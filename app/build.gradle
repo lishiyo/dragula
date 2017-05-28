@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.segunfamisa.kotlin.samples.retrofit"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -24,15 +24,43 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile 'com.android.support:appcompat-v7:25.3.1'
 
-    // retrofit
+    // ui
+    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:cardview-v7:${rootProject.ext.supportLibVersion}"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // retrofit + gson
     compile "com.squareup.retrofit2:retrofit:2.3.0"
     compile "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
     compile "com.squareup.retrofit2:converter-gson:2.3.0"
 
-    // rxandroid
+    // rxjava + rxbinding
+    compile 'io.reactivex.rxjava2:rxjava:2.1.0'
     compile "io.reactivex.rxjava2:rxandroid:2.0.1"
+    String rxBindingVersion = '2.0.0'
+    compile "com.jakewharton.rxbinding2:rxbinding:$rxBindingVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding-kotlin:$rxBindingVersion"
+
+    // butterknife
+    String butterKnifeVersion = '8.6.0'
+    compile "com.jakewharton:butterknife:$butterKnifeVersion"
+    kapt "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
+
+    // == FRESCO ==
+    compile 'com.facebook.fresco:fresco:1.3.0'
+    // For animated GIF support
+    compile 'com.facebook.fresco:animated-gif:1.3.0'
+    // For WebP support, including animated WebP
+    compile 'com.facebook.fresco:animated-webp:1.3.0'
+    compile 'com.facebook.fresco:webpsupport:1.3.0'
+
+    // dagger 2
+    compile 'com.google.dagger:dagger:2.10'
+    kapt 'com.google.dagger:dagger-compiler:2.10'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
 
     // test dependencies
     testCompile 'junit:junit:4.12'

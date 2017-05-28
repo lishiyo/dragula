@@ -1,4 +1,4 @@
-package com.segunfamisa.kotlin.samples.retrofit.data.kotlin
+package com.segunfamisa.kotlin.github.data
 
 
 object SearchRepositoryProvider {

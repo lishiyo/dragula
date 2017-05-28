@@ -1,4 +1,4 @@
-package com.segunfamisa.kotlin.samples.retrofit.data.kotlin
+package com.segunfamisa.kotlin.github.data
 
 
 interface GithubApiService {
@@ -13,14 +13,14 @@ interface GithubApiService {
      * Companion object for the factory
      */
     companion object Factory {
-        fun create(): com.segunfamisa.kotlin.samples.retrofit.data.kotlin.GithubApiService {
+        fun create(): GithubApiService {
             val retrofit = retrofit2.Retrofit.Builder()
                     .addCallAdapterFactory(retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory.create())
                     .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
                     .baseUrl("https://api.github.com/")
                     .build()
 
-            return retrofit.create(com.segunfamisa.kotlin.samples.retrofit.data.kotlin.GithubApiService::class.java);
+            return retrofit.create(GithubApiService::class.java);
         }
     }
 }
