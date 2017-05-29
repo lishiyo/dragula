@@ -7,8 +7,7 @@ import com.lishiyo.kotlin.commons.adapter.ViewTypeDelegateAdapter
 import com.lishiyo.kotlin.commons.extensions.inflate
 import com.lishiyo.kotlin.github.ui.viewmodel.GithubUser
 import com.lishiyo.kotlin.samples.retrofit.R
-import kotlinx.android.synthetic.main.github_list_item_user.view.*
-
+import kotlinx.android.synthetic.main.list_item_github_user.view.*
 
 
 /**
@@ -30,7 +29,7 @@ class UserDelegateAdapter(val viewListener: onViewSelectedListener?) : ViewTypeD
     }
 
     inner class UserViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
-            parent.inflate(R.layout.github_list_item_user)) {
+            parent.inflate(R.layout.list_item_github_user)) {
         var currentItem: GithubUser? = null
 
         init {

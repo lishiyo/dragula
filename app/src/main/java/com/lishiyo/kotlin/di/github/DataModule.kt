@@ -10,15 +10,13 @@ import retrofit2.Retrofit
 import javax.inject.Named
 import javax.inject.Singleton
 
-
-
 /**
  * Wire up the injection providers (modules) to the injection targets (activities, frags).
  *
  * Created by connieli on 5/28/17.
  */
 @Module
-class NetworkModule {
+class DataModule {
 
     @Provides
     @Singleton

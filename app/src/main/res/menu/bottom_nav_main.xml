@@ -11,7 +11,7 @@
 		android:id="@+id/action_notes"
 		android:enabled="true"
 		android:icon="@android:drawable/ic_menu_agenda"
-		android:title="@string/tab_notes_label"
+		android:title="@string/tab_casual_q_label"
 		app:showAsAction="ifRoom" />
 	<item
 		android:id="@+id/action_tumblr"

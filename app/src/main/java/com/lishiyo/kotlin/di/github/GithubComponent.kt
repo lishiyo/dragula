@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = arrayOf(
         AppModule::class,
-        NetworkModule::class)
+        DataModule::class)
 )
 interface GithubComponent {
 

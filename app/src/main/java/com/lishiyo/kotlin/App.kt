@@ -7,9 +7,12 @@ import com.facebook.stetho.Stetho
 import com.lishiyo.kotlin.di.AppComponent
 import com.lishiyo.kotlin.di.AppModule
 import com.lishiyo.kotlin.di.DaggerAppComponent
+import com.lishiyo.kotlin.di.casualq.DaggerQuestionsComponent
+import com.lishiyo.kotlin.di.casualq.QuestionsComponent
+import com.lishiyo.kotlin.di.casualq.QuestionsModule
 import com.lishiyo.kotlin.di.github.DaggerGithubComponent
+import com.lishiyo.kotlin.di.github.DataModule
 import com.lishiyo.kotlin.di.github.GithubComponent
-import com.lishiyo.kotlin.di.github.NetworkModule
 
 /**
  * Created by connieli on 5/28/17.
@@ -19,6 +22,7 @@ class App : Application() {
     companion object {
         lateinit var appComponent: AppComponent
         lateinit var githubComponent: GithubComponent
+        lateinit var questionsComponent: QuestionsComponent
 
         fun getAppContext(): Context {
             return appComponent.getAppContext()
@@ -35,7 +39,11 @@ class App : Application() {
                 .build()
 
         githubComponent = DaggerGithubComponent.builder()
-                .networkModule(NetworkModule())
+                .dataModule(DataModule())
+                .build()
+
+        questionsComponent = DaggerQuestionsComponent.builder()
+                .questionsModule(QuestionsModule())
                 .build()
     }
 }

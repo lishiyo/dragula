@@ -1,7 +1,7 @@
 package com.lishiyo.kotlin.github.ui.viewmodel
 
-import com.lishiyo.kotlin.commons.adapter.Constants
 import com.lishiyo.kotlin.commons.adapter.ViewType
+import com.lishiyo.kotlin.github.Constants
 import com.lishiyo.kotlin.github.data.User
 
 /**
