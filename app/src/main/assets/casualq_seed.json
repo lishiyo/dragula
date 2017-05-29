@@ -1,0 +1,34 @@
+{
+  "questions": {
+    "reddit": [
+      {
+        "text": "first",
+        "source": "reddit"
+      },
+      {
+        "text": "second",
+        "source": "reddit"
+      }
+    ],
+    "nyt": [
+      {
+        "text": "first",
+        "source": "nyt"
+      },
+      {
+        "text": "second",
+        "source": "nyt"
+      }
+    ],
+    "other": [
+      {
+        "text": "first",
+        "source": "other"
+      },
+      {
+        "text": "second",
+        "source": "other"
+      }
+    ]
+  }
+}
