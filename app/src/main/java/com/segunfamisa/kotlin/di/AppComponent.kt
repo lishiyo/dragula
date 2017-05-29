@@ -1,6 +1,6 @@
 package com.segunfamisa.kotlin.di
 
-import com.segunfamisa.kotlin.di.github.NetworkModule
+import android.content.Context
 import dagger.Component
 import javax.inject.Singleton
 
@@ -11,9 +11,10 @@ import javax.inject.Singleton
  */
 @Component(
         modules = arrayOf(
-                AppModule::class,
-                NetworkModule::class
+                AppModule::class
         )
 )
 @Singleton
-interface AppComponent
+interface AppComponent {
+    fun getAppContext() : Context
+}

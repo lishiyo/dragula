@@ -1,7 +1,7 @@
 package com.segunfamisa.kotlin.di.github
 
 import com.segunfamisa.kotlin.di.AppModule
-import com.segunfamisa.kotlin.github.ui.GithubActivity
+import com.segunfamisa.kotlin.github.ui.GithubFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -17,6 +17,6 @@ import javax.inject.Singleton
 )
 interface GithubComponent {
 
-    fun inject(target: GithubActivity)
+    fun inject(target: GithubFragment)
 
 }

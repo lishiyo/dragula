@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">kotlin-sandbox</string>
+
+    <string name="tab_github_label">github</string>
+    <string name="tab_notes_label">notes</string>
+    <string name="tab_tumblr_label">tumblr</string>
 </resources>
