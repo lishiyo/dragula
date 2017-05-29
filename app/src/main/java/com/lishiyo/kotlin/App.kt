@@ -9,7 +9,6 @@ import com.lishiyo.kotlin.di.AppModule
 import com.lishiyo.kotlin.di.DaggerAppComponent
 import com.lishiyo.kotlin.di.casualq.DaggerQuestionsComponent
 import com.lishiyo.kotlin.di.casualq.QuestionsComponent
-import com.lishiyo.kotlin.di.casualq.QuestionsModule
 import com.lishiyo.kotlin.di.github.DaggerGithubComponent
 import com.lishiyo.kotlin.di.github.DataModule
 import com.lishiyo.kotlin.di.github.GithubComponent
@@ -43,7 +42,7 @@ class App : Application() {
                 .build()
 
         questionsComponent = DaggerQuestionsComponent.builder()
-                .questionsModule(QuestionsModule())
+                .dataModule(com.lishiyo.kotlin.di.casualq.DataModule())
                 .build()
     }
 }

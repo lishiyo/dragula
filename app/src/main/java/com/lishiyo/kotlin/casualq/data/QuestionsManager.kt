@@ -27,4 +27,9 @@ class QuestionsManager {
 
         return Observable.just(redditQuestions)
     }
+
+    fun getQuestionsFromRemote() : Observable<List<QuestionData>> {
+        // todo: retrieve from firebase
+        return Observable.just(ArrayList())
+    }
 }

@@ -1,16 +1,25 @@
 package com.lishiyo.kotlin.di.casualq
 
+import com.google.firebase.database.FirebaseDatabase
 import com.lishiyo.kotlin.casualq.data.QuestionsManager
 import dagger.Module
 import dagger.Provides
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-class QuestionsModule {
+class DataModule {
 
     @Provides
     @Singleton
     fun createQuestionsManager(): QuestionsManager {
         return QuestionsManager()
+    }
+
+    @Provides
+    @Singleton
+    @Named("casualq")
+    fun createFirebaseDatabase(): FirebaseDatabase {
+        return FirebaseDatabase.getInstance()
     }
 }

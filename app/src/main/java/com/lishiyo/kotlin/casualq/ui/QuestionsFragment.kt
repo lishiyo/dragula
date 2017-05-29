@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.google.firebase.database.*
 import com.lishiyo.kotlin.App
 import com.lishiyo.kotlin.casualq.data.QuestionsManager
 import com.lishiyo.kotlin.casualq.ui.viewmodel.Question
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelectedListener {
     // Data
     @Inject lateinit var manager: QuestionsManager
+    @Inject lateinit var firebaseDb: FirebaseDatabase
 
     // UI
     @BindView(R.id.questions_list) lateinit var list: RecyclerView
@@ -56,6 +58,41 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
             layoutManager = LinearLayoutManager(context)
             adapter = questionsAdapter
         }
+
+        initFirebase()
+    }
+
+    private fun initFirebase() {
+        // Get a reference to the todoItems child items it the database
+        val myRef: DatabaseReference = firebaseDb.getReference("questions")
+
+        // Assign a listener to detect changes to the child items
+        // of the database reference.
+        myRef.addChildEventListener(object : ChildEventListener {
+            override fun onCancelled(error: DatabaseError?) {
+                Log.w("TAG:", "Failed to read value.", error?.toException());
+            }
+
+            override fun onChildMoved(dataSnapshot: DataSnapshot?, p1: String?) {
+            }
+
+            override fun onChildChanged(dataSnapshot: DataSnapshot?, p1: String?) {
+            }
+
+            override fun onChildRemoved(dataSnapshot: DataSnapshot?) {
+                val value = dataSnapshot?.getValue(String::class.java)
+//                adapter.remove(value)
+            }
+
+            // This function is called once for each child that exists
+            // when the listener is added. Then it is called
+            // each time a new child is added.
+            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String) {
+                val value = dataSnapshot.getValue(String::class.java)
+                // TODO: update adapter
+//                adapter.add(value)
+            }
+        })
     }
 
     override fun onResume() {

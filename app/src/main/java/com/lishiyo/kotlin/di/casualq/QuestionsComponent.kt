@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = arrayOf(
         AppModule::class,
-        QuestionsModule::class
+        DataModule::class
 ))
 interface QuestionsComponent {
     fun inject(target: QuestionsFragment)
