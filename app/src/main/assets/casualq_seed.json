@@ -20,6 +20,20 @@
         "source": "nyt"
       }
     ],
+    "podcast": [
+      {
+        "text": "What do you look for in people you choose to become friends with? Has it changed as you've gotten older?",
+        "source": "podcast"
+      },
+      {
+        "text": "What are three books you'd recommend?",
+        "source": "podcast"
+      },
+      {
+        "text": "What is a transformative piece of technology you really hope to be alive to see in your lifetime?",
+        "source": "podcast"
+      }
+    ],
     "other": [
       {
         "text": "first",

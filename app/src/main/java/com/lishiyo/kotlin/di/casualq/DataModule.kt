@@ -4,7 +4,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.lishiyo.kotlin.casualq.data.QuestionsManager
 import dagger.Module
 import dagger.Provides
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -18,7 +17,6 @@ class DataModule {
 
     @Provides
     @Singleton
-    @Named("casualq")
     fun createFirebaseDatabase(): FirebaseDatabase {
         return FirebaseDatabase.getInstance()
     }

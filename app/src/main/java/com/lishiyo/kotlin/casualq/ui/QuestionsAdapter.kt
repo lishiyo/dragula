@@ -29,12 +29,31 @@ class QuestionsAdapter(listener: QuestionDelegateAdapter.onViewSelectedListener?
     /**
      * Set the questions to list.
      */
-    fun addQuestions(questions: List<Question>) {
+    fun setQuestions(questions: List<Question>) {
         // TODO: first remove loading and notify
         items.clear()
 
         items.addAll(questions)
         notifyDataSetChanged()
+    }
+
+    fun addQuestions(questions: List<Question>) {
+        val originalLength = items.size
+        items.addAll(questions)
+        notifyItemRangeInserted(originalLength, items.size)
+    }
+
+    fun addQuestion(question: Question) {
+        items.add(question)
+        notifyItemInserted(items.size - 1)
+    }
+
+    fun removeQuestion(question: Question) {
+        val oldPosition = items.indexOf(question)
+        if (oldPosition != -1) {
+            items.remove(question)
+            notifyItemRemoved(oldPosition)
+        }
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {

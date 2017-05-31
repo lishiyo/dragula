@@ -8,15 +8,32 @@
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/questions_list"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent" />
+		android:layout_height="wrap_content" />
 
-	<android.support.design.widget.FloatingActionButton
-		android:layout_width="wrap_content"
+	<!-- TODO: flip to FAB -->
+	<LinearLayout
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_gravity="bottom|end"
-		android:layout_margin="16dp"
-		android:src="@android:drawable/ic_input_add"
-		app:layout_anchor="@id/questions_list"
-		app:layout_anchorGravity="bottom|right|end" />
+		android:orientation="vertical"
+		android:layout_gravity="bottom">
+		<EditText
+			android:id="@+id/temp_add_text"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+		<Button
+			android:id="@+id/temp_add_button"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Add New Item"/>
+	</LinearLayout>
+
+	<!--<android.support.design.widget.FloatingActionButton-->
+		<!--android:layout_width="wrap_content"-->
+		<!--android:layout_height="wrap_content"-->
+		<!--android:layout_gravity="bottom|end"-->
+		<!--android:layout_margin="16dp"-->
+		<!--android:src="@android:drawable/ic_input_add"-->
+		<!--app:layout_anchor="@id/questions_list"-->
+		<!--app:layout_anchorGravity="bottom|right|end" />-->
 
 </android.support.design.widget.CoordinatorLayout>

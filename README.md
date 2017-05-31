@@ -1,12 +1,22 @@
-# retrofit-kotlin-sample
-Sample app for using Retrofit + RxJava + Kotlin in Android.
+# Kotlin Sandbox
 
-This is a sample app for the blog post here https://segunfamisa.com/posts/using-retrofit-on-android-with-kotlin
+## CasualQ
 
-It features the following features of the Kotlin language:
+Topics for interesting conversations.
 
-* Data classes
-* Object declarations
-* Companion objects
-* String templates
-* Interoperability with Java
+Sources:
+ - /r/casualconversation
+ - NYC
+ - podcasts
+
+https://console.firebase.google.com/u/0/project/kotlin-sandbox/database/data
+https://kotlin-sandbox.firebaseio.com/
+
+Libraries:
+* Retrofit + RxJava + Rxbinding
+* Gson
+* Fresco
+* Firebase
+* Dagger 2
+* Butterknife
+* Stetho
