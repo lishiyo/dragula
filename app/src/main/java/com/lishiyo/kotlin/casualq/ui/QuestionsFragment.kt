@@ -110,9 +110,11 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
 
             // Set the child's data to the value passed in from the text box.
             val text = composeEditText.text.toString()
+            val source = "custom"
+
             if (!text.isBlank()) {
-                val newTopic = QuestionData(composeEditText.text.toString(), "other")
-                childRef.setValue(newTopic)
+                val newQuestion = QuestionData(childRef.key, text, source)
+                childRef.setValue(newQuestion)
             }
         }
 

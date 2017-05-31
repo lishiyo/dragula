@@ -9,10 +9,11 @@ import com.lishiyo.kotlin.casualq.ui.viewmodel.Question
  */
 @IgnoreExtraProperties
 data class QuestionData(
+        @SerializedName("_id") var id: String = "",
         @SerializedName("text") val text: String = "",
         @SerializedName("source") val source: String = ""
 ) {
-    constructor(viewmodel: Question) : this(viewmodel.text, viewmodel.source)
+    constructor(viewmodel: Question) : this(text = viewmodel.text, source = viewmodel.source)
 }
 
 /**
