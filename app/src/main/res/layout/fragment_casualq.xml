@@ -12,13 +12,13 @@
 		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 		android:fitsSystemWindows="true">
 
-		<android.support.v7.widget.Toolbar
-			android:id="@+id/toolbar"
-			android:layout_width="match_parent"
-			android:layout_height="?attr/actionBarSize"
-			app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-			app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-			/>
+		<!--<android.support.v7.widget.Toolbar-->
+			<!--android:id="@+id/toolbar"-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="?attr/actionBarSize"-->
+			<!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
+			<!--app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"-->
+			<!--/>-->
 
 		<!--<android.support.design.widget.TabLayout-->
 			<!--android:layout_width="match_parent"-->
@@ -47,13 +47,15 @@
 					android:layout_width="0dp"
 					android:layout_height="match_parent"
 					android:layout_weight="1"
-					android:text="Add"/>
+					android:text="Delete All"
+					android:background="@android:color/holo_red_light"
+					/>
 				<Button
 					android:id="@+id/btn_reseed"
 					android:layout_width="0dp"
 					android:layout_height="match_parent"
 					android:layout_weight="1"
-					android:text="Add"/>
+					android:text="Reseed"/>
 			</LinearLayout>
 
 			<!-- firebase list -->

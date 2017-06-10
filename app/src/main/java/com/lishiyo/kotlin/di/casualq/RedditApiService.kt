@@ -1,6 +1,6 @@
 package com.lishiyo.kotlin.di.casualq
 
-import com.lishiyo.kotlin.features.casualq.data.CommentsResponse
+import com.lishiyo.kotlin.features.casualq.data.Listing
 
 /**
  * Created by connieli on 6/9/17.
@@ -9,9 +9,9 @@ interface RedditApiService {
     @retrofit2.http.GET("r/{subreddit}/comments/{postId}")
     fun getCommentsForPost(@retrofit2.http.Path("subreddit") subreddit: String,
                            @retrofit2.http.Path("postId") postId: String,
-                           @retrofit2.http.Query("limit") query: Int = 20,
+                           @retrofit2.http.Query("limit") limit: Int = 20,
                            @retrofit2.http.Query("showmore") page: Boolean = true,
-                           @retrofit2.http.Query("sort") sort: String = "top"): io.reactivex.Observable<CommentsResponse>
+                           @retrofit2.http.Query("sort") sort: String = "top"): io.reactivex.Observable<List<Listing>>
 
 
     /**

@@ -9,7 +9,7 @@ import com.lishiyo.kotlin.features.casualq.ui.viewmodel.Question
  */
 @IgnoreExtraProperties
 data class QuestionData(
-        @SerializedName("_id") var id: String = "",
+        @SerializedName("id") var id: String = "",
         @SerializedName("text") val text: String = "",
         @SerializedName("source") val source: String = "",
         @SerializedName("level") val level: Int = 0,

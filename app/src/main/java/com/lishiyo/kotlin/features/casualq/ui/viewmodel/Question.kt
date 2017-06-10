@@ -1,8 +1,8 @@
 package com.lishiyo.kotlin.features.casualq.ui.viewmodel
 
+import com.lishiyo.kotlin.commons.adapter.ViewType
 import com.lishiyo.kotlin.features.casualq.Constants
 import com.lishiyo.kotlin.features.casualq.data.QuestionData
-import com.lishiyo.kotlin.commons.adapter.ViewType
 
 /**
  * Created by connieli on 5/28/17.
@@ -13,7 +13,7 @@ import com.lishiyo.kotlin.commons.adapter.ViewType
  * Created by connieli on 5/28/17.
  */
 data class Question(
-        val _id: String = "", // firebase key
+        val id: String = "", // firebase key
         val text: String = "",
         val source: String = "",
         val level: Int = 0,

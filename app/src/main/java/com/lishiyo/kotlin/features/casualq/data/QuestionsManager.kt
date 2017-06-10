@@ -41,7 +41,7 @@ class QuestionsManager {
         return Observable.just(allQuestions)
     }
 
-    fun getQuestionsFromRemote() : Observable<List<QuestionData>> {
+    fun getQuestionsFromRemote(firebaseRef: DatabaseReference) : Observable<List<QuestionData>> {
         // todo: retrieve from firebase
         return Observable.just(ArrayList())
     }
@@ -58,6 +58,7 @@ class QuestionsManager {
             for ((_, questionsFromSource) in fullRespNode.questions) {
                 for (question in questionsFromSource) {
                     val childRef = firebaseRef.push()
+                    question.id = childRef.key
                     childRef.setValue(question)
                 }
             }

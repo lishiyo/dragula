@@ -14,8 +14,10 @@ import butterknife.ButterKnife
 import com.google.firebase.database.*
 import com.lishiyo.kotlin.App
 import com.lishiyo.kotlin.commons.ui.RxBaseFragment
+import com.lishiyo.kotlin.features.casualq.data.Listing
 import com.lishiyo.kotlin.features.casualq.data.QuestionData
 import com.lishiyo.kotlin.features.casualq.data.QuestionsManager
+import com.lishiyo.kotlin.features.casualq.data.RedditManager
 import com.lishiyo.kotlin.features.casualq.ui.viewmodel.Question
 import com.lishiyo.kotlin.samples.retrofit.R
 import io.reactivex.Observable
@@ -31,7 +33,8 @@ import javax.inject.Inject
  */
 class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelectedListener {
     // Data
-    @Inject lateinit var manager: QuestionsManager
+    @Inject lateinit var firebaseManager: QuestionsManager
+    @Inject lateinit var redditManager: RedditManager
     @Inject lateinit var firebaseDb: FirebaseDatabase
 
     // UI
@@ -43,6 +46,8 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
 
     private val questionsAdapter = QuestionsAdapter(this)
     lateinit private var localQuestionsObservable: Observable<List<QuestionData>>
+    // comments on the single post
+    lateinit private var redditSeedPostObservable: Observable<List<Listing>>
 
     // == FIREBASE: https://kotlin-sandbox.firebaseio.com/
     // https://console.firebase.google.com/u/0/project/kotlin-sandbox/database/data/
@@ -72,7 +77,6 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
         super.onActivityCreated(savedInstanceState)
 
         list.apply {
-//            setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = questionsAdapter
         }
@@ -83,21 +87,29 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
     override fun onResume() {
         super.onResume()
 
-        localQuestionsObservable = manager.getQuestions(context) // TODO: get from remote
+        localQuestionsObservable = firebaseManager
+                .getQuestions(context) // TODO: get from remote
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 
-        compositeDisposable.add(
-                localQuestionsObservable
-                        .subscribe(
-                                { results ->
-                                    // convert data to viewmodels
-                                    val questions = Question.createFromList(results)
-                                    questionsAdapter.setQuestions(questions)
-                                },
-                                {
-                                    throwable -> Log.e("connie", throwable.message)
-                                })
+        redditSeedPostObservable = redditManager
+                .getCommentsForPost()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+
+        compositeDisposable.addAll(
+                localQuestionsObservable.subscribe(
+                        { results ->
+                            // convert data to viewmodels
+                            val questions = Question.createFromList(results)
+                            questionsAdapter.setQuestions(questions)
+                        }, { throwable -> Log.e("connie", throwable.message) }),
+                redditSeedPostObservable.subscribe(
+                        { results ->
+                            Log.d("connie", "results listing size: " + results.size)
+                            // TODO: parse into Question form => store into local file => populate firebase
+
+                        }, { throwable -> Log.e("connie", throwable.message) })
         )
     }
 
@@ -166,7 +178,7 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
         reseedBtn.setOnClickListener {
             // clear, then repopulate from local files
             questionsRef.removeValue()
-            manager.populateFirebaseFromLocal(context, questionsRef, QuestionsManager.DEFAULT_SEED_FILE)
+            firebaseManager.populateFirebaseFromLocal(context, questionsRef, QuestionsManager.DEFAULT_SEED_FILE)
         }
     }
 
@@ -178,7 +190,7 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
 
     override fun onItemSelected(question: Question) {
         // item clicked!
-        val query = questionsRef.orderByKey().equalTo(question._id)
+        val query = questionsRef.orderByKey().equalTo(question.id)
 
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError?) {

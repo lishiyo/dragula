@@ -2,7 +2,9 @@ package com.lishiyo.kotlin.di.casualq
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.firebase.database.FirebaseDatabase
+import com.lishiyo.kotlin.di.casualq.RedditApiService.Factory.BASE_URL
 import com.lishiyo.kotlin.features.casualq.data.QuestionsManager
+import com.lishiyo.kotlin.features.casualq.data.RedditManager
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -36,7 +38,7 @@ class DataModule {
         return Retrofit.Builder()
                 .addCallAdapterFactory(retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory.create())
                 .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
-                .baseUrl("https://api.github.com/")
+                .baseUrl(BASE_URL)
                 .client(okHttpClient)
                 .build()
     }
@@ -44,6 +46,12 @@ class DataModule {
     @Provides
     @Singleton
     fun createRedditApi(): RedditApiService {
-        return createRetrofitReddit().create(RedditApiService::class.java)
+        return RedditApiService.create()
+    }
+
+    @Provides
+    @Singleton
+    fun createRedditManager(): RedditManager {
+        return RedditManager(createRedditApi())
     }
 }

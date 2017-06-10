@@ -6,11 +6,11 @@ import com.google.gson.annotations.SerializedName
  * Created by connieli on 6/9/17.
  */
 
-// Response for comments on a post.
+// Response for comments on a post. Returns array of Listing.
 // /r/casualconversation/comments/6djhr4?limit=500&showmore=true&sort=top
-class CommentsResponse(
-        val listings: List<Listing> = listOf()
-)
+//class PostCommentsResponse(
+//        val listings: List<Listing> = listOf()
+//)
 
 data class Listing(
         @SerializedName("kind") val kind: String,
@@ -49,7 +49,7 @@ class Comment(
         @SerializedName("author") val author: String,
         @SerializedName("parent_id") val parent_id: String,
         @SerializedName("body") val body: String,
-        @SerializedName("replies") val replies: Array<Listing>,
+        @SerializedName("replies") val replies: Listing, // TODO can be ""
         @SerializedName("ups") val ups: Int,
         @SerializedName("downs") val downs: Int
 ) {
@@ -64,7 +64,7 @@ class Comment(
         if (body != other.body) return false
         if (ups != other.ups) return false
         if (downs != other.downs) return false
-        return (replies contentEquals other.replies)
+        return (replies == other.replies)
     }
 
     override fun hashCode(): Int {
