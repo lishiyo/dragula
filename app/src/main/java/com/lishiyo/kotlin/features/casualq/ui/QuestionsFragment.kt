@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.casualq.ui
+package com.lishiyo.kotlin.features.casualq.ui
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -13,17 +13,20 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.google.firebase.database.*
 import com.lishiyo.kotlin.App
-import com.lishiyo.kotlin.casualq.data.QuestionData
-import com.lishiyo.kotlin.casualq.data.QuestionsManager
-import com.lishiyo.kotlin.casualq.ui.viewmodel.Question
 import com.lishiyo.kotlin.commons.ui.RxBaseFragment
+import com.lishiyo.kotlin.features.casualq.data.QuestionData
+import com.lishiyo.kotlin.features.casualq.data.QuestionsManager
+import com.lishiyo.kotlin.features.casualq.ui.viewmodel.Question
 import com.lishiyo.kotlin.samples.retrofit.R
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
 /**
+ * Shows saved questions from Firebase.
+ *
  * Created by connieli on 5/28/17.
  */
 class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelectedListener {
@@ -33,11 +36,18 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
 
     // UI
     @BindView(R.id.questions_list) lateinit var list: RecyclerView
-    @BindView(R.id.temp_add_button) lateinit var composeButton: Button
-    @BindView(R.id.temp_add_text) lateinit var composeEditText: EditText
+    @BindView(R.id.btn_add_question) lateinit var composeButton: Button
+    @BindView(R.id.add_question_text) lateinit var composeEditText: EditText
+    @BindView(R.id.btn_delete_all) lateinit var deleteAllBtn: Button
+    @BindView(R.id.btn_reseed) lateinit var reseedBtn: Button
 
     private val questionsAdapter = QuestionsAdapter(this)
+    lateinit private var localQuestionsObservable: Observable<List<QuestionData>>
+
+    // == FIREBASE: https://kotlin-sandbox.firebaseio.com/
+    // https://console.firebase.google.com/u/0/project/kotlin-sandbox/database/data/
     lateinit var questionsRef: DatabaseReference
+    lateinit var rootChildEventListener: ChildEventListener
 
     companion object {
         fun newInstance(bundle: Bundle?): QuestionsFragment {
@@ -70,28 +80,50 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
         initFirebase()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        localQuestionsObservable = manager.getQuestions(context) // TODO: get from remote
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+
+        compositeDisposable.add(
+                localQuestionsObservable
+                        .subscribe(
+                                { results ->
+                                    // convert data to viewmodels
+                                    val questions = Question.createFromList(results)
+                                    questionsAdapter.setQuestions(questions)
+                                },
+                                {
+                                    throwable -> Log.e("connie", throwable.message)
+                                })
+        )
+    }
+
     private fun initFirebase() {
         // Get a reference to the questions child items in the database
         questionsRef = firebaseDb.getReference("questions")
 
         // Assign a listener to detect changes to the child items
         // of the database reference.
-        questionsRef.addChildEventListener(object : ChildEventListener {
+        rootChildEventListener = object : ChildEventListener {
             override fun onCancelled(error: DatabaseError?) {
-                Log.w("connie", "Failed to read value.", error?.toException())
+                Log.d("connie", "Failed to read value.", error?.toException())
             }
 
             override fun onChildMoved(dataSnapshot: DataSnapshot?, previousChildName: String?) {
-                Log.w("connie", "onChildMoved! $previousChildName")
+                Log.d("connie", "onChildMoved! $previousChildName")
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot?, previousChildName: String?) {
-                Log.w("connie", "onChildChanged! $previousChildName")
+                Log.d("connie", "onChildChanged! $previousChildName")
             }
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {
                 val question = dataSnapshot.getValue(Question::class.java)
-                questionsAdapter.removeQuestion(question)
+                Log.d("connie", "onChildRemoved! " + question!!.text)
+                questionsAdapter.removeQuestion(question!!)
             }
 
             // This function is called once for each child that exists
@@ -99,10 +131,17 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
             // each time a new child is added.
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val question = dataSnapshot.getValue(Question::class.java)
-                questionsAdapter.addQuestion(question)
+                Log.d("connie", "onChildAdded! " + question!!.text)
+                questionsAdapter.addQuestion(question!!)
             }
-        })
+        }
 
+        questionsRef.addChildEventListener(rootChildEventListener)
+
+        initButtons()
+    }
+
+    private fun initButtons() {
         // Add items via the Button and EditText at the bottom of the window.
         composeButton.setOnClickListener {
             // Create a new child DatabaseReference with a auto-generated ID.
@@ -111,49 +150,50 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
             // Set the child's data to the value passed in from the text box.
             val text = composeEditText.text.toString()
             val source = "custom"
+            val level = 0
 
             if (!text.isBlank()) {
-                val newQuestion = QuestionData(childRef.key, text, source)
+                val newQuestion = QuestionData(childRef.key, text, source, level, saved = true)
                 childRef.setValue(newQuestion)
             }
         }
 
+        deleteAllBtn.setOnClickListener {
+            // Wipe out everything in firebase
+            questionsRef.removeValue()
+        }
+
+        reseedBtn.setOnClickListener {
+            // clear, then repopulate from local files
+            questionsRef.removeValue()
+            manager.populateFirebaseFromLocal(context, questionsRef, QuestionsManager.DEFAULT_SEED_FILE)
+        }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onPause() {
+        super.onPause() // clears disposable
 
-        compositeDisposable.add(
-                manager.getQuestions(context) // from local then firebase
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                { results ->
-                                    // convert to viewmodels
-                                    val questions = Question.createFromList(results)
-                                    questionsAdapter.setQuestions(questions)
-                                }, { throwable ->
-                            Log.e("connie", throwable.message)
-                        })
-        )
-
+        tearDown()
     }
-    override fun onItemSelected(item: Question?) {
-        // delete the item?
-        val myQuery = questionsRef.orderByValue().equalTo(item.toString())
 
-        myQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+    override fun onItemSelected(question: Question) {
+        // item clicked!
+        val query = questionsRef.orderByKey().equalTo(question._id)
+
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError?) {
-                Log.e("connie", "delete failed")
+                Log.e("connie", "delete failed: " + question.text)
             }
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.hasChildren()) {
-//                    val firstChild = dataSnapshot.children.iterator().next()
-//                    firstChild.ref.removeValue()
+                    Log.i("connie", "data changed for: " + question.text)
                 }
             }
-
         })
+    }
+
+    private fun tearDown() {
+        questionsRef.removeEventListener(rootChildEventListener)
     }
 }

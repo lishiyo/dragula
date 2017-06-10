@@ -1,8 +1,8 @@
-package com.lishiyo.kotlin.github.ui.viewmodel
+package com.lishiyo.kotlin.features.github.ui.viewmodel
 
 import com.lishiyo.kotlin.commons.adapter.ViewType
-import com.lishiyo.kotlin.github.Constants
-import com.lishiyo.kotlin.github.data.User
+import com.lishiyo.kotlin.features.github.Constants
+import com.lishiyo.kotlin.features.github.data.User
 
 /**
  * View model versions of the data.

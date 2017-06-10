@@ -2,36 +2,254 @@
   "questions": {
     "reddit": [
       {
-        "text": "first",
-        "source": "reddit"
+        "text": "If you could use a time machine that only went back in time or one that only went forward, which would you choose? How far ahead would you go?",
+        "source": "http://bit.ly/2r3RvFC",
+        "level": 0,
+        "saved": true
       },
       {
-        "text": "second",
-        "source": "reddit"
+        "text": "What are some books/movies/games that never get old and always make you feel better when you're sad? I like to call them 'armchair books,'' because they're comfortable, familiar, and always there, even if they're not of the highest quality or the most objective merit.",
+        "source": "http://bit.ly/2r3RvFC",
+        "level": 0,
+        "saved": true
       }
     ],
-    "nyt": [
+    "article": [
       {
-        "text": "first",
-        "source": "nyt"
+        "text": "Given the choice of anyone in the world, whom would you want as a dinner guest?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 0,
+        "saved": true
       },
       {
-        "text": "second",
-        "source": "nyt"
+        "text": "Would you like to be famous? In what way?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 0,
+        "saved": true
+      },
+      {
+        "text": "Before making a telephone call, do you ever rehearse what you are going to say? Why?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 0,
+        "saved": true
+      },
+      {
+        "text": "What would constitute a “perfect” day for you?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 1,
+        "saved": true
+      },
+      {
+        "text": "When did you last sing to yourself? To someone else?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 2,
+        "saved": true
+      },
+      {
+        "text": " If you were able to live to the age of 90 and retain either the mind or body of a 30-year-old for the last 60 years of your life, which would you want?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 1,
+        "saved": true
+      },
+      {
+        "text": "Do you have a secret hunch about how you will die?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 2,
+        "saved": true
+      },
+      {
+        "text": "Name three things you and your partner appear to have in common.",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 2,
+        "saved": true
+      },
+      {
+        "text": "For what in your life do you feel most grateful?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 0,
+        "saved": true
+      },
+      {
+        "text": "If you could change anything about the way you were raised, what would it be?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 1,
+        "saved": true
+      },
+      {
+        "text": "Take four minutes and tell your partner your life story in as much detail as possible.",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "If you could wake up tomorrow having gained any one quality or ability, what would it be?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 0,
+        "saved": true
+      },
+      {
+        "text": "If a crystal ball could tell you the truth about yourself, your life, the future or anything else, what would you want to know?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "Is there something that you’ve dreamed of doing for a long time? Why haven’t you done it?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "What is the greatest accomplishment of your life?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "What is the greatest accomplishment of your life?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "What do you value most in a friendship?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 1,
+        "saved": true
+      },
+      {
+        "text": "What is your most treasured memory?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "What is your most terrible memory?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 4,
+        "saved": true
+      },
+      {
+        "text": "If you knew that in one year you would die suddenly, would you change anything about the way you are now living? Why?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "What does friendship mean to you?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "What roles do love and affection play in your life?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "Alternate sharing something you consider a positive characteristic of your partner. Share a total of five items.",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "How close and warm is your family? Do you feel your childhood was happier than most other people’s?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "How do you feel about your relationship with your mother?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 4,
+        "saved": true
+      },
+      {
+        "text": "Make three true “we” statements each. For instance, “We are both in this room feeling ... “",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 2,
+        "saved": true
+      },
+      {
+        "text": "Complete this sentence: “I wish I had someone with whom I could share ... ",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "If you were going to become a close friend with your partner, please share what would be important for him or her to know.",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "Tell your partner what you like about them; be very honest this time, saying things that you might not say to someone you’ve just met.",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "Share with your partner an embarrassing moment in your life.",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "When did you last cry in front of another person? By yourself?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "Tell your partner something that you like about them already.",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "What, if anything, is too serious to be joked about?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "If you were to die this evening with no opportunity to communicate with anyone, what would you most regret not having told someone? Why haven’t you told them yet?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 4,
+        "saved": true
+      },
+      {
+        "text": "Your house, containing everything you own, catches fire. After saving your loved ones and pets, you have time to safely make a final dash to save any one item. What would it be? Why?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 3,
+        "saved": true
+      },
+      {
+        "text": "Of all the people in your family, whose death would you find most disturbing? Why?",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 4,
+        "saved": true
+      },
+      {
+        "text": "Share a personal problem and ask your partner’s advice on how he or she might handle it. Also, ask your partner to reflect back to you how you seem to be feeling about the problem you have chosen.",
+        "source": "https://www.nytimes.com/2015/01/11/fashion/no-37-big-wedding-or-small.html?_r=0",
+        "level": 4,
+        "saved": true
       }
     ],
     "podcast": [
       {
         "text": "What do you look for in people you choose to become friends with? Has it changed as you've gotten older?",
-        "source": "podcast"
+        "source": "ezra klein show"
       },
       {
         "text": "What are three books you'd recommend?",
-        "source": "podcast"
+        "source": "ezra klein show"
       },
       {
         "text": "What is a transformative piece of technology you really hope to be alive to see in your lifetime?",
-        "source": "podcast"
+        "source": "ezra klein show"
       }
     ],
     "other": [

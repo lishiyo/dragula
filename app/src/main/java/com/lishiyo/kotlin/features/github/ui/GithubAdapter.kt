@@ -1,17 +1,17 @@
-package com.lishiyo.kotlin.casualq.ui
+package com.lishiyo.kotlin.features.github.ui
 
 import android.support.v4.util.SparseArrayCompat
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import com.lishiyo.kotlin.casualq.Constants
-import com.lishiyo.kotlin.casualq.ui.viewmodel.Question
 import com.lishiyo.kotlin.commons.adapter.ViewType
 import com.lishiyo.kotlin.commons.adapter.ViewTypeDelegateAdapter
+import com.lishiyo.kotlin.features.github.Constants
+import com.lishiyo.kotlin.features.github.ui.viewmodel.GithubUser
 
 /**
  * Created by connieli on 5/28/17.
  */
-class QuestionsAdapter(listener: QuestionDelegateAdapter.onViewSelectedListener? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GithubAdapter(listener: UserDelegateAdapter.onViewSelectedListener? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     // backing list
     private val items: ArrayList<ViewType> = ArrayList()
     // map of { ViewType constant => Delegate for that ViewType }
@@ -22,38 +22,16 @@ class QuestionsAdapter(listener: QuestionDelegateAdapter.onViewSelectedListener?
     }
 
     init {
-        delegateAdapters.put(Constants.QUESTION, QuestionDelegateAdapter(listener))
+        delegateAdapters.put(Constants.GITHUB_USER, UserDelegateAdapter(listener))
         // TODO: add loader type
     }
 
-    /**
-     * Set the questions to list.
-     */
-    fun setQuestions(questions: List<Question>) {
+    fun addUsers(users: List<GithubUser>) {
         // TODO: first remove loading and notify
         items.clear()
 
-        items.addAll(questions)
+        items.addAll(users)
         notifyDataSetChanged()
-    }
-
-    fun addQuestions(questions: List<Question>) {
-        val originalLength = items.size
-        items.addAll(questions)
-        notifyItemRangeInserted(originalLength, items.size)
-    }
-
-    fun addQuestion(question: Question) {
-        items.add(question)
-        notifyItemInserted(items.size - 1)
-    }
-
-    fun removeQuestion(question: Question) {
-        val oldPosition = items.indexOf(question)
-        if (oldPosition != -1) {
-            items.remove(question)
-            notifyItemRemoved(oldPosition)
-        }
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {

@@ -1,8 +1,8 @@
 package com.lishiyo.kotlin.di.github
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
-import com.lishiyo.kotlin.github.data.GithubApiService
-import com.lishiyo.kotlin.github.data.GithubManager
+import com.lishiyo.kotlin.features.github.data.GithubApiService
+import com.lishiyo.kotlin.features.github.data.GithubManager
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

@@ -35,7 +35,7 @@ class RootActivity : AppCompatActivity() {
                 when (menuItem.itemId) {
                     R.id.action_github -> viewpager.currentItem = 0
                     R.id.action_notes -> viewpager.currentItem = 1
-                    R.id.action_tumblr -> viewpager.currentItem = 2
+                    R.id.action_wifi -> viewpager.currentItem = 2
                     else -> viewpager.currentItem = 0
                 }
                 true

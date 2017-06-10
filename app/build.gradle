@@ -4,12 +4,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.lishiyo.kotlin.sandbox"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -19,6 +19,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/rxjava.properties'
     }
 }
 
@@ -36,6 +45,8 @@ dependencies {
     // retrofit + gson
     compile "com.squareup.retrofit2:retrofit:2.3.0"
     compile "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
+
+    // TODO switch to jackson-module-kotlin
     compile "com.squareup.retrofit2:converter-gson:2.3.0"
 
     // rxjava + rxbinding
@@ -75,7 +86,7 @@ dependencies {
 
     compile 'com.facebook.stetho:stetho:1.5.0'
     compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
-    compile 'com.google.firebase:firebase-database:10.2.4'
+    compile 'com.google.firebase:firebase-database:11.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

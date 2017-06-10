@@ -1,6 +1,6 @@
 package com.lishiyo.kotlin.di.casualq
 
-import com.lishiyo.kotlin.casualq.ui.QuestionsFragment
+import com.lishiyo.kotlin.features.casualq.ui.QuestionsFragment
 import com.lishiyo.kotlin.di.AppModule
 import dagger.Component
 import javax.inject.Singleton

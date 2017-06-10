@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.github.ui
+package com.lishiyo.kotlin.features.github.ui
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -11,8 +11,8 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.lishiyo.kotlin.App
 import com.lishiyo.kotlin.commons.ui.RxBaseFragment
-import com.lishiyo.kotlin.github.data.GithubManager
-import com.lishiyo.kotlin.github.ui.viewmodel.GithubUser
+import com.lishiyo.kotlin.features.github.data.GithubManager
+import com.lishiyo.kotlin.features.github.ui.viewmodel.GithubUser
 import com.lishiyo.kotlin.samples.retrofit.R
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

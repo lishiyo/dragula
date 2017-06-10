@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.casualq
+package com.lishiyo.kotlin.features.casualq
 
 /**
  * Created by connieli on 5/28/17.

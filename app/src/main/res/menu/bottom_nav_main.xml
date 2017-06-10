@@ -14,9 +14,9 @@
 		android:title="@string/tab_casual_q_label"
 		app:showAsAction="ifRoom" />
 	<item
-		android:id="@+id/action_tumblr"
+		android:id="@+id/action_wifi"
 		android:enabled="true"
 		android:icon="@android:drawable/ic_menu_myplaces"
-		android:title="@string/tab_tumblr_label"
+		android:title="@string/tab_wifi_label"
 		app:showAsAction="ifRoom" />
 </menu>

@@ -4,8 +4,8 @@ import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import com.lishiyo.kotlin.casualq.ui.QuestionsFragment
-import com.lishiyo.kotlin.github.ui.GithubFragment
+import com.lishiyo.kotlin.features.casualq.ui.QuestionsFragment
+import com.lishiyo.kotlin.features.github.ui.GithubFragment
 import com.lishiyo.kotlin.samples.retrofit.R
 
 /**
@@ -15,7 +15,7 @@ class RootPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     enum class Tab(val index: Int, @StringRes val titleResId: Int) {
         GITHUB(0, R.string.tab_github_label),
         CASUAL_Q(1, R.string.tab_casual_q_label),
-        TUMBLR(2, R.string.tab_tumblr_label);
+        WIFI_DETECTOR(2, R.string.tab_wifi_label);
 
         val title: String = App.getAppContext().resources.getString(titleResId)
     }
@@ -35,7 +35,7 @@ class RootPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getPageTitle(position: Int): CharSequence = when (position) {
         Tab.GITHUB.index -> Tab.GITHUB.title
         Tab.CASUAL_Q.index -> Tab.CASUAL_Q.title
-        Tab.TUMBLR.index -> Tab.TUMBLR.title
+        Tab.WIFI_DETECTOR.index -> Tab.WIFI_DETECTOR.title
         else -> "no title"
     }
 }

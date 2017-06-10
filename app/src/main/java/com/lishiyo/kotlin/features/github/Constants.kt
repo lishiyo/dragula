@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.github
+package com.lishiyo.kotlin.features.github
 
 /**
  * TODO: switch to enum

@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.github.data
+package com.lishiyo.kotlin.features.github.data
 
 
 interface GithubApiService {
@@ -20,7 +20,7 @@ interface GithubApiService {
                     .baseUrl("https://api.github.com/")
                     .build()
 
-            return retrofit.create(GithubApiService::class.java);
+            return retrofit.create(GithubApiService::class.java)
         }
     }
 }

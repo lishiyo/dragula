@@ -1,7 +1,7 @@
-package com.lishiyo.kotlin.casualq.ui.viewmodel
+package com.lishiyo.kotlin.features.casualq.ui.viewmodel
 
-import com.lishiyo.kotlin.casualq.Constants
-import com.lishiyo.kotlin.casualq.data.QuestionData
+import com.lishiyo.kotlin.features.casualq.Constants
+import com.lishiyo.kotlin.features.casualq.data.QuestionData
 import com.lishiyo.kotlin.commons.adapter.ViewType
 
 /**
@@ -13,10 +13,13 @@ import com.lishiyo.kotlin.commons.adapter.ViewType
  * Created by connieli on 5/28/17.
  */
 data class Question(
+        val _id: String = "", // firebase key
         val text: String = "",
-        val source: String = ""
+        val source: String = "",
+        val level: Int = 0,
+        val saved: Boolean = false
 ) : ViewType {
-    constructor(model: QuestionData) : this(model.text, model.source)
+    constructor(model: QuestionData) : this(model.id, model.text, model.source, model.level, model.saved)
 
     override fun getViewType(): Int = Constants.QUESTION
 

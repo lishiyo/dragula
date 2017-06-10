@@ -5,27 +5,89 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<android.support.v7.widget.RecyclerView
-		android:id="@+id/questions_list"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content" />
-
-	<!-- TODO: flip to FAB -->
-	<LinearLayout
+	<android.support.design.widget.AppBarLayout
+		android:id="@+id/appbar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		android:layout_gravity="bottom">
-		<EditText
-			android:id="@+id/temp_add_text"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+		android:fitsSystemWindows="true">
+
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/toolbar"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
-		<Button
-			android:id="@+id/temp_add_button"
+			android:layout_height="?attr/actionBarSize"
+			app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+			app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+			/>
+
+		<!--<android.support.design.widget.TabLayout-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="?attr/actionBarSize"-->
+			<!--app:layout_scrollFlags="scroll|enterAlways"/>-->
+
+	</android.support.design.widget.AppBarLayout>
+
+	<android.support.v4.widget.NestedScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+		<LinearLayout
+			android:orientation="vertical"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="Add New Item"/>
-	</LinearLayout>
+			android:layout_height="match_parent">
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:layout_gravity="top">
+				<Button
+					android:id="@+id/btn_delete_all"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:text="Add"/>
+				<Button
+					android:id="@+id/btn_reseed"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:text="Add"/>
+			</LinearLayout>
+
+			<!-- firebase list -->
+			<android.support.v7.widget.RecyclerView
+				android:id="@+id/questions_list"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				/>
+
+			<!-- TODO: flip to FAB -->
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:layout_gravity="bottom">
+				<EditText
+					android:id="@+id/add_question_text"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					android:layout_height="match_parent"
+					android:hint="add another question"
+					/>
+				<Button
+					android:id="@+id/btn_add_question"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:text="Add"/>
+			</LinearLayout>
+		</LinearLayout>
+
+
+
+
+	</android.support.v4.widget.NestedScrollView>
 
 	<!--<android.support.design.widget.FloatingActionButton-->
 		<!--android:layout_width="wrap_content"-->
