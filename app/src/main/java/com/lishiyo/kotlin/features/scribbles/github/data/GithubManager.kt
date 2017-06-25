@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.github.data
+package com.lishiyo.kotlin.features.scribbles.github.data
 
 /**
  * API wrapper around github api service

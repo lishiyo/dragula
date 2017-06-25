@@ -1,11 +1,11 @@
-package com.lishiyo.kotlin.features.github.ui
+package com.lishiyo.kotlin.features.scribbles.github.ui
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.lishiyo.kotlin.commons.adapter.ViewType
 import com.lishiyo.kotlin.commons.adapter.ViewTypeDelegateAdapter
 import com.lishiyo.kotlin.commons.extensions.inflate
-import com.lishiyo.kotlin.features.github.ui.viewmodel.GithubUser
+import com.lishiyo.kotlin.features.scribbles.github.ui.viewmodel.GithubUser
 import com.lishiyo.kotlin.samples.retrofit.R
 import kotlinx.android.synthetic.main.list_item_github_user.view.*
 

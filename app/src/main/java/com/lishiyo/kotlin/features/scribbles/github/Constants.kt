@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.github
+package com.lishiyo.kotlin.features.scribbles.github
 
 /**
  * TODO: switch to enum

@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.lishiyo.kotlin.features.toolkit.wifi_fencer.WifiFencerActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">kotlin-sandbox</string>
 
-    <string name="tab_github_label">github</string>
+    <string name="tab_toolkit_label">toolkit</string>
     <string name="tab_casual_q_label">casual q</string>
-    <string name="tab_wifi_label">wifi</string>
+    <string name="tab_scribbles_label">scribbles</string>
+
+    <string name="label_wifi_fencer">Wifi fencer</string>
+    <string name="label_github">GitHub demo</string>
 </resources>

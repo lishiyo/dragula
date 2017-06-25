@@ -5,7 +5,7 @@
 		android:id="@+id/action_github"
 		android:enabled="true"
 		android:icon="@android:drawable/ic_menu_search"
-		android:title="@string/tab_github_label"
+		android:title="@string/tab_toolkit_label"
 		app:showAsAction="ifRoom" />
 	<item
 		android:id="@+id/action_notes"
@@ -17,6 +17,6 @@
 		android:id="@+id/action_wifi"
 		android:enabled="true"
 		android:icon="@android:drawable/ic_menu_myplaces"
-		android:title="@string/tab_wifi_label"
+		android:title="@string/tab_scribbles_label"
 		app:showAsAction="ifRoom" />
 </menu>

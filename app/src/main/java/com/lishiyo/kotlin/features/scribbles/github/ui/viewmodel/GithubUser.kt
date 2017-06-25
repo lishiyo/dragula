@@ -1,8 +1,8 @@
-package com.lishiyo.kotlin.features.github.ui.viewmodel
+package com.lishiyo.kotlin.features.scribbles.github.ui.viewmodel
 
 import com.lishiyo.kotlin.commons.adapter.ViewType
-import com.lishiyo.kotlin.features.github.Constants
-import com.lishiyo.kotlin.features.github.data.User
+import com.lishiyo.kotlin.features.scribbles.github.Constants
+import com.lishiyo.kotlin.features.scribbles.github.data.User
 
 /**
  * View model versions of the data.

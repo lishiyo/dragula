@@ -5,7 +5,9 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import com.lishiyo.kotlin.features.casualq.ui.QuestionsFragment
-import com.lishiyo.kotlin.features.github.ui.GithubFragment
+import com.lishiyo.kotlin.features.scribbles.ScribblesFragment
+import com.lishiyo.kotlin.features.scribbles.github.ui.GithubFragment
+import com.lishiyo.kotlin.features.toolkit.ToolkitFragment
 import com.lishiyo.kotlin.samples.retrofit.R
 
 /**
@@ -13,17 +15,18 @@ import com.lishiyo.kotlin.samples.retrofit.R
  */
 class RootPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     enum class Tab(val index: Int, @StringRes val titleResId: Int) {
-        GITHUB(0, R.string.tab_github_label),
-        CASUAL_Q(1, R.string.tab_casual_q_label),
-        WIFI_DETECTOR(2, R.string.tab_wifi_label);
+        TOOLKIT(0, R.string.tab_toolkit_label),
+        Q(1, R.string.tab_casual_q_label),
+        SCRIBBLES(2, R.string.tab_scribbles_label);
 
         val title: String = App.getAppContext().resources.getString(titleResId)
     }
 
     // Returns the fragment to display for that page
     override fun getItem(position: Int): Fragment = when (position) {
-        Tab.GITHUB.index -> GithubFragment.newInstance(null)
-        Tab.CASUAL_Q.index -> QuestionsFragment.newInstance(null)
+        Tab.TOOLKIT.index -> ToolkitFragment.newInstance(null)
+        Tab.Q.index -> QuestionsFragment.newInstance(null)
+        Tab.SCRIBBLES.index -> ScribblesFragment.newInstance(null)
         else -> GithubFragment.newInstance(null)
     }
 
@@ -33,9 +36,9 @@ class RootPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     // Returns the page title for the top indicator
     override fun getPageTitle(position: Int): CharSequence = when (position) {
-        Tab.GITHUB.index -> Tab.GITHUB.title
-        Tab.CASUAL_Q.index -> Tab.CASUAL_Q.title
-        Tab.WIFI_DETECTOR.index -> Tab.WIFI_DETECTOR.title
+        Tab.TOOLKIT.index -> Tab.TOOLKIT.title
+        Tab.Q.index -> Tab.Q.title
+        Tab.SCRIBBLES.index -> Tab.SCRIBBLES.title
         else -> "no title"
     }
 }

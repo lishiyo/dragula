@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.wifi_detector
+package com.lishiyo.kotlin.features.toolkit.wifi_detector
 
 import android.content.BroadcastReceiver
 import android.content.Context
