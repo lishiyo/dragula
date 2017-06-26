@@ -1,16 +1,15 @@
 package com.lishiyo.kotlin.features.scribbles.github.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.lishiyo.kotlin.App
-import com.lishiyo.kotlin.commons.ui.RxBaseFragment
+import com.lishiyo.kotlin.commons.ui.RxBaseActivity
 import com.lishiyo.kotlin.features.scribbles.github.data.GithubManager
 import com.lishiyo.kotlin.features.scribbles.github.ui.viewmodel.GithubUser
 import com.lishiyo.kotlin.samples.retrofit.R
@@ -19,10 +18,9 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
- * Created by connieli on 5/28/17.
+ * Created by connieli on 6/25/17.
  */
-class GithubFragment: RxBaseFragment(), UserDelegateAdapter.onViewSelectedListener {
-
+class GithubActivity : RxBaseActivity(), UserDelegateAdapter.onViewSelectedListener  {
     // Data
     @Inject lateinit var repository: GithubManager
 
@@ -31,28 +29,27 @@ class GithubFragment: RxBaseFragment(), UserDelegateAdapter.onViewSelectedListen
     private val githubAdapter = GithubAdapter(this)
 
     companion object {
-        @JvmStatic val FRAGMENT_TAG = GithubFragment::class.java.simpleName
+//        @JvmStatic val FRAGMENT_TAG = GithubFragment::class.java.simpleName
 
-        fun newInstance(bundle: Bundle?): GithubFragment {
-            val f = GithubFragment()
-            f.arguments = bundle
-            return f
+//        fun newInstance(bundle: Bundle?): GithubFragment {
+//            val f = GithubFragment()
+//            f.arguments = bundle
+//            return f
+//        }
+
+        fun createIntent(context: Context, bundle: Bundle?): Intent {
+            val intent = Intent(context, GithubActivity::class.java)
+            bundle?.let { intent.putExtras(it) }
+            return intent
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_github)
+
+        ButterKnife.bind(this)
         App.githubComponent.inject(this)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View = inflater.inflate(R.layout.fragment_github, container, false)
-        ButterKnife.bind(this, view)
-        return view
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
 
         list.apply {
             setHasFixedSize(true)
@@ -82,5 +79,4 @@ class GithubFragment: RxBaseFragment(), UserDelegateAdapter.onViewSelectedListen
     override fun onItemSelected(item: GithubUser?) {
         Log.i("connie", "clicked github user! ${item?.login}")
     }
-
 }

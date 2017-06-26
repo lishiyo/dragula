@@ -8,14 +8,13 @@ import android.widget.Button
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.lishiyo.kotlin.commons.ui.RxBaseFragment
-import com.lishiyo.kotlin.features.scribbles.github.ui.GithubFragment
+import com.lishiyo.kotlin.features.scribbles.github.ui.GithubActivity
 import com.lishiyo.kotlin.samples.retrofit.R
 
 /**
  * Created by connieli on 6/24/17.
  */
 class ScribblesFragment: RxBaseFragment() {
-
 
     // UI
     @BindView(R.id.github_btn) lateinit var githubBtn: Button
@@ -41,12 +40,15 @@ class ScribblesFragment: RxBaseFragment() {
 
     fun initClickListeners() {
         githubBtn.setOnClickListener {
-            val githubFrag = GithubFragment.newInstance(null)
-            fragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, githubFrag, GithubFragment.FRAGMENT_TAG)
-                    .addToBackStack(null)
-                    .commit()
+            val intent = GithubActivity.createIntent(context, null)
+            activity.startActivity(intent)
+
+//            val githubFrag = GithubFragment.newInstance(null)
+//            fragmentManager
+//                    .beginTransaction()
+//                    .replace(R.id.container, githubFrag, GithubFragment.FRAGMENT_TAG)
+//                    .addToBackStack(null)
+//                    .commit()
         }
     }
 }

@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import com.lishiyo.kotlin.features.casualq.ui.QuestionsFragment
 import com.lishiyo.kotlin.features.scribbles.ScribblesFragment
-import com.lishiyo.kotlin.features.scribbles.github.ui.GithubFragment
 import com.lishiyo.kotlin.features.toolkit.ToolkitFragment
 import com.lishiyo.kotlin.samples.retrofit.R
 
@@ -27,7 +26,7 @@ class RootPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         Tab.TOOLKIT.index -> ToolkitFragment.newInstance(null)
         Tab.Q.index -> QuestionsFragment.newInstance(null)
         Tab.SCRIBBLES.index -> ScribblesFragment.newInstance(null)
-        else -> GithubFragment.newInstance(null)
+        else -> ToolkitFragment.newInstance(null)
     }
 
     override fun getCount(): Int {
