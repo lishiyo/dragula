@@ -8,3 +8,11 @@ package com.lishiyo.kotlin.features.toolkit.dragndrop.models
 interface Block {
     // com.tumblr.rumblr.model.post.outgoing.blocks.Block.Builder getBuilder()
 }
+
+class TextBlock : Block {
+
+}
+
+class ImageBlock : Block {
+
+}

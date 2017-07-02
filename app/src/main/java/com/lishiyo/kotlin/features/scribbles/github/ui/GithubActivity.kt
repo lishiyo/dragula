@@ -30,14 +30,6 @@ class GithubActivity : RxBaseActivity(), UserDelegateAdapter.onViewSelectedListe
     private val githubAdapter = GithubAdapter(this)
 
     companion object {
-//        @JvmStatic val FRAGMENT_TAG = GithubFragment::class.java.simpleName
-
-//        fun newInstance(bundle: Bundle?): GithubFragment {
-//            val f = GithubFragment()
-//            f.arguments = bundle
-//            return f
-//        }
-
         fun createIntent(context: Context, bundle: Bundle?): Intent {
             val intent = Intent(context, GithubActivity::class.java)
             bundle?.let { intent.putExtras(it) }

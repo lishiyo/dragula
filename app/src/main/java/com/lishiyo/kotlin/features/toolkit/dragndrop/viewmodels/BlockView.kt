@@ -1,5 +1,8 @@
 package com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels
 
+import android.content.Context
+import android.util.AttributeSet
+import android.widget.LinearLayout
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
 
 /**
@@ -16,4 +19,10 @@ interface BlockView {
     fun getBlock(): Block?
 
     fun initDragAndDrop()
+
+    // successful drop - resize the view to shortest photo in row
+    fun onDrop(successful: Boolean)
+
+    // max num of this blockview type in a DroppableContainer
+    fun limitInContainer() : Boolean
 }

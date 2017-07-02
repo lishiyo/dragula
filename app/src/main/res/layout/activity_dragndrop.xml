@@ -5,7 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
-	tools:context="com.lishiyo.kotlin.features.toolkit.dragndrop.DragDropActivity">
+	tools:context="com.lishiyo.kotlin.features.toolkit.dragndrop.DragNDropActivity">
 
 	<!-- canvas zone -->
 	<com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
@@ -14,7 +14,7 @@
 		android:layout_height="match_parent"
 		android:layout_alignParentEnd="true"
 		android:layout_above="@+id/block_picker_toolbar"
-		android:background="@android:color/darker_gray"
+		android:background="@android:color/white"
 		>
 
 		<!-- actual layout for the blocks -->
@@ -33,7 +33,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="66dp"
 		android:orientation="horizontal"
-		android:background="@android:color/white"
+		android:background="@android:color/holo_green_light"
 		android:layout_alignParentBottom="true"
 		>
 	</LinearLayout>

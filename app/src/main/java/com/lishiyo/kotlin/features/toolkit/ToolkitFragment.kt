@@ -8,7 +8,7 @@ import android.widget.Button
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.lishiyo.kotlin.commons.ui.RxBaseFragment
-import com.lishiyo.kotlin.features.toolkit.dragndrop.DragDropActivity
+import com.lishiyo.kotlin.features.toolkit.dragndrop.DragNDropActivity
 import com.lishiyo.kotlin.features.toolkit.wifi_fencer.WifiFencerActivity
 import com.lishiyo.kotlin.samples.retrofit.R
 
@@ -48,7 +48,7 @@ class ToolkitFragment: RxBaseFragment() {
         }
 
         dragDropBtn.setOnClickListener {
-            val intent = DragDropActivity.createIntent(context, null)
+            val intent = DragNDropActivity.createIntent(context, null)
             activity.startActivity(intent)
         }
     }
