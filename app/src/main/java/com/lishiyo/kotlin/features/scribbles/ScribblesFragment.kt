@@ -42,13 +42,6 @@ class ScribblesFragment: RxBaseFragment() {
         githubBtn.setOnClickListener {
             val intent = GithubActivity.createIntent(context, null)
             activity.startActivity(intent)
-
-//            val githubFrag = GithubFragment.newInstance(null)
-//            fragmentManager
-//                    .beginTransaction()
-//                    .replace(R.id.container, githubFrag, GithubFragment.FRAGMENT_TAG)
-//                    .addToBackStack(null)
-//                    .commit()
         }
     }
 }

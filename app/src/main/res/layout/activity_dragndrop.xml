@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/canvas_layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	tools:context="com.lishiyo.kotlin.features.toolkit.dragndrop.DragDropActivity">
+
+	<!-- canvas zone -->
+	<com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
+		android:id="@+id/canvas_scrollview"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_alignParentEnd="true"
+		android:layout_above="@+id/block_picker_toolbar"
+		android:background="@android:color/darker_gray"
+		>
+
+		<!-- actual layout for the blocks -->
+		<LinearLayout
+			android:id="@+id/temp_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:paddingTop="16dp"
+			android:paddingBottom="16dp" />
+	</com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView>
+
+	<!-- block picker toolbar -->
+	<LinearLayout
+		android:id="@+id/block_picker_toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="66dp"
+		android:orientation="horizontal"
+		android:background="@android:color/white"
+		android:layout_alignParentBottom="true"
+		>
+	</LinearLayout>
+
+	<!-- trash can icon -->
+	<ImageView
+		android:id="@+id/canvas_trash"
+		android:layout_width="56dp"
+		android:layout_height="56dp"
+		android:layout_alignParentBottom="true"
+		android:layout_marginBottom="80dp"
+		android:layout_centerHorizontal="true"
+		android:layout_gravity="bottom|center_horizontal"
+		android:background="@drawable/ic_btn_trash_bg"
+		android:scaleType="center"
+		android:src="@drawable/ic_btn_trash"
+		android:visibility="gone"
+		tools:visibility="visible" />
+</RelativeLayout>

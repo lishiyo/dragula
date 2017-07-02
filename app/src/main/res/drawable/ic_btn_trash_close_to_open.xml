@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:aapt="http://schemas.android.com/aapt"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:drawable="@drawable/ic_btn_trash_open"
+	tools:ignore="MissingPrefix">
+
+	<target android:name="trash_1">
+		<aapt:attr name="android:animation">
+			<objectAnimator
+				android:duration="@integer/canvas_trash_animation_duration"
+				android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+				android:propertyName="fillColor"
+				android:valueFrom="#8F8F8F"
+				android:valueTo="#FFFFFF"
+				android:valueType="colorType" />
+		</aapt:attr>
+	</target>
+
+	<target android:name="trash_2">
+		<aapt:attr name="android:animation">
+			<objectAnimator
+				android:duration="@integer/canvas_trash_animation_duration"
+				android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+				android:propertyName="fillColor"
+				android:valueFrom="#8F8F8F"
+				android:valueTo="#FFFFFF"
+				android:valueType="colorType" />
+		</aapt:attr>
+	</target>
+
+	<target android:name="trash_3">
+		<aapt:attr name="android:animation">
+			<objectAnimator
+				android:duration="@integer/canvas_trash_animation_duration"
+				android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+				android:propertyName="fillColor"
+				android:valueFrom="#8F8F8F"
+				android:valueTo="#FFFFFF"
+				android:valueType="colorType" />
+		</aapt:attr>
+	</target>
+
+	<target android:name="trash_lid">
+		<aapt:attr name="android:animation">
+			<set>
+				<objectAnimator
+					android:duration="@integer/canvas_trash_animation_duration"
+					android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+					android:propertyName="fillColor"
+					android:valueFrom="#8F8F8F"
+					android:valueTo="#FFFFFF"
+					android:valueType="colorType" />
+				<objectAnimator
+					android:duration="@integer/canvas_trash_animation_duration"
+					android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+					android:propertyName="pathData"
+					android:valueFrom="M29.02,16C29.56,15.96 30.01,15.56 30,15C30.01,14.5 29.56,14.13 29,14L17,14C16.47,14.13 16,14.5 16,15C16,15.56 16.59,15.96 17.14,16L29.02,16Z"
+					android:valueTo="M29.1,13.94C29.63,13.81 30,13.33 29.89,12.78C29.81,12.29 29.31,12 28.74,11.97L16.92,14.06C16.42,14.28 16.02,14.72 16.11,15.22C16.21,15.76 16.85,16.06 17.4,16L29.1,13.94Z"
+					android:valueType="pathType" />
+			</set>
+		</aapt:attr>
+	</target>
+
+	<target android:name="trash">
+		<aapt:attr name="android:animation">
+			<objectAnimator
+				android:duration="@integer/canvas_trash_animation_duration"
+				android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+				android:propertyName="rotation"
+				android:valueFrom="0"
+				android:valueTo="-10"
+				android:pivotX="22.5"
+				android:pivotY="22.5" />
+		</aapt:attr>
+	</target>
+
+</animated-vector>

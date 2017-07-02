@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lishiyo.kotlin.commons.extensions.loadJsonFromFile
+import com.lishiyo.kotlin.features.casualq.Constants.DEBUG_TAG
 import io.reactivex.Observable
 
 /**
@@ -48,7 +49,7 @@ class QuestionsManager {
 
     fun populateFirebaseFromLocal(context: Context, firebaseRef: DatabaseReference, vararg filenames: String) {
         for (file in filenames) {
-            Log.i("connie", "populating from file: " + file)
+            Log.i(DEBUG_TAG, "populating from file: " + file)
 
             val res = context.loadJsonFromFile(file)
 

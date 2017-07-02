@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+	android:width="24dp"
+	android:height="24dp"
+	android:viewportHeight="88.0"
+	android:viewportWidth="88.0">
+	<path
+		android:name="trash_bg"
+		android:fillColor="#F2F2F2"
+		android:pathData="M44,44m-41.5,0a41.5,41.5 0,1 1,83 0a41.5,41.5 0,1 1,-83 0"
+		android:strokeColor="#8F8F8F"
+		android:strokeWidth="1" />
+</vector>

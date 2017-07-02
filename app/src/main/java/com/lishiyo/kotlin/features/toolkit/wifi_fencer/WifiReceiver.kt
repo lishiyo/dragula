@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.toolkit.wifi_detector
+package com.lishiyo.kotlin.features.toolkit.wifi_fencer
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -11,7 +11,7 @@ import android.widget.Toast
 /**
  * Created by connieli on 6/9/17.
  */
-class ConnectionReceiver(wifiManager: WifiManager) : BroadcastReceiver() {
+class WifiReceiver(wifiManager: WifiManager) : BroadcastReceiver() {
     val wifiManager = wifiManager
 
     override fun onReceive(context: Context?, intent: Intent?) {

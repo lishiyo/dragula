@@ -8,6 +8,7 @@ import android.widget.Button
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.lishiyo.kotlin.commons.ui.RxBaseFragment
+import com.lishiyo.kotlin.features.toolkit.dragndrop.DragDropActivity
 import com.lishiyo.kotlin.features.toolkit.wifi_fencer.WifiFencerActivity
 import com.lishiyo.kotlin.samples.retrofit.R
 
@@ -18,6 +19,7 @@ class ToolkitFragment: RxBaseFragment() {
 
     // UI
     @BindView(R.id.wifi_fencer_btn) lateinit var wifiFencerBtn: Button
+    @BindView(R.id.dragndrop_btn) lateinit var dragDropBtn: Button
 
     companion object {
         fun newInstance(bundle: Bundle?): ToolkitFragment {
@@ -42,6 +44,11 @@ class ToolkitFragment: RxBaseFragment() {
         // open wifi fencer activity
         wifiFencerBtn.setOnClickListener {
             val intent = WifiFencerActivity.createIntent(context, null)
+            activity.startActivity(intent)
+        }
+
+        dragDropBtn.setOnClickListener {
+            val intent = DragDropActivity.createIntent(context, null)
             activity.startActivity(intent)
         }
     }

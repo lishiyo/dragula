@@ -14,6 +14,7 @@ import butterknife.ButterKnife
 import com.google.firebase.database.*
 import com.lishiyo.kotlin.App
 import com.lishiyo.kotlin.commons.ui.RxBaseFragment
+import com.lishiyo.kotlin.features.casualq.Constants.DEBUG_TAG
 import com.lishiyo.kotlin.features.casualq.data.Listing
 import com.lishiyo.kotlin.features.casualq.data.QuestionData
 import com.lishiyo.kotlin.features.casualq.data.QuestionsManager
@@ -103,13 +104,13 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
                             // convert data to viewmodels
                             val questions = Question.createFromList(results)
                             questionsAdapter.setQuestions(questions)
-                        }, { throwable -> Log.e("connie", throwable.message) }),
+                        }, { throwable -> Log.e(DEBUG_TAG, throwable.message) }),
                 redditSeedPostObservable.subscribe(
                         { results ->
-                            Log.d("connie", "results listing size: " + results.size)
+                            Log.d(DEBUG_TAG, "results listing size: " + results.size)
                             // TODO: parse into Question form => store into local file => populate firebase
 
-                        }, { throwable -> Log.e("connie", throwable.message) })
+                        }, { throwable -> Log.e(DEBUG_TAG, throwable.message) })
         )
     }
 
@@ -121,20 +122,20 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
         // of the database reference.
         rootChildEventListener = object : ChildEventListener {
             override fun onCancelled(error: DatabaseError?) {
-                Log.d("connie", "Failed to read value.", error?.toException())
+                Log.d(DEBUG_TAG, "Failed to read value.", error?.toException())
             }
 
             override fun onChildMoved(dataSnapshot: DataSnapshot?, previousChildName: String?) {
-                Log.d("connie", "onChildMoved! $previousChildName")
+                Log.d(DEBUG_TAG, "onChildMoved! $previousChildName")
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot?, previousChildName: String?) {
-                Log.d("connie", "onChildChanged! $previousChildName")
+                Log.d(DEBUG_TAG, "onChildChanged! $previousChildName")
             }
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {
                 val question = dataSnapshot.getValue(Question::class.java)
-                Log.d("connie", "onChildRemoved! " + question!!.text)
+                Log.d(DEBUG_TAG, "onChildRemoved! " + question!!.text)
                 questionsAdapter.removeQuestion(question!!)
             }
 
@@ -143,7 +144,7 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
             // each time a new child is added.
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val question = dataSnapshot.getValue(Question::class.java)
-                Log.d("connie", "onChildAdded! " + question!!.text)
+                Log.d(DEBUG_TAG, "onChildAdded! " + question!!.text)
                 questionsAdapter.addQuestion(question!!)
             }
         }
@@ -194,12 +195,12 @@ class QuestionsFragment : RxBaseFragment(), QuestionDelegateAdapter.onViewSelect
 
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError?) {
-                Log.e("connie", "delete failed: " + question.text)
+                Log.e(DEBUG_TAG, "delete failed: " + question.text)
             }
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.hasChildren()) {
-                    Log.i("connie", "data changed for: " + question.text)
+                    Log.i(DEBUG_TAG, "data changed for: " + question.text)
                 }
             }
         })

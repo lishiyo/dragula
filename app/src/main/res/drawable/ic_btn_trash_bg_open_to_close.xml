@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:aapt="http://schemas.android.com/aapt"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:drawable="@drawable/ic_btn_trash_bg_selected"
+	tools:ignore="MissingPrefix">
+
+	<target android:name="trash_bg">
+		<aapt:attr name="android:animation">
+			<set>
+				<objectAnimator
+					android:duration="@integer/canvas_trash_animation_duration"
+					android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+					android:propertyName="fillColor"
+					android:valueFrom="#D95E40"
+					android:valueTo="#F2F2F2"
+					android:valueType="colorType" />
+				<objectAnimator
+					android:duration="@integer/canvas_trash_animation_duration"
+					android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+					android:propertyName="strokeColor"
+					android:valueFrom="#00000000"
+					android:valueTo="#8F8F8F"
+					android:valueType="colorType" />
+				<objectAnimator
+					android:duration="@integer/canvas_trash_animation_duration"
+					android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+					android:propertyName="pathData"
+					android:valueFrom="M44,44m-42,0a42,42 0,1 1,84 0a42,42 0,1 1,-84 0"
+					android:valueTo="M44,44m-41.5,0a41.5,41.5 0,1 1,83 0a41.5,41.5 0,1 1,-83 0"
+					android:valueType="pathType" />
+			</set>
+		</aapt:attr>
+	</target>
+</animated-vector>

@@ -3,7 +3,8 @@
 ## Toolkit
 
 little demos for personal use:
-- geofencer - turn on and off wifi when nearing home or work
+- WifiFencer - turn on and off wifi when nearing home or work
+- Drag n' Drop - drag n' drop demo
 
 ## CasualQ
 
@@ -23,7 +24,7 @@ TODO: SillyQ, DeepQ
 
 ## Scribbles
 
-Just for practice.
+Just for practice, ref, junk etc.
 
 ### Libraries
 * Retrofit + RxJava + RxBinding

@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+	android:width="56dp"
+	android:height="56dp"
+	android:viewportHeight="45.0"
+	android:viewportWidth="45.0">
+	<group android:name="trash"
+		android:rotation="-10"
+		android:pivotX="22.5"
+		android:pivotY="22.5">
+		<path
+			android:name="trash_1"
+			android:fillColor="#FFFFFF"
+			android:pathData="M28,19L28,28C28.09,28.66 27.66,29 27,29L19,29C18.49,29 18.06,28.66 18,28L18,19C18,18.42 17.56,17.99 17,18C16.5,17.99 16.01,18.42 16,19L16,28.54C16.01,30.13 17.44,30.99 19.03,31L27,31C28.81,30.99 30.01,30.17 30,28.54L30,19C30.01,18.42 29.5,17.99 29,18C28.44,17.99 28.02,18.47 28,19Z" />
+		<path
+			android:name="trash_2"
+			android:fillColor="#FFFFFF"
+			android:pathData="M20,26C20,26 20,27.01 21,27C22,26.99 22,26 22,26L22,19C22.01,18.47 21.58,17.99 21,18C20.52,17.99 20,18.48 20,19L20,26Z" />
+		<path
+			android:name="trash_3"
+			android:fillColor="#FFFFFF"
+			android:pathData="M24,26C24,26 24,27.01 25,27C26,26.99 26,26 26,26L26,19C26.01,18.47 25.58,17.99 25,18C24.52,17.99 24,18.48 24,19L24,26Z" />
+		<path
+			android:name="trash_lid"
+			android:fillColor="#FFFFFF"
+			android:pathData="M29.1,13.94C29.63,13.81 30,13.33 29.89,12.78C29.81,12.29 29.31,12 28.74,11.97L16.92,14.06C16.42,14.28 16.02,14.72 16.11,15.22C16.21,15.76 16.85,16.06 17.4,16L29.1,13.94Z" />
+	</group>
+</vector>
