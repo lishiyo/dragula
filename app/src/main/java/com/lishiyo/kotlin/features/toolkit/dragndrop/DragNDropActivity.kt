@@ -27,7 +27,7 @@ class DragNDropActivity : RxBaseActivity() {
     // contains the blocks
     @BindView(R.id.temp_layout) lateinit var contentLayout: LinearLayout
     // bottom bar to select current block
-    @BindView(R.id.block_picker_toolbar) lateinit var blockPickerBar: LinearLayout
+    @BindView(R.id.block_picker_bar) lateinit var blockPickerBar: LinearLayout
     // trashcan icon
     @BindView(R.id.canvas_trash) lateinit var trash: ImageView
 

@@ -32,7 +32,7 @@ class MaxOneBlockView @JvmOverloads constructor(
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun limitInContainer(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun limitPerContainer(): Int {
+        return 1
     }
 }

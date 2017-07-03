@@ -11,9 +11,8 @@ interface ObservableScrollable {
 
     /**
      * Set the scroll changed callback.
-
      * @param callback
-     * *      the [OnScrollChangedCallback].
+     *       the [OnScrollChangedCallback].
      */
     fun setOnScrollChangedCallback(callback: OnScrollChangedCallback)
 }
@@ -26,12 +25,10 @@ interface OnScrollChangedCallback {
 
     /**
      * Callback for when the scroll has changed.
-
      * @param l
-     * *      the horizontal scroll.
-     * *
+     *      the horizontal scroll.
      * @param t
-     * *      the vertical scroll.
+     *      the vertical scroll.
      */
     fun onScroll(l: Int, t: Int)
 

@@ -5,7 +5,9 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
-	tools:context="com.lishiyo.kotlin.features.toolkit.dragndrop.DragNDropActivity">
+	tools:context="com.lishiyo.kotlin.features.toolkit.dragndrop.DragNDropActivity"
+	tools:targetApi="O"
+	>
 
 	<!-- canvas zone -->
 	<com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
@@ -13,7 +15,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_alignParentEnd="true"
-		android:layout_above="@+id/block_picker_toolbar"
+		android:layout_above="@+id/block_picker_bar"
 		android:background="@android:color/white"
 		>
 
@@ -28,15 +30,16 @@
 	</com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView>
 
 	<!-- block picker toolbar -->
-	<LinearLayout
-		android:id="@+id/block_picker_toolbar"
+	<com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockPickerBar
+		android:id="@+id/block_picker_bar"
+		tools:layout="@layout/block_picker_bar"
 		android:layout_width="match_parent"
 		android:layout_height="66dp"
 		android:orientation="horizontal"
 		android:background="@android:color/holo_green_light"
 		android:layout_alignParentBottom="true"
 		>
-	</LinearLayout>
+	</com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockPickerBar>
 
 	<!-- trash can icon -->
 	<ImageView

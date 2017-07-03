@@ -2,25 +2,22 @@ package com.lishiyo.kotlin.features.toolkit.dragndrop.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.LinearLayout
-import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
+import com.lishiyo.kotlin.samples.retrofit.R
 
 /**
- * Base class for the drop zone containers.
- *
- * Created by connieli on 7/1/17.
+ * Created by connieli on 7/2/17.
  */
-class DroppableContainer @JvmOverloads constructor(
+class BlockPickerBar @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0,
         defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyle, defStyleRes) {
 
-    val blockViewsList = arrayListOf<BlockView>()
-
     init {
-//        LayoutInflater.from(context).inflate(R.layout.view_custom_component, this, true)
+        LayoutInflater.from(context).inflate(R.layout.block_picker_bar, this, true)
         orientation = VERTICAL
     }
 
