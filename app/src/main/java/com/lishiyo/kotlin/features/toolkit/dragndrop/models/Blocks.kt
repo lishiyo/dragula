@@ -9,10 +9,8 @@ interface Block {
     // com.tumblr.rumblr.model.post.outgoing.blocks.Block.Builder getBuilder()
 }
 
-class TextBlock : Block {
+// TextBlock
+class MaxOneBlock : Block
 
-}
-
-class ImageBlock : Block {
-
-}
+// ImageBlock
+class MaxThreeBlock : Block

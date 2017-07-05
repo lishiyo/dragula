@@ -5,8 +5,8 @@ import android.util.Log
 import com.google.firebase.database.DatabaseReference
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
 import com.lishiyo.kotlin.commons.extensions.loadJsonFromFile
-import com.lishiyo.kotlin.features.casualq.Constants.DEBUG_TAG
 import io.reactivex.Observable
 
 /**

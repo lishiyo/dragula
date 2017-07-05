@@ -12,7 +12,8 @@ import com.lishiyo.kotlin.commons.ui.RxBaseActivity
 import com.lishiyo.kotlin.di.dragndrop.DaggerDragNDropComponent
 import com.lishiyo.kotlin.di.dragndrop.DragNDropModule
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
-import com.lishiyo.kotlin.features.toolkit.dragndrop.models.TextBlock
+import com.lishiyo.kotlin.features.toolkit.dragndrop.models.MaxOneBlock
+import com.lishiyo.kotlin.features.toolkit.dragndrop.models.MaxThreeBlock
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.DroppableContainer
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
@@ -63,17 +64,37 @@ class DragNDropActivity : RxBaseActivity() {
     }
 
     private fun initContentLayout() {
-        // add first row with default block
-        layoutHelper.clearAndSetBlockRows(arrayListOf(createInitialBlockRow()))
+        // add initial rows - first with a MaxOne, second with a MaxThree
+        layoutHelper.clearAndSetBlockRows(createInitialBlockRows())
     }
 
-    private fun createInitialBlockRow(): DroppableContainer {
-        // create the block, set to a block view
-        val firstBlock = TextBlock()
-        val blockView = blockViewProviderMap[TextBlock::class.java]?.get()!!
-        blockView.setBlock(firstBlock)
+    private fun createInitialBlockRows(): List<DroppableContainer> {
+        val initialRows = mutableListOf<DroppableContainer>()
+        initialRows.add(createMaxOneBlockRow())
+        initialRows.add(createMaxThreeBlockRow())
+        return initialRows
+    }
 
-        // create the first block row
+    private fun createMaxOneBlockRow(): DroppableContainer  {
+        // create the block, set to a block view
+        val textBlock = MaxOneBlock()
+        val blockView = blockViewProviderMap[MaxOneBlock::class.java]?.get()!!
+        blockView.setBlock(textBlock)
+
+        // create the first block row with MaxOne
+        val firstBlockRow = DroppableContainer(this)
+        firstBlockRow.setBlockViews(blockView)
+
+        return firstBlockRow
+    }
+
+    private fun createMaxThreeBlockRow(): DroppableContainer {
+        // create the block, set to a block view
+        val imageBlock = MaxThreeBlock()
+        val blockView = blockViewProviderMap[MaxThreeBlock::class.java]?.get()!!
+        blockView.setBlock(imageBlock)
+
+        // create the second block row with MaxThree
         val firstBlockRow = DroppableContainer(this)
         firstBlockRow.setBlockViews(blockView)
 
@@ -86,4 +107,5 @@ class DragNDropActivity : RxBaseActivity() {
                 .build()
         dragNDropComponent.inject(this)
     }
+
 }

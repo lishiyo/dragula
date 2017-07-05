@@ -13,8 +13,8 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.google.firebase.database.*
 import com.lishiyo.kotlin.App
+import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
 import com.lishiyo.kotlin.commons.ui.RxBaseFragment
-import com.lishiyo.kotlin.features.casualq.Constants.DEBUG_TAG
 import com.lishiyo.kotlin.features.casualq.data.Listing
 import com.lishiyo.kotlin.features.casualq.data.QuestionData
 import com.lishiyo.kotlin.features.casualq.data.QuestionsManager

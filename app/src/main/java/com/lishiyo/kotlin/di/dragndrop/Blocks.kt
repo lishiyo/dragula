@@ -2,8 +2,8 @@ package com.lishiyo.kotlin.di.dragndrop
 
 import android.content.Context
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.BlockKey
-import com.lishiyo.kotlin.features.toolkit.dragndrop.models.ImageBlock
-import com.lishiyo.kotlin.features.toolkit.dragndrop.models.TextBlock
+import com.lishiyo.kotlin.features.toolkit.dragndrop.models.MaxThreeBlock
+import com.lishiyo.kotlin.features.toolkit.dragndrop.models.MaxOneBlock
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxOneBlockView
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxThreeBlockView
@@ -19,14 +19,14 @@ class TextBlockModule {
 
     @Provides
     @IntoMap
-    @BlockKey(TextBlock::class)
+    @BlockKey(MaxOneBlock::class)
     internal fun provideTextBlockView(context: Context): BlockView {
         return MaxOneBlockView(context)
     }
 
     @Provides
-    internal fun provideTextBlock(): TextBlock {
-        return TextBlock()
+    internal fun provideTextBlock(): MaxOneBlock {
+        return MaxOneBlock()
     }
 }
 
@@ -34,13 +34,13 @@ class TextBlockModule {
 class ImageBlockModule {
     @Provides
     @IntoMap
-    @BlockKey(ImageBlock::class)
+    @BlockKey(MaxThreeBlock::class)
     internal fun provideImageBlockView(context: Context): BlockView {
         return MaxThreeBlockView(context)
     }
 
     @Provides
-    internal fun provideImageBlock(): ImageBlock {
-        return ImageBlock()
+    internal fun provideImageBlock(): MaxThreeBlock {
+        return MaxThreeBlock()
     }
 }

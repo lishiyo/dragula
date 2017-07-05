@@ -7,9 +7,9 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 
-
-
 /**
+ * From https://developer.android.com/guide/topics/ui/drag-drop.html
+ *
  * Created by connieli on 7/2/17.
  */
 private class DragShadowBuilder(v: View) : View.DragShadowBuilder(v) {

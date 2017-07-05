@@ -56,6 +56,7 @@ class BlockPickerBar @JvmOverloads constructor(
 
     internal fun setDragStart(v: View, dragData: ClipData): Boolean {
         val shadowBuilder = DragShadowBuilder(v)
+//        val shadowBuilder = CanvasImageShadowBuilder(v)
 
         // Start the drag
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

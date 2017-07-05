@@ -41,8 +41,9 @@ class DroppableContainer @JvmOverloads constructor(
 
     fun setBlockViews(vararg newBlockViews: BlockView) {
         blockViews.clear()
-        blockViews.addAll(newBlockViews)
-        blockViews.forEach({ rootView.addView(it as View) })
+        newBlockViews.forEach({
+            addBlockView(it)
+        })
     }
 
     fun addBlockView(newBlockView: BlockView) {
