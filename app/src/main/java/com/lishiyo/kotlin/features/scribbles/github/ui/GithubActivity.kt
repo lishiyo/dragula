@@ -9,7 +9,7 @@ import android.util.Log
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.lishiyo.kotlin.App
-import com.lishiyo.kotlin.commons.adapter.LogHelper
+import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
 import com.lishiyo.kotlin.commons.ui.RxBaseActivity
 import com.lishiyo.kotlin.features.scribbles.github.data.GithubManager
 import com.lishiyo.kotlin.features.scribbles.github.ui.viewmodel.GithubUser
