@@ -3,6 +3,7 @@ package com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
+import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockRow
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
 
 /**
@@ -41,6 +42,11 @@ interface CanvasDragCallback {
      * @return The [View] to use as the drop target
      */
     val trash: View
+
+    /**
+     * List of rows that can accept the drop.
+     */
+    val blockRows: MutableList<BlockRow>
 
     /**
      * Remove a view

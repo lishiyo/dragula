@@ -3,12 +3,11 @@ package com.lishiyo.kotlin.features.toolkit.dragndrop
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.PerActivity
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
-import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.DroppableContainer
+import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockRow
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.CanvasDragCallback
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.CanvasDragHelper
@@ -28,32 +27,33 @@ class CanvasLayoutHelper
                         val blockViewProviderMap: Map<Class<out Block>, @JvmSuppressWildcards Provider<BlockView>>,
                         @CanvasSpacer val spacerProvider: Provider<View>)
     : CanvasDragCallback {
+    private lateinit var canvasDragHelper: CanvasDragHelper
+
+    override var scrollView: ObservableScrollView = activity.scrollLayout
+    override val contentView: ViewGroup = activity.contentLayout // mLayout, this is temp_layout
+    override val spacer: View = spacerProvider.get()
+    override val trash: View = activity.trash
+    // keep track of current block rows which hold the blocks
+    override val blockRows : MutableList<BlockRow> = arrayListOf()
 
     override fun onSwap(dragPosition: Int, dropPosition: Int) {
         Log.d(DEBUG_TAG, "onSwap! drag: $dragPosition to drop in: $dropPosition")
         // get the blockview at dragPosition and remove it and its block
         // add that block to the drop position
         // add to current list of blocks
+        val draggedView = contentView.getChildAt(dragPosition)
     }
-    override var scrollView: ObservableScrollView = activity.scrollLayout
-    override val contentView: ViewGroup = activity.contentLayout
-    override val spacer: View
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-    override val trash: View
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     override fun deleteView(view: View) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        contentView.removeView(view)
+        if (view is BlockRow) {
+            // remove from blocks
+        }
     }
 
-    private var blockRows = arrayListOf<DroppableContainer>()
-    private var layout: LinearLayout
-    private lateinit var canvasDragHelper: CanvasDragHelper
 
     init {
         Log.d(DEBUG_TAG, "init CanvasLayoutHelper!")
-        layout = activity.contentLayout
-        scrollView = activity.scrollLayout
 
         setupDragAndDrop()
     }
@@ -62,20 +62,19 @@ class CanvasLayoutHelper
         canvasDragHelper = CanvasDragHelper.init(activity, this)
     }
 
-    fun clearAndSetBlockRows(rows: List<DroppableContainer>) {
-        blockRows = rows as ArrayList<DroppableContainer>
-        layout.removeAllViews()
+    fun clearAndSetBlockRows(rows: List<BlockRow>) {
+        blockRows.clear()
+        contentView.removeAllViews()
 
         Observable.fromIterable(blockRows)
                 .subscribe({
-                    row -> addBlockRow(row, layout.childCount)
+                    row -> addBlockRow(row, contentView.childCount)
                 })
     }
 
-    internal fun addBlockRow(row: DroppableContainer, position: Int): DroppableContainer {
-        layout.addView(row, position)
-//        row.getFocusObservable()
-//                .subscribe({ activity.setFocusedBlockView(it) })
+    internal fun addBlockRow(row: BlockRow, position: Int): BlockRow {
+        // add to layout, initialize drop and drop on the row (add drag long click listener)
+        contentView.addView(row, position)
         row.initDragAndDrop()
 
         return row

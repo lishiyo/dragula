@@ -15,7 +15,7 @@ import com.lishiyo.kotlin.samples.retrofit.R
  *
  * Created by connieli on 7/1/17.
  */
-class DroppableContainer @JvmOverloads constructor(
+class BlockRow @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0,
@@ -36,6 +36,7 @@ class DroppableContainer @JvmOverloads constructor(
     }
 
     fun initDragAndDrop() {
+        // TODO: set same long click listener as BlockPickerBar
 
     }
 
