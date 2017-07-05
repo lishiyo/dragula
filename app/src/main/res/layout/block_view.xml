@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:fresco="http://schemas.android.com/apk/res-auto"
 	android:orientation="horizontal"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
@@ -8,10 +9,12 @@
 	android:focusable="false"
 	>
 
-	<ImageView
+	<com.facebook.drawee.view.SimpleDraweeView
 		android:id="@+id/image"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="200dp"
+		fresco:actualImageScaleType="focusCrop"
+		fresco:viewAspectRatio="1"
 		/>
 
 </merge>
