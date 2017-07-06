@@ -82,7 +82,7 @@ class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
                     // scale trash, remove spacer and select trash if on it
 
                     // not scrolling the entire scrollview atm, toggle spacers
-                    if (!handleScroll(callback.scrollView, event, scrollThreshold)) {
+                    if (!handleScroll(callback.scrollView, blockRow, event, scrollThreshold)) {
                         // current hover position in entire layout
                         var hoverPosition = getExternalDropPosition(blockRow, event) // drop at top or bottom
                         Log.i(DEBUG_TAG, "hoverPosition: $hoverPosition")
@@ -163,7 +163,7 @@ class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
         fun getExternalDropPosition(blockRow: BlockRow, event: DragEvent): Int {
             var dropPosition = POSITION_INVALID
             // takes into account the blockrow index
-            val blockRowIndex = callback.contentView.findChildPosition(blockRow)
+            val blockRowIndex = callback.blockRows.indexOf(blockRow)
             if (blockRowIndex == POSITION_INVALID) {
                 Log.d(DEBUG_TAG, "getExternalDropPosition ++ blockRow not in layout!")
                 return dropPosition
@@ -232,15 +232,18 @@ class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
         }
 
         // Scroll the full content layout
-        private fun handleScroll(scrollView: ScrollView, event: DragEvent, threshold: Pair<Int, Int>): Boolean {
+        private fun handleScroll(scrollView: ScrollView, blockRow: BlockRow, event: DragEvent, threshold: Pair<Int, Int>): Boolean {
             val needToScroll: Boolean // whether we need to scroll this scrollview
-            val eventY = event.y.toInt() // current event y-coord
+            val eventY = event.y // relative y within blockRow
+            val distanceFromTop: Float = blockRow.y + eventY // relative y + blockrow's distance from top
             val delta: Int
 
+            // TODO: fix this
             delta = when {
-                (eventY < threshold.first) -> (-MAX_DRAG_SCROLL_SPEED * smootherStep(threshold.first.toFloat(), 0f, event.y)).toInt()
-                (eventY > threshold.second) -> (MAX_DRAG_SCROLL_SPEED * smootherStep(
-                        threshold.second.toFloat(), scrollView.height.toFloat(), event.y)).toInt()
+                (distanceFromTop < threshold.first) -> (-MAX_DRAG_SCROLL_SPEED * smootherStep(threshold.first.toFloat(), 0f,
+                        distanceFromTop)).toInt()
+                (distanceFromTop > threshold.second) -> (MAX_DRAG_SCROLL_SPEED * smootherStep(
+                        threshold.second.toFloat(), scrollView.height.toFloat(), distanceFromTop)).toInt()
                 else -> 0
             }
 

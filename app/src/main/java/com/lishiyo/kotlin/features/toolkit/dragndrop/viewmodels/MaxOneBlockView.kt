@@ -54,7 +54,6 @@ class MaxOneBlockView @JvmOverloads constructor(
         layoutParams = params
         image.layoutParams = params
 
-
         // set aspect ratio
 //        val imageViewParams = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
 //        imageViewParams.width = getScreenWidth()
