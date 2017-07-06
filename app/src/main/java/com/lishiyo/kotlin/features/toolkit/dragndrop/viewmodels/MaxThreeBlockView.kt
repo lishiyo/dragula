@@ -1,14 +1,18 @@
 package com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels
 
+import android.content.ClipData
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.LinearLayout
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.jakewharton.rxbinding2.view.RxView
+import com.lishiyo.kotlin.commons.extensions.getPixelSize
+import com.lishiyo.kotlin.commons.extensions.setDragStart
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
 import com.lishiyo.kotlin.samples.retrofit.R
 import io.reactivex.Observable
@@ -43,6 +47,8 @@ class MaxThreeBlockView @JvmOverloads constructor(
 
         val params = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
 //        params.height = resources.getDimensionPixelSize(R.dimen.block_view_height)
+        params.marginEnd = context.getPixelSize(R.dimen.block_view_margin)
+        params.marginStart = context.getPixelSize(R.dimen.block_view_margin)
         layoutParams = params
         image.layoutParams = params
 
@@ -50,6 +56,19 @@ class MaxThreeBlockView @JvmOverloads constructor(
 
         val imageRequest = ImageRequestBuilder.newBuilderWithResourceId(R.drawable.block_3).build()
         image.setImageURI(imageRequest.sourceUri)
+    }
+
+    override fun initDragAndDrop() {
+        setOnLongClickListener {
+            val dragData = ClipData.newPlainText(
+                    MaxOneBlockView::class.java.simpleName, // label
+                    "max one" // text in the clip
+            )
+            val shadowBuilder = View.DragShadowBuilder(this)
+//        val shadowBuilder = CanvasImageShadowBuilder(v)
+
+            it.setDragStart(dragData, shadowBuilder)
+        }
     }
 
     override fun getFocusObservable(): Observable<out BlockView> {
@@ -70,5 +89,9 @@ class MaxThreeBlockView @JvmOverloads constructor(
 
     override fun limitPerContainer(): Int {
         return 3
+    }
+
+    override fun weight(): Int {
+        return 1
     }
 }

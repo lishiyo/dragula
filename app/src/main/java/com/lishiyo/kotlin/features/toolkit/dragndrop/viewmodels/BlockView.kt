@@ -1,5 +1,6 @@
 package com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels
 
+import android.support.annotation.IntRange
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
 import io.reactivex.Observable
 
@@ -12,6 +13,9 @@ interface BlockView {
         val DRAG_ALPHA = 0.13f
     }
 
+    // set the long click listener to initiate drag
+    fun initDragAndDrop()
+
     fun setBlock(block: Block)
 
     fun getBlock(): Block?
@@ -23,4 +27,8 @@ interface BlockView {
 
     // max num of this blockview type in a DroppableContainer
     fun limitPerContainer(): Int
+
+    // weight per container (1-3)
+    @IntRange(from = 1, to = 3)
+    fun weight(): Int
 }

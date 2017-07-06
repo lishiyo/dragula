@@ -67,6 +67,7 @@ class DragNDropActivity : RxBaseActivity() {
     private fun createInitialBlockRows(): List<BlockRow> {
         val initialRows = mutableListOf<BlockRow>()
         initialRows.add(createMaxOneBlockRow())
+        initialRows.add(createMaxOneBlockRow())
         initialRows.add(createMaxThreeBlockRow())
         return initialRows
     }

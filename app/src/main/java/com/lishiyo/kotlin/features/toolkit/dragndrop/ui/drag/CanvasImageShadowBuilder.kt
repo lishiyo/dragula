@@ -6,6 +6,7 @@ import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.view.View
+import com.lishiyo.kotlin.commons.extensions.getPixelSize
 import com.lishiyo.kotlin.samples.retrofit.R
 
 /**
@@ -24,8 +25,8 @@ class CanvasImageShadowBuilder(view: View) : View.DragShadowBuilder(view) {
     private var mOffsetLarge: Int = 0
 
     init {
-        mOffsetMedium = view.context.resources.getDimensionPixelSize(R.dimen.canvas_image_shadow_margin_medium)
-        mOffsetMedium = view.context.resources.getDimensionPixelSize(R.dimen.canvas_image_shadow_margin_large)
+        mOffsetMedium = view.context.getPixelSize(R.dimen.canvas_image_shadow_margin_medium)
+        mOffsetMedium = view.context.getPixelSize(R.dimen.canvas_image_shadow_margin_large)
     }
 
     override fun onProvideShadowMetrics(size: Point, touch: Point) {

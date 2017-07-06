@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<dimen name="block_view_height">66dp</dimen>
 	<dimen name="full_block_view_height">66dp</dimen>
 	<dimen name="canvas_image_shadow_margin_medium">3.75dp</dimen>
 	<dimen name="canvas_image_shadow_margin_large">6dp</dimen>
+	<!-- actually 14 -->
+	<dimen name="canvas_spacer_height">24dp</dimen>
+	<dimen name="block_view_margin">10dp</dimen>
 </resources>

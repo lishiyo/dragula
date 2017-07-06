@@ -14,14 +14,18 @@ import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
  */
 interface CanvasDragCallback {
     /**
-     * notify the caller that the user dropped a view
-     * @param dragPosition
-     * 		The original position
+     * Drop a block view *out* of a block row (need to add new block row).
      *
-     * @param dropPosition
-     * 		The new position
+     * @param draggedView
+     *      the block view being dragged out
+     * @param dragFromBlockRowIndex
+     *      the index of hte block row we are dragging view from, or {@link POSITION_INVALID} if not dragging from a block row
+     * @param dropToPosition
+     *      the index of where to drop in entire layout
      */
-    fun onSwap(dragPosition: Int, dropPosition: Int)
+    fun onDragBlockOut(draggedView: View, dragFromBlockRowIndex: Int, dropToPosition: Int)
+
+    fun onDragBlockInto(draggedView: View, dragFromBlockRowIndex: Int, dropToBlockRowIndex: Int)
 
     /**
      * @return the [ScrollView] used for setting up the Drag and Drop operation, and scrolling when necessary

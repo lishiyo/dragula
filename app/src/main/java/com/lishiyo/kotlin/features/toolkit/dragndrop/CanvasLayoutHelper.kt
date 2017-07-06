@@ -27,6 +27,7 @@ class CanvasLayoutHelper
                         val blockViewProviderMap: Map<Class<out Block>, @JvmSuppressWildcards Provider<BlockView>>,
                         @CanvasSpacer val spacerProvider: Provider<View>)
     : CanvasDragCallback {
+
     private lateinit var canvasDragHelper: CanvasDragHelper
 
     override var scrollView: ObservableScrollView = activity.scrollLayout
@@ -36,12 +37,12 @@ class CanvasLayoutHelper
     // keep track of current block rows which hold the blocks
     override val blockRows : MutableList<BlockRow> = arrayListOf()
 
-    override fun onSwap(dragPosition: Int, dropPosition: Int) {
-        Log.d(DEBUG_TAG, "onSwap! drag: $dragPosition to drop in: $dropPosition")
-        // get the blockview at dragPosition and remove it and its block
-        // add that block to the drop position
-        // add to current list of blocks
-        val draggedView = contentView.getChildAt(dragPosition)
+    override fun onDragBlockOut(draggedView: View, dragFromBlockRowIndex: Int, dropToPosition: Int) {
+        Log.d(DEBUG_TAG, "onDragBlockOut ++ FROM blockRowIndex: $dragFromBlockRowIndex TO: $dropToPosition")
+    }
+
+    override fun onDragBlockInto(draggedView: View, dragFromBlockRowIndex: Int, dropToBlockRowIndex: Int) {
+        Log.d(DEBUG_TAG, "onDragBlockInto ++ FROM blockRowIndex: $dragFromBlockRowIndex TO blockRowIndex: $dropToBlockRowIndex")
     }
 
     override fun deleteView(view: View) {
@@ -51,14 +52,14 @@ class CanvasLayoutHelper
         }
     }
 
-
     init {
         Log.d(DEBUG_TAG, "init CanvasLayoutHelper!")
 
         setupDragAndDrop()
     }
 
-    private fun setupDragAndDrop() {
+    fun setupDragAndDrop() {
+        // must be called AFTER activity's block rows have been set
         canvasDragHelper = CanvasDragHelper.init(activity, this)
     }
 
@@ -66,7 +67,7 @@ class CanvasLayoutHelper
         blockRows.clear()
         contentView.removeAllViews()
 
-        Observable.fromIterable(blockRows)
+        Observable.fromIterable(rows)
                 .subscribe({
                     row -> addBlockRow(row, contentView.childCount)
                 })
@@ -75,7 +76,9 @@ class CanvasLayoutHelper
     internal fun addBlockRow(row: BlockRow, position: Int): BlockRow {
         // add to layout, initialize drop and drop on the row (add drag long click listener)
         contentView.addView(row, position)
-        row.initDragAndDrop()
+        blockRows.add(row)
+
+        row.initDragAndDrop(canvasDragHelper.dragListener)
 
         return row
     }

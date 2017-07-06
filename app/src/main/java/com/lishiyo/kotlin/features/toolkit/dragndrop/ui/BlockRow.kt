@@ -35,9 +35,21 @@ class BlockRow @JvmOverloads constructor(
 
     }
 
-    fun initDragAndDrop() {
-        // TODO: set same long click listener as BlockPickerBar
+    // can this block view drop in here right now, given the current children?
+    fun canDropIn(newBlockView: BlockView): Boolean {
+        val limitAllowedInContainer = blockViews.minBy { it.limitPerContainer() }?.limitPerContainer() ?: 0
+        return limitAllowedInContainer > childCount
+    }
 
+    fun blocksCount(): Int {
+        return blockViews.size
+    }
+
+    fun initDragAndDrop(dragListener: View.OnDragListener) {
+        // set drag listener on the block row
+        setOnDragListener(dragListener)
+
+        // set long click listener on each of the block views
     }
 
     fun setBlockViews(vararg newBlockViews: BlockView) {
