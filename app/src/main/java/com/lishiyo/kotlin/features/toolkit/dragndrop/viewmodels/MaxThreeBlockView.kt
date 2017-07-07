@@ -11,6 +11,7 @@ import butterknife.ButterKnife
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.jakewharton.rxbinding2.view.RxView
+import com.lishiyo.kotlin.commons.extensions.getPixelSize
 import com.lishiyo.kotlin.commons.extensions.setDragStart
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
 import com.lishiyo.kotlin.samples.retrofit.R
@@ -45,7 +46,9 @@ class MaxThreeBlockView @JvmOverloads constructor(
         ButterKnife.bind(this)
 
         val params: LinearLayout.LayoutParams = if (layoutParams == null)
-            LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT) else layoutParams as LayoutParams
+            LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, getWeight().toFloat()) else layoutParams as LayoutParams
+        params.marginStart = context.getPixelSize(R.dimen.block_view_margin)
+        params.marginEnd = context.getPixelSize(R.dimen.block_view_margin)
         layoutParams = params
 
         setBackgroundColor(resources.getColor(R.color.material_deep_teal_500))
@@ -61,8 +64,6 @@ class MaxThreeBlockView @JvmOverloads constructor(
                     "max one" // text in the clip
             )
             val shadowBuilder = View.DragShadowBuilder(this)
-//        val shadowBuilder = CanvasImageShadowBuilder(v)
-
             it.setDragStart(dragData, shadowBuilder)
         }
     }
@@ -81,13 +82,19 @@ class MaxThreeBlockView @JvmOverloads constructor(
 
     override fun onDrop(successful: Boolean) {
         // resize given max width
+        val params: LinearLayout.LayoutParams = if (layoutParams == null)
+            LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, getWeight().toFloat()) else layoutParams as LayoutParams
+        params.width = 0
+        params.height = LayoutParams.MATCH_PARENT
+        params.weight = getWeight().toFloat()
+        layoutParams = params
     }
 
     override fun limitPerContainer(): Int {
         return 3
     }
 
-    override fun weight(): Int {
+    override fun getWeight(): Int {
         return 1
     }
 }

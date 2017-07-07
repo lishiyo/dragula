@@ -44,6 +44,11 @@ interface CanvasDragCallback {
     val spacer: View
 
     /**
+     * @return The inner spacer inside block rows
+     */
+    val innerSpacer: View
+
+    /**
      * @return The [View] to use as the drop target
      */
     val trash: View

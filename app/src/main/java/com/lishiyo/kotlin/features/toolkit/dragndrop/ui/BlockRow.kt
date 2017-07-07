@@ -48,15 +48,27 @@ class BlockRow @JvmOverloads constructor(
 
     // can this block view drop in here right now, given the current children?
     fun canDropIn(newBlockView: BlockView): Boolean {
-        val limitAllowedInContainer = blockViews.minBy { it.limitPerContainer() }?.limitPerContainer() ?: 0
+        val limitAllowedInContainer = (blockViews.plus(newBlockView)).minBy { it.limitPerContainer() }?.limitPerContainer() ?: 0
         return limitAllowedInContainer > childCount
+    }
+
+    fun addInnerSpacer(spacer: View, position: Int): View {
+        rootView.removeView(spacer)
+
+        rootView.addView(spacer, position)
+        val lp = spacer.layoutParams
+        lp.width = context.getPixelSize(R.dimen.canvas_spacer_height)
+        lp.height = ViewGroup.LayoutParams.MATCH_PARENT
+        spacer.layoutParams = lp
+
+        return spacer
     }
 
     fun initDragAndDrop(dragListener: View.OnDragListener) {
         // set drag listener on the block row
         setOnDragListener(dragListener)
 
-        // TODO: set long click listener on each current block views
+        blockViews.forEach { it.initDragAndDrop() }
     }
 
     fun setBlockViews(vararg newBlockViews: BlockView) {
@@ -70,16 +82,16 @@ class BlockRow @JvmOverloads constructor(
         checkRemoveParent(newBlockView as View)
 
         blockViews.add(newBlockView)
-        rootView.addView(newBlockView as View)
-        // TODO: set long click listener on the blockview
+        rootView.addView(newBlockView)
+        newBlockView.initDragAndDrop()
     }
 
     fun addBlockViewAt(newBlockView: BlockView, position: Int) {
         checkRemoveParent(newBlockView as View)
 
         blockViews.add(position, newBlockView)
-        rootView.addView(newBlockView as View, position)
-        // TODO: set long click listener on the blockview
+        rootView.addView(newBlockView, position)
+        newBlockView.initDragAndDrop()
     }
 
     fun removeBlockView(blockView: BlockView) {
@@ -111,7 +123,7 @@ class BlockRow @JvmOverloads constructor(
         return INVALID_POSITION
     }
 
-    fun createDropZones(): MutableMap<Rect, Int> {
+    private fun createDropZones(): MutableMap<Rect, Int> {
         val zones = mutableMapOf<Rect, Int>()
         val blockRowWidth = width
         val blockRowHeight = height

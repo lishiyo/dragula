@@ -13,6 +13,10 @@ import kotlin.reflect.KClass
 @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class CanvasSpacer
 
+@Qualifier
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+annotation class InnerSpacer
+
 @Scope
 @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class PerActivity
