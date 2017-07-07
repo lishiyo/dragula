@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/container"
 	android:orientation="horizontal"
 	android:layout_width="match_parent"
 	android:layout_height="@dimen/block_view_height"
@@ -8,16 +9,36 @@
 	>
 
 	<com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxOneBlockView
-		android:id="@+id/max_one_block"
 		android:layout_width="60dp"
 		android:layout_height="60dp"
 		android:gravity="center_vertical">
 	</com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxOneBlockView>
 
-	<!-- MaxTwoBlock -->
+	<com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxOneBlockView
+		android:layout_width="60dp"
+		android:layout_height="60dp"
+		android:gravity="center_vertical">
+	</com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxOneBlockView>
+
+	<com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxOneBlockView
+		android:layout_width="60dp"
+		android:layout_height="60dp"
+		android:gravity="center_vertical">
+	</com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxOneBlockView>
 
 	<com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxThreeBlockView
-		android:id="@+id/max_three_block"
+		android:layout_width="60dp"
+		android:layout_height="60dp"
+		android:gravity="center_vertical">
+	</com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxThreeBlockView>
+
+	<com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxThreeBlockView
+		android:layout_width="60dp"
+		android:layout_height="60dp"
+		android:gravity="center_vertical">
+	</com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxThreeBlockView>
+
+	<com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxThreeBlockView
 		android:layout_width="60dp"
 		android:layout_height="60dp"
 		android:gravity="center_vertical">

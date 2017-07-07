@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
+import com.lishiyo.kotlin.commons.extensions.POSITION_INVALID
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.PerActivity
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
@@ -37,25 +38,50 @@ class CanvasLayoutHelper
     // keep track of current block rows which hold the blocks
     override val blockRows : MutableList<BlockRow> = arrayListOf()
 
-    override fun onDragBlockOut(draggedView: View, dragFromBlockRowIndex: Int, dropToPosition: Int) {
-        Log.d(DEBUG_TAG, "onDragBlockOut ++ FROM blockRowIndex: $dragFromBlockRowIndex TO: $dropToPosition")
+    init {
+        setupDragAndDrop()
     }
 
-    override fun onDragBlockInto(draggedView: View, dragFromBlockRowIndex: Int, dropToBlockRowIndex: Int) {
-        Log.d(DEBUG_TAG, "onDragBlockInto ++ FROM blockRowIndex: $dragFromBlockRowIndex TO blockRowIndex: $dropToBlockRowIndex")
+    // external drop - dropped outside a block row
+    override fun onDragBlockOut(draggedView: View, dragFromBlockRowIndex: Int, dropToPosition: Int) {
+        Log.d(DEBUG_TAG, "onDragBlockOut ++ FROM blockRowIndex: $dragFromBlockRowIndex TO: $dropToPosition")
+
+        if (draggedView is BlockView) {
+            // create a new blockrow with this view
+            val newBlockRow = BlockRow(activity)
+            newBlockRow.addBlockView(draggedView)
+            addBlockRow(newBlockRow, dropToPosition)
+
+            // remove the draggedView from the dragFromBlockRow
+            if (dragFromBlockRowIndex != POSITION_INVALID) {
+                val dragFromBlockRow = blockRows[dragFromBlockRowIndex]
+                dragFromBlockRow.removeBlockView(draggedView)
+            }
+        }
+    }
+
+    // internal drop - dropped inside a block row
+    override fun onDragBlockIn(draggedView: View, dragFromBlockRowIndex: Int, dropToBlockRow: BlockRow, internalDropPosition: Int) {
+        val blockRowIndex = blockRows.indexOf(dropToBlockRow)
+        Log.d(DEBUG_TAG, "onDragBlockIn ++ FROM blockRowIndex: $dragFromBlockRowIndex TO blockRowIndex: $blockRowIndex at internalPos: $internalDropPosition")
+
+        if (draggedView is BlockView) {
+            // tell blockrow to insert draggedView at the internal position
+            dropToBlockRow.addBlockViewAt(draggedView, internalDropPosition)
+
+            // remove the draggedView from the dragFromBlockRow
+            if (dragFromBlockRowIndex != POSITION_INVALID) {
+                val dragFromBlockRow = blockRows[dragFromBlockRowIndex]
+                dragFromBlockRow.removeBlockView(draggedView)
+            }
+        }
     }
 
     override fun deleteView(view: View) {
         contentView.removeView(view)
         if (view is BlockRow) {
-            // remove from blocks
+            blockRows.remove(view)
         }
-    }
-
-    init {
-        Log.d(DEBUG_TAG, "init CanvasLayoutHelper!")
-
-        setupDragAndDrop()
     }
 
     fun setupDragAndDrop() {
@@ -74,12 +100,14 @@ class CanvasLayoutHelper
     }
 
     internal fun addBlockRow(row: BlockRow, position: Int): BlockRow {
-        // add to layout, initialize drop and drop on the row (add drag long click listener)
+        // add row to layout, initialize drop and drop on the row (add drag long click listener)
         contentView.addView(row, position)
-        blockRows.add(row)
+        blockRows.add(position, row)
 
         row.initDragAndDrop(canvasDragHelper.dragListener)
 
         return row
     }
+
+
 }

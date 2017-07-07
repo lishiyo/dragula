@@ -22,9 +22,8 @@ import com.lishiyo.kotlin.samples.retrofit.R
  * Created by connieli on 7/1/17.
  */
 class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
-    private val INVALID = -1
     private val SCROLL_THRESHOLD = 0.15f
-    private val MAX_DRAG_SCROLL_SPEED = 16
+    private val MAX_DRAG_SCROLL_SPEED = 20
 
     private val callback: CanvasDragCallback = dragCallback
 
@@ -57,8 +56,6 @@ class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
         // Handler for block rows that can only be dropped on top or bottom
         // only add spacer to top or bottom of BlockRow, can't drop internally
         fun handleExternalDrag(draggedView: View, blockRow: BlockRow, event: DragEvent): Boolean {
-//            Log.d(DEBUG_TAG, "can't drop in this BlockRow! reached limit, only check top and bottom")
-
             val action = event.action
 
             when (action) {
@@ -67,24 +64,16 @@ class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
                     // set up animations
                     // make trashcan visible
 
-                    val locationInWindow = IntArray(2)
-                    blockRow.getLocationInWindow(locationInWindow)
-
+                    // store the current threshold with spacer included adding spacer
                     val scrollViewVisibleRect = Rect()
                     callback.scrollView.getGlobalVisibleRect(scrollViewVisibleRect)
-                    Log.d(DEBUG_TAG, "ACTION_DRAG_STARTED ++ scrollView.scrollY: " + callback.scrollView.scrollY + "scrollView localTop: " +
-                            "top: " + scrollViewVisibleRect.top + " localBottom: " + scrollViewVisibleRect.bottom + " vs y: " + blockRow.y + " vs top: "
-                            + blockRow.top + " locationInWindow: " + locationInWindow[1])
-                    // reset scroll threshold to current full scroll layout height
-                    // TODO: needs to consider first child top
-//                    val height = callback.scrollView.height
-//                    val topTen = (height * SCROLL_THRESHOLD).toInt()
-//                    val bottomTen = (height - height * SCROLL_THRESHOLD).toInt()
                     val height = scrollViewVisibleRect.bottom - scrollViewVisibleRect.top // total visible height of scrollview
                     val threshold = height * SCROLL_THRESHOLD // 10%
-                    val topTen = (scrollViewVisibleRect.top + threshold).toInt() // current top + 10% of viewport
-                    val bottomTen = (scrollViewVisibleRect.bottom - threshold).toInt() // current bottom - 90%
-                    scrollThreshold = Pair(topTen, bottomTen)
+                    val topCutoff = threshold.toInt() // normalized for top 10% (0-200)
+                    val bottomCutoff = (height - threshold).toInt() // 90% (2000-2200)
+                    scrollThreshold = Pair(topCutoff, bottomCutoff)
+                    Log.d(DEBUG_TAG, "scrollView globalVisibleRect TOP: " + scrollViewVisibleRect.top + " BOTTOM: " +
+                            scrollViewVisibleRect.bottom + " for threshold: <" + topCutoff + ", " + bottomCutoff + ">")
 
                 }
                 DragEvent.ACTION_DRAG_ENTERED -> {
@@ -94,22 +83,14 @@ class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
                 DragEvent.ACTION_DRAG_LOCATION -> {
                     // dragged view is moving around in our view area
 
-                    val locationInWindow = IntArray(2)
-                    blockRow.getLocationInWindow(locationInWindow)
-
-                    Log.d(DEBUG_TAG, "ACTION_DRAG_LOCATION ++ scrollView.scrollY: " + callback.scrollView.scrollY + " vs y: " + blockRow
-                            .y + " vs " + "top: " + blockRow.top + " vs eventY: " + event.y + " locationInWindow:" + " " + locationInWindow[1]
-                            + " vs scrollThreshold top <" + scrollThreshold.first + ", " + scrollThreshold.second + ">")
-
                     // scale trash, remove spacer and select trash if on it
 
                     // not scrolling the entire scrollview atm, toggle spacers
                     if (!handleScroll(callback.scrollView, blockRow, event, scrollThreshold)) {
                         // current hover position in entire layout
                         val hoverPosition = getExternalDropPosition(blockRow, event) // drop at top or bottom
-                        Log.i(DEBUG_TAG, "hoverPosition: $hoverPosition")
+                        Log.i(DEBUG_TAG, "ACTION_DRAG_LOCATION ++ spacer hoverPosition: $hoverPosition")
                         if (oldSpacer != null) {
-                            // current spacer position in entire layout
                             val currentSpacerPosition = callback.contentView.findChildPosition(oldSpacer as View)
                             val shouldMoveSpacer = (hoverPosition != POSITION_INVALID && hoverPosition != currentSpacerPosition)
                             Log.i(DEBUG_TAG, "currentSpacerPosition: $currentSpacerPosition ++ shouldMove? $shouldMoveSpacer")
@@ -118,7 +99,6 @@ class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
                                 // remove old spacer from layout and add spacer at new position
                                 oldSpacer = addSpacer(hoverPosition)
                             }
-
                         } else {
                             oldSpacer = addSpacer(hoverPosition)
                         }
@@ -131,18 +111,41 @@ class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
 
                 }
                 DragEvent.ACTION_DROP -> {
-                    // view was dropped in here!
-//                    Log.d(DEBUG_TAG, "ACTION_DROP! trashMode? " + trashMode + " view: " + blockRow.id)
+                    // view was dropped in this block row!
 
                     if (trashMode) {
                         // TODO: delete the dragged view
 
                     } else {
-                        val draggedFromBlockRowIndex = getDragFromBlockRowPosition(draggedView)
-                        val dropIndex = getExternalDropPosition(blockRow, event) // above or below this view we're dropping on
-                        Log.d(DEBUG_TAG, "ACTION_DROP! draggedFromBlockRow: $draggedFromBlockRowIndex dropIndex: $dropIndex")
+                        if (!blockRow.canDropIn(draggedView as BlockView)) {
+                            // drag block to above or below this BlockRow
 
-                        callback.onDragBlockOut(draggedView, draggedFromBlockRowIndex, dropIndex)
+                            val draggedFromBlockRowIndex = getDragFromBlockRowPosition(draggedView) // -1 if not dragged from block row
+                            val dropIndex = getExternalDropPosition(blockRow, event) // above or below this blockrow we're dropping on
+                            Log.d(DEBUG_TAG, "ACTION_DROP! draggedFromBlockRow: $draggedFromBlockRowIndex DROPINDEX: $dropIndex")
+
+                            // remove the block view from the block row, add a new blockrow at the dropIndex
+                            callback.onDragBlockOut(draggedView, draggedFromBlockRowIndex, dropIndex)
+                        } else {
+                            // drag block INTO this BlockRow
+                            val draggedFromBlockRowIndex = getDragFromBlockRowPosition(draggedView) // -1 if not dragged from block row
+                            val dropPosition = blockRow.getDropPosition(event)
+                            val currentBlockRowIndex = callback.blockRows.indexOf(blockRow)
+                            Log.d(DEBUG_TAG, "dragging from $draggedFromBlockRowIndex to blockRowIndex $currentBlockRowIndex with " +
+                                    "dropPosition $dropPosition")
+                            when (dropPosition) {
+                                BlockRow.INVALID_POSITION -> Log.d(DEBUG_TAG, "dropping in invalid position in blockRow!")
+                                BlockRow.TOP_POSITION -> callback.onDragBlockOut(draggedView, draggedFromBlockRowIndex, currentBlockRowIndex)
+                                BlockRow.BOTTOM_POSITION -> callback.onDragBlockOut(draggedView, draggedFromBlockRowIndex,
+                                        currentBlockRowIndex + 1)
+                                else -> {
+                                    // will go inside
+                                    callback.onDragBlockIn(draggedView, draggedFromBlockRowIndex, blockRow, dropPosition)
+                                }
+                            }
+
+                        }
+
                     }
                 }
                 DragEvent.ACTION_DRAG_ENDED -> {
@@ -201,16 +204,6 @@ class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
             return dropPosition
         }
 
-        /**
-         *
-         */
-        fun handleInternalDrag(draggedView: BlockView, blockRow: BlockRow, event: DragEvent): Boolean {
-//            Log.i(DEBUG_TAG, "handleInternalDrag ++ ")
-            val action = event.action
-
-            return true
-        }
-
         override fun onDrag(view: View, event: DragEvent): Boolean {
             if (event.localState !is BlockView) {
                 Log.d(DEBUG_TAG, "onDrag! A drag event using a " + event.localState.javaClass.canonicalName + " was detected")
@@ -258,9 +251,6 @@ class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
 
         // Scroll the full content layout
         private fun handleScroll(scrollView: ScrollView, blockRow: BlockRow, event: DragEvent, threshold: Pair<Int, Int>): Boolean {
-            val scrollViewVisibleRect = Rect()
-            callback.scrollView.getGlobalVisibleRect(scrollViewVisibleRect)
-
             val blockRowVisibleRect = Rect()
             blockRow.getGlobalVisibleRect(blockRowVisibleRect)
 
@@ -270,8 +260,8 @@ class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
             val locationInWindow = IntArray(2)
             blockRow.getLocationInWindow(locationInWindow)
             val eventY = event.y // relative y within blockRow
-            val blockRowY = locationInWindow[1] // blockrow's top edge, negative if above the top line
-            val eventYOnScreen: Float = event.y + blockRowY // actual y of event
+            val blockRowY = locationInWindow[1] // y of blockrow's top edge, negative if above the top line
+            val eventYOnScreen: Float = event.y + blockRowY // actual y of event from top line
 
             delta = when {
                 (eventYOnScreen < threshold.first) -> (-MAX_DRAG_SCROLL_SPEED * smootherStep(threshold.first.toFloat(), 0f,
@@ -281,12 +271,13 @@ class CanvasDragHelper(context: Context, dragCallback: CanvasDragCallback) {
                 else -> 0
             }
 
-            needToScroll = delta < 0 && scrollView.scrollY > 0
-                    || delta > 0 && (scrollView.height + scrollView.scrollY <= scrollView.getChildAt(0).height)
+            needToScroll = delta < 0 && scrollView.scrollY > 0 // at top, and we've scroll down => scroll back up
+                    || delta > 0 && (scrollView.height + scrollView.scrollY <= scrollView.getChildAt(0).height) // at bottom
 
-            Log.d(DEBUG_TAG, "handleScroll! eventY $eventY ++ eventYOnScreen $eventYOnScreen ++ delta: $delta needToScroll? " +
-                    "$needToScroll ++ SCROLLVIEW localTop: " + scrollViewVisibleRect.top + " SCROLLVIEW localBottom: " + scrollViewVisibleRect
-                    .bottom + " BLOCKROW localTop: " + blockRowVisibleRect.top + " BLOCKROW localBottom: " + blockRowVisibleRect.bottom)
+            Log.d(DEBUG_TAG, "handleScroll! eventY $eventY ++ blockRowLocationInWindow: $blockRowY for total eventYOnScreen $eventYOnScreen")
+            Log.d(DEBUG_TAG, "handleScroll! BLOCKROW globalRect: <" + blockRowVisibleRect.top + ", " + blockRowVisibleRect.bottom + ">" +
+                    " vs top: " + blockRow.top + " scrollY: " + blockRow.scrollY)
+            Log.d(DEBUG_TAG, "handleScroll finish ===== delta: $delta ==== needToScroll? $needToScroll")
 
             scrollView.smoothScrollBy(0, delta)
 

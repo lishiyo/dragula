@@ -25,7 +25,8 @@ interface CanvasDragCallback {
      */
     fun onDragBlockOut(draggedView: View, dragFromBlockRowIndex: Int, dropToPosition: Int)
 
-    fun onDragBlockInto(draggedView: View, dragFromBlockRowIndex: Int, dropToBlockRowIndex: Int)
+    // can drop inside the block, or maybe out
+    fun onDragBlockIn(draggedView: View, dragFromBlockRowIndex: Int, dropToBlockRow: BlockRow, internalDropPosition: Int)
 
     /**
      * @return the [ScrollView] used for setting up the Drag and Drop operation, and scrolling when necessary
