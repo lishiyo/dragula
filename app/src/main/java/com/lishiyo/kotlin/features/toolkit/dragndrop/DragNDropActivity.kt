@@ -69,6 +69,9 @@ class DragNDropActivity : RxBaseActivity() {
         initialRows.add(createMaxOneBlockRow())
         initialRows.add(createMaxOneBlockRow())
         initialRows.add(createMaxThreeBlockRow())
+        initialRows.add(createMaxOneBlockRow())
+        initialRows.add(createMaxThreeBlockRow())
+        initialRows.add(createMaxThreeBlockRow())
         return initialRows
     }
 

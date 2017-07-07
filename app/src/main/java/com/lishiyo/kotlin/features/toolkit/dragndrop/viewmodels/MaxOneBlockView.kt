@@ -11,7 +11,6 @@ import butterknife.ButterKnife
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.jakewharton.rxbinding2.view.RxView
-import com.lishiyo.kotlin.commons.extensions.getPixelSize
 import com.lishiyo.kotlin.commons.extensions.setDragStart
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
 import com.lishiyo.kotlin.samples.retrofit.R
@@ -47,12 +46,9 @@ class MaxOneBlockView @JvmOverloads constructor(
         ButterKnife.bind(this)
         orientation = HORIZONTAL
 
-        val params = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-//        params.height = resources.getDimensionPixelSize(R.dimen.block_view_height)
-        params.marginEnd = context.getPixelSize(R.dimen.block_view_margin)
-        params.marginStart = context.getPixelSize(R.dimen.block_view_margin)
+        val params: LinearLayout.LayoutParams = if (layoutParams == null)
+            LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT) else layoutParams as LayoutParams
         layoutParams = params
-        image.layoutParams = params
 
         // set aspect ratio
 //        val imageViewParams = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)

@@ -1,9 +1,14 @@
 <resources>
+	<!-- in block picker bar -->
 	<dimen name="block_view_height">66dp</dimen>
-	<dimen name="full_block_view_height">66dp</dimen>
+	<!-- in canvas -->
+	<dimen name="block_view_height_large">200dp</dimen>
 	<dimen name="canvas_image_shadow_margin_medium">3.75dp</dimen>
 	<dimen name="canvas_image_shadow_margin_large">6dp</dimen>
 	<!-- actually 14 -->
 	<dimen name="canvas_spacer_height">24dp</dimen>
-	<dimen name="block_view_margin">10dp</dimen>
+	<!-- top/bottom margin between block rows -->
+	<dimen name="block_row_margin">4dp</dimen>
+	<!-- left/right margin b/t block views -->
+	<dimen name="block_view_margin">4dp</dimen>
 </resources>
