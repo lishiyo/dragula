@@ -3,6 +3,8 @@ package com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
+import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
+import com.lishiyo.kotlin.di.dragndrop.qualifiers.InnerSpacer
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockRow
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
 
@@ -23,10 +25,10 @@ interface CanvasDragCallback {
      * @param dropToPosition
      *      the index of where to drop in entire layout
      */
-    fun onDragBlockOut(draggedView: View, dragFromBlockRowIndex: Int, dropToPosition: Int)
+    fun onDragBlockOut(draggedView: View, dragFromBlockRowIndex: BlockRow?, dropToPosition: Int)
 
     // can drop inside the block, or maybe out
-    fun onDragBlockIn(draggedView: View, dragFromBlockRowIndex: Int, dropToBlockRow: BlockRow, internalDropPosition: Int)
+    fun onDragBlockIn(draggedView: View, dragFromBlockRow: BlockRow?, dropToBlockRow: BlockRow, internalDropPosition: Int)
 
     /**
      * @return the [ScrollView] used for setting up the Drag and Drop operation, and scrolling when necessary
@@ -41,11 +43,13 @@ interface CanvasDragCallback {
     /**
      * @return A [View] to use as spacer while a view is dragged, but not dropped
      */
+    @CanvasSpacer
     val spacer: View
 
     /**
      * @return The inner spacer inside block rows
      */
+    @InnerSpacer
     val innerSpacer: View
 
     /**

@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 import com.lishiyo.kotlin.samples.retrofit.R
@@ -26,17 +25,17 @@ class BlockRow @JvmOverloads constructor(
         defStyle: Int = 0,
         defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyle, defStyleRes) {
-    var rootView: ViewGroup
+    var rootView: ViewGroup = LayoutInflater.from(context).inflate(R.layout.droppable_container, this, true) as ViewGroup
     val blockViews = arrayListOf<BlockView>()
 
     companion object {
+        val TAG: String = BlockRow::class.java::getSimpleName.toString()
         const val TOP_POSITION = -1000
         const val BOTTOM_POSITION = 1000
         const val INVALID_POSITION = -1
     }
 
     init {
-        rootView = LayoutInflater.from(context).inflate(R.layout.droppable_container, this, true) as ViewGroup
         orientation = HORIZONTAL
         gravity = CENTER_VERTICAL
         val params = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, context.getPixelSize(R.dimen.block_view_height_large))
@@ -49,11 +48,16 @@ class BlockRow @JvmOverloads constructor(
     // can this block view drop in here right now, given the current children?
     fun canDropIn(newBlockView: BlockView): Boolean {
         val limitAllowedInContainer = (blockViews.plus(newBlockView)).minBy { it.limitPerContainer() }?.limitPerContainer() ?: 0
-        return limitAllowedInContainer > childCount
+        return limitAllowedInContainer > blockViews.size
     }
 
+//    private var innerSpacer: View? = null
+
+    // add the vertical spacer
     fun addInnerSpacer(spacer: View, position: Int): View {
-        rootView.removeView(spacer)
+//        innerSpacer = spacer
+
+        checkRemoveParent(spacer)
 
         rootView.addView(spacer, position)
         val lp = spacer.layoutParams
@@ -62,6 +66,11 @@ class BlockRow @JvmOverloads constructor(
         spacer.layoutParams = lp
 
         return spacer
+    }
+
+    fun removeInnerSpacer(innerSpacer: View) {
+        // if attached, remove the spacer
+        checkRemoveParent(innerSpacer)
     }
 
     fun initDragAndDrop(dragListener: View.OnDragListener) {
@@ -95,13 +104,17 @@ class BlockRow @JvmOverloads constructor(
     }
 
     fun removeBlockView(blockView: BlockView) {
-        blockViews.remove(blockView)
+        val blockViewIndex = blockViews.indexOf(blockView)
+        val removed = blockViews.remove(blockView)
+        Log.d(TAG, "removeBlockView! $blockViewIndex in current ${blockViews.size} ++ removed? $removed")
         rootView.removeView(blockView as View)
     }
 
-    fun checkRemoveParent(view: View) {
-        if (view.parent is ViewGroup) {
-            (view.parent as ViewGroup).removeView(view)
+    fun checkRemoveParent(view: View?) {
+        view?.let {
+            if (view.parent is ViewGroup) {
+                (view.parent as ViewGroup).removeView(view)
+            }
         }
     }
 
@@ -115,7 +128,7 @@ class BlockRow @JvmOverloads constructor(
         val dropZones = createDropZones()
         for ((zone, position) in dropZones) {
             if (zone.contains(event.x.toInt(), event.y.toInt())) {
-                Log.d(DEBUG_TAG, "found zone! " + zone.toShortString())
+                Log.d(TAG, "found zone! " + zone.toShortString())
                 return position
             }
         }
