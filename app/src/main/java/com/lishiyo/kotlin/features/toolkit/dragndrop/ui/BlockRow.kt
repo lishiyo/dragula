@@ -55,11 +55,10 @@ class BlockRow @JvmOverloads constructor(
 
     // add the vertical spacer
     fun addInnerSpacer(spacer: View, position: Int): View {
-//        innerSpacer = spacer
-
         checkRemoveParent(spacer)
 
         rootView.addView(spacer, position)
+        // make it vertical
         val lp = spacer.layoutParams
         lp.width = context.getPixelSize(R.dimen.canvas_spacer_height)
         lp.height = ViewGroup.LayoutParams.MATCH_PARENT
@@ -68,9 +67,9 @@ class BlockRow @JvmOverloads constructor(
         return spacer
     }
 
-    fun removeInnerSpacer(innerSpacer: View) {
+    fun removeInnerSpacer(spacer: View?) {
         // if attached, remove the spacer
-        checkRemoveParent(innerSpacer)
+        checkRemoveParent(spacer)
     }
 
     fun initDragAndDrop(dragListener: View.OnDragListener) {

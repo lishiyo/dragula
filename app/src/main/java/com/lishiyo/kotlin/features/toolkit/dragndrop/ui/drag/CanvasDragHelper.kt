@@ -13,7 +13,6 @@ import com.lishiyo.kotlin.commons.extensions.POSITION_INVALID
 import com.lishiyo.kotlin.commons.extensions.findChildPosition
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
-import com.lishiyo.kotlin.di.dragndrop.qualifiers.InnerSpacer
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockRow
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 import com.lishiyo.kotlin.samples.retrofit.R
@@ -25,8 +24,7 @@ import com.lishiyo.kotlin.samples.retrofit.R
  */
 class CanvasDragHelper(context: Context,
                        dragCallback: CanvasDragCallback,
-                       @CanvasSpacer spacer: View,
-                       @InnerSpacer innerSpacer: View) {
+                       @CanvasSpacer spacer: View) {
     private val SCROLL_THRESHOLD = 0.15f
     private val MAX_DRAG_SCROLL_SPEED = 20
 
@@ -35,7 +33,6 @@ class CanvasDragHelper(context: Context,
     // spacer logic
     private val spacerHeight: Int = context.getPixelSize(R.dimen.canvas_spacer_height)
     private var oldSpacer: View? = spacer
-    private var innerSpacer = innerSpacer
     // top 10% and bottom 10% of current scrollview height (scrollview wraps the blocks layout)
     private var scrollThreshold : Pair<Int, Int> = Pair(0, 0)
 
@@ -43,8 +40,8 @@ class CanvasDragHelper(context: Context,
 
     companion object {
         // factory constructor
-        fun init(context: Context, dragCallback: CanvasDragCallback, spacer: View, innerSpacer: View): CanvasDragHelper {
-            return CanvasDragHelper(context, dragCallback, spacer, innerSpacer)
+        fun init(context: Context, dragCallback: CanvasDragCallback, spacer: View): CanvasDragHelper {
+            return CanvasDragHelper(context, dragCallback, spacer)
         }
     }
 
@@ -94,6 +91,8 @@ class CanvasDragHelper(context: Context,
 
                         if (!blockRow.canDropIn(draggedView as BlockView)) {
                             // between block rows
+//                            val hoverPosition = getExternalDropPosition(blockRow, event) // drop at top or bottom
+                            // takes into account both spacers and blockrows
                             val hoverPosition = getExternalDropPosition(blockRow, event) // drop at top or bottom
                             Log.i(DEBUG_TAG, "ACTION_DRAG_LOCATION ++ spacer hoverPosition: $hoverPosition")
                             if (oldSpacer != null) {
@@ -103,10 +102,10 @@ class CanvasDragHelper(context: Context,
                                 if (shouldMoveSpacer) {
 //                                hoverPosition = clamp(hoverPosition, currentSpacerPosition - 1, currentSpacerPosition + 1)
                                     // remove old spacer from layout and add spacer at new position
-                                    oldSpacer = addSpacer(hoverPosition)
+                                    oldSpacer = addSpacer(hoverPosition, blockRow)
                                 }
                             } else {
-                                oldSpacer = addSpacer(hoverPosition)
+                                oldSpacer = addSpacer(hoverPosition, blockRow)
                             }
                         } else {
                             // maybe can drop spacer inside
@@ -114,11 +113,12 @@ class CanvasDragHelper(context: Context,
                             val currentBlockRowIndex = callback.blockRows.indexOf(blockRow)
                             when (dropPosition) {
                                 BlockRow.INVALID_POSITION -> POSITION_INVALID
-                                BlockRow.TOP_POSITION -> oldSpacer = addSpacer(currentBlockRowIndex)
-                                BlockRow.BOTTOM_POSITION -> oldSpacer = addSpacer(currentBlockRowIndex + 1)
+                                BlockRow.TOP_POSITION -> oldSpacer = addSpacer(currentBlockRowIndex, blockRow)
+                                BlockRow.BOTTOM_POSITION -> oldSpacer = addSpacer(currentBlockRowIndex + 1, blockRow)
                                 else -> {
                                     // add vertical spacer inside the block row
-                                    innerSpacer = blockRow.addInnerSpacer(innerSpacer, dropPosition)
+                                    val spacer = oldSpacer ?: callback.spacer
+                                    oldSpacer = blockRow.addInnerSpacer(spacer, dropPosition)
                                 }
                             }
                         }
@@ -143,7 +143,7 @@ class CanvasDragHelper(context: Context,
 
                             val draggedFromBlockRow = getDragFromBlockRow(draggedView) // -1 if not dragged from block row
                             val dropIndex = getExternalDropPosition(blockRow, event) // above or below this blockrow we're dropping on
-                            Log.d(DEBUG_TAG, "ACTION_DROP! draggedFromBlockRow: $draggedFromBlockRow DROPINDEX: $dropIndex")
+                            Log.d(DEBUG_TAG, "ACTION_DROP! draggedFromBlockRow: $draggedFromBlockRow drop index: $dropIndex")
 
                             // remove the block view from the block row, add a new blockrow at the dropIndex
                             callback.onDragBlockOut(draggedView, draggedFromBlockRow, dropIndex)
@@ -173,7 +173,7 @@ class CanvasDragHelper(context: Context,
                     // drag and drop flow finished, didn't drop in here
                     Log.d(DEBUG_TAG, "ACTION_DRAG_ENDED! trashMode? " + trashMode + " view: " + blockRow.id)
 
-                    removeSpacers(blockRow)
+                    removeSpacers()
 
                     if (event.result) {
                         // drop was successful
@@ -204,7 +204,26 @@ class CanvasDragHelper(context: Context,
             return draggedFromBlockRow
         }
 
-        // get the drop position within the full layout
+        fun getExternalDropPositionWithSpacer(blockRow: BlockRow, event: DragEvent): Int {
+            var dropPosition = POSITION_INVALID
+            // takes into account the blockrow index
+            val blockRowIndex = callback.contentView.findChildPosition(blockRow)
+            if (blockRowIndex == POSITION_INVALID) {
+                Log.d(DEBUG_TAG, "getExternalDropPosition ++ blockRow not in layout!")
+                return dropPosition
+            }
+
+            val cutoff = (blockRow.y + blockRow.height / 2.0).toInt()
+            if (event.y < cutoff) {
+                dropPosition = blockRowIndex // on top of block row
+            } else {
+                dropPosition = blockRowIndex + 1 // on bottom of block row
+            }
+
+            return dropPosition
+        }
+
+        // get the drop position taking into account block rows only
         // only for external drops (above or below this block row)
         fun getExternalDropPosition(blockRow: BlockRow, event: DragEvent): Int {
             var dropPosition = POSITION_INVALID
@@ -241,8 +260,10 @@ class CanvasDragHelper(context: Context,
             return handleDrag(draggedView, view, event)
         }
 
-        private fun addSpacer(position: Int): View {
-            callback.contentView.removeView(oldSpacer)
+        // add external spacer
+        private fun addSpacer(position: Int, blockRow: BlockRow): View {
+//            callback.contentView.removeView(oldSpacer)
+            removeSpacers() // remove either the external or internal one
 
             val spacer = callback.spacer
             callback.contentView.addView(spacer, position)
@@ -255,15 +276,13 @@ class CanvasDragHelper(context: Context,
             return spacer
         }
 
-        private fun removeSpacers(blockRow: BlockRow) {
+        private fun removeSpacers() {
             oldSpacer?.let {
-                it.parent?.let {
-                    callback.contentView.removeView(oldSpacer)
+                if (it.parent is ViewGroup) {
+                    (it.parent as ViewGroup).removeView(oldSpacer)
                     oldSpacer = null
                 }
             }
-
-            blockRow.removeInnerSpacer(innerSpacer)
         }
 
         // Scroll the full content layout

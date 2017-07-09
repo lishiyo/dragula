@@ -4,7 +4,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
-import com.lishiyo.kotlin.di.dragndrop.qualifiers.InnerSpacer
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockRow
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
 
@@ -20,12 +19,12 @@ interface CanvasDragCallback {
      *
      * @param draggedView
      *      the block view being dragged out
-     * @param dragFromBlockRowIndex
-     *      the index of hte block row we are dragging view from, or {@link POSITION_INVALID} if not dragging from a block row
+     * @param dragFromBlockRow
+     *      the index of the block row we are dragging view from, or {@link POSITION_INVALID} if not dragging from a block row
      * @param dropToPosition
      *      the index of where to drop in entire layout
      */
-    fun onDragBlockOut(draggedView: View, dragFromBlockRowIndex: BlockRow?, dropToPosition: Int)
+    fun onDragBlockOut(draggedView: View, dragFromBlockRow: BlockRow?, dropToPosition: Int)
 
     // can drop inside the block, or maybe out
     fun onDragBlockIn(draggedView: View, dragFromBlockRow: BlockRow?, dropToBlockRow: BlockRow, internalDropPosition: Int)
@@ -46,11 +45,11 @@ interface CanvasDragCallback {
     @CanvasSpacer
     val spacer: View
 
-    /**
-     * @return The inner spacer inside block rows
-     */
-    @InnerSpacer
-    val innerSpacer: View
+//    /**
+//     * @return The inner spacer inside block rows
+//     */
+//    @InnerSpacer
+//    val innerSpacer: View
 
     /**
      * @return The [View] to use as the drop target

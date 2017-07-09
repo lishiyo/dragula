@@ -10,14 +10,12 @@ import kotlin.reflect.KClass
  * Created by connieli on 7/1/17.
  */
 @Qualifier
-@MustBeDocumented
 @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class CanvasSpacer
 
-@Qualifier
-@MustBeDocumented
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
-annotation class InnerSpacer
+//@Qualifier
+//@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+//annotation class InnerSpacer
 
 @Scope
 @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)

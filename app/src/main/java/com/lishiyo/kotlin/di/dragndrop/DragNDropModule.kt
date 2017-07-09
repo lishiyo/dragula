@@ -3,7 +3,6 @@ package com.lishiyo.kotlin.di.dragndrop
 import android.content.Context
 import android.view.View
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
-import com.lishiyo.kotlin.di.dragndrop.qualifiers.InnerSpacer
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.PerActivity
 import com.lishiyo.kotlin.features.toolkit.dragndrop.CanvasLayoutHelper
 import com.lishiyo.kotlin.features.toolkit.dragndrop.DragNDropActivity
@@ -26,9 +25,8 @@ class DragNDropModule(val activity: DragNDropActivity) {
     @Named("CanvasLayoutHelper")
     internal fun provideCanvasLayoutHelper(activity: DragNDropActivity,
                                            blockViewProviderMap: Map<Class<out Block>, @JvmSuppressWildcards Provider<BlockView>>,
-                                           @CanvasSpacer spacerProvider: Provider<View>,
-                                           @InnerSpacer innerSpacerProvider: Provider<View>): CanvasLayoutHelper {
-        return CanvasLayoutHelper(activity, blockViewProviderMap, spacerProvider, innerSpacerProvider)
+                                           @CanvasSpacer spacerProvider: Provider<View>): CanvasLayoutHelper {
+        return CanvasLayoutHelper(activity, blockViewProviderMap, spacerProvider)
     }
 
     @Provides
@@ -39,13 +37,13 @@ class DragNDropModule(val activity: DragNDropActivity) {
         return spacer
     }
 
-    @Provides
-    @InnerSpacer
-    internal fun provideInnerSpacer(context: Context): View {
-        val spacer = View(context)
-        spacer.setBackgroundResource(R.drawable.inner_spacer_background)
-        return spacer
-    }
+//    @Provides
+//    @InnerSpacer
+//    internal fun provideInnerSpacer(context: Context): View {
+//        val spacer = View(context)
+//        spacer.setBackgroundResource(R.drawable.inner_spacer_background)
+//        return spacer
+//    }
 
     @Provides
     internal fun provideActivity(): DragNDropActivity {
