@@ -12,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.lishiyo.kotlin.commons.extensions.checkRemoveParent
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
+import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.CanvasDragCallback
+import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.SpacerDragListener
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 import com.lishiyo.kotlin.samples.retrofit.R
 
@@ -28,6 +30,7 @@ class BlockRow @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyle, defStyleRes) {
     var rootView: ViewGroup = LayoutInflater.from(context).inflate(R.layout.droppable_container, this, true) as ViewGroup
     val blockViews = arrayListOf<BlockView>()
+    var innerSpacerDragListener: SpacerDragListener? = null
 
     companion object {
         val TAG: String = BlockRow::class.java::getSimpleName.toString()
@@ -53,7 +56,7 @@ class BlockRow @JvmOverloads constructor(
     }
 
     // add the vertical inner spacer
-    fun addInnerSpacer(spacer: View, position: Int): View {
+    fun addInnerSpacer(spacer: View, position: Int, callback: CanvasDragCallback): View {
         checkRemoveParent(spacer)
 
         rootView.addView(spacer, position)
@@ -63,6 +66,12 @@ class BlockRow @JvmOverloads constructor(
         lp.width = context.getPixelSize(R.dimen.canvas_spacer_height)
         lp.height = ViewGroup.LayoutParams.MATCH_PARENT
         spacer.layoutParams = lp
+
+        // add the drag listener
+        if (innerSpacerDragListener == null) {
+            innerSpacerDragListener = SpacerDragListener(this, callback, spacer)
+        }
+        spacer.setOnDragListener(innerSpacerDragListener)
 
         return spacer
     }

@@ -49,7 +49,7 @@ fun View.setDragStart(dragData: ClipData, shadowBuilder: View.DragShadowBuilder)
     return true
 }
 
-fun View.checkRemoveParent(view: View?) {
+fun checkRemoveParent(view: View?) {
     view?.let {
         if (view.parent is ViewGroup) {
             (view.parent as ViewGroup).removeView(view)

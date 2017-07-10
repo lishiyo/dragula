@@ -39,8 +39,7 @@ class CanvasDragHelper(context: Context,
     // Set on EACH blockrow
     val blockRowDragListener = CanvasDragListener()
     // Set on the spacer
-    val spacerDragListener = SpacerDragListener()
-    var isSpacerHandlingDrop = false
+    val spacerDragListener = SpacerDragListener(callback.contentView, callback, spacer)
 
     companion object {
         // factory constructor
@@ -106,16 +105,16 @@ class CanvasDragHelper(context: Context,
 
                         if (!blockRow.canDropIn(draggedView as BlockView)) {
                             // blockrow can't accept draggedView - add external spacer either above or below
-                            val hoverPosition = getExternalDropPositionWithSpacer(blockRow, event, oldSpacer) // drop at top or bottom
+                            var hoverPosition = getExternalDropPositionWithSpacer(blockRow, event, oldSpacer) // drop at top or bottom
                             Log.i(DEBUG_TAG, "ACTION_DRAG_LOCATION ++ spacer hoverPosition: $hoverPosition")
                             if (oldSpacer != null) {
                                 val currentSpacerPosition = callback.contentView.findChildPosition(oldSpacer!!)
                                 val shouldMoveSpacer = (hoverPosition != POSITION_INVALID
-                                        && hoverPosition != currentSpacerPosition // current spacer is at hover
-                                        && currentSpacerPosition != hoverPosition - 1) // current spacer is above hover
+                                        && hoverPosition != currentSpacerPosition // current spacer is at hover block
+                                        && currentSpacerPosition != hoverPosition - 1) // current spacer just above hover block
                                 Log.i(DEBUG_TAG, "currentSpacerPosition: $currentSpacerPosition ++ shouldMove? $shouldMoveSpacer")
                                 if (shouldMoveSpacer) {
-//                                hoverPosition = clamp(hoverPosition, currentSpacerPosition - 1, currentSpacerPosition + 1)
+                                    hoverPosition = clamp(hoverPosition, currentSpacerPosition - 1, currentSpacerPosition + 1)
                                     // remove old spacer from layout and add spacer at new position
                                     oldSpacer = addSpacer(hoverPosition)
                                 }
@@ -133,7 +132,7 @@ class CanvasDragHelper(context: Context,
                                 else -> {
                                     // drop position is internal - switch to vertical spacer inside the block row
                                     val spacer = oldSpacer ?: callback.spacer
-                                    oldSpacer = blockRow.addInnerSpacer(spacer, dropPosition)
+                                    oldSpacer = blockRow.addInnerSpacer(spacer, dropPosition, callback)
                                 }
                             }
                         }
@@ -186,11 +185,7 @@ class CanvasDragHelper(context: Context,
                     }
                 }
                 DragEvent.ACTION_DRAG_ENDED -> {
-                    Log.d(DEBUG_TAG, "ACTION_DRAG_ENDED! isSpacerHandlingDrop? $isSpacerHandlingDrop ${event.result}")
-                    // pass to spacer instead
-//                    if (isSpacerHandlingDrop) {
-//                        return true
-//                    }
+                    Log.d(DEBUG_TAG, "ACTION_DRAG_ENDED! event result? ${event.result}")
 
                     removeSpacers()
 
@@ -307,66 +302,64 @@ class CanvasDragHelper(context: Context,
     }
 
     // Drag listener for the spacer so it can accept drops
-    inner class SpacerDragListener : View.OnDragListener {
-        override fun onDrag(view: View, event: DragEvent): Boolean {
-            if (event.localState !is BlockView) {
-                Log.d(DEBUG_TAG, "onDrag! A drag event using a " + event.localState.javaClass.canonicalName + " was detected")
-                return false
-            }
-
-            val draggedView = event.localState as View
-
-            return handleDrag(draggedView, view, event)
-        }
-
-        fun handleDrag(draggedView: View, spacer: View, event: DragEvent): Boolean {
-            val action = event.action
-
-            when (action) {
-                DragEvent.ACTION_DRAG_STARTED -> {
-                    // TODO: set scroll threshold
-                    Log.d(DEBUG_TAG, "ACTION_DRAG_STARTED! == ON SPACER == ")
-                }
-                DragEvent.ACTION_DRAG_LOCATION -> {
-                    // TODO: scroll if necessary
-                    Log.d(DEBUG_TAG, "ACTION_DRAG_LOCATION! == ON SPACER == ")
-                }
-                DragEvent.ACTION_DROP -> {
-                    // view was dropped in this spacer - add it here
-                    Log.d(DEBUG_TAG, "ACTION_DROP! == ON SPACER == ")
-
-                    // flag for dropped on spacer
-                    isSpacerHandlingDrop = true
-
-                    // TODO handle trashmode?
-
-                    val draggedFromView = getDragFromBlockRow(draggedView)
-                    val currentSpacerPosition = callback.contentView.findChildPosition(spacer)
-                    callback.onDragBlockOut(draggedView, draggedFromView, currentSpacerPosition)
-
-                    // remove self if not already removed
-                    removeSpacers()
-
-                    isSpacerHandlingDrop = false
-                }
-                DragEvent.ACTION_DRAG_EXITED -> {
-                    Log.d(DEBUG_TAG, "ACTION_DRAG_EXITED! == ON SPACER == ")
-
-                    isSpacerHandlingDrop = false
-                }
-                DragEvent.ACTION_DRAG_ENDED -> {
-                    // TODO: this doesn't seem to be getting hit?
-                    Log.d(DEBUG_TAG, "ACTION_DRAG_ENDED! == ON SPACER == ${event.result}")
-
-                    removeSpacers()
-
-                    isSpacerHandlingDrop = false
-                }
-            }
-
-            return true
-        }
-    }
+//    inner class SpacerDragListener(ownerView: ViewGroup) : View.OnDragListener {
+//        val ownerView = ownerView
+//
+//        override fun onDrag(view: View, event: DragEvent): Boolean {
+//            if (event.localState !is BlockView) {
+//                Log.d(DEBUG_TAG, "onDrag! A drag event using a " + event.localState.javaClass.canonicalName + " was detected")
+//                return false
+//            }
+//
+//            val draggedView = event.localState as View
+//
+//            return handleDrag(draggedView, view, event)
+//        }
+//
+//        fun getSpacerPosition(spacer: View): Int {
+//            return ownerView.findChildPosition(spacer)
+//        }
+//
+//        fun handleDrag(draggedView: View, spacer: View, event: DragEvent): Boolean {
+//            val action = event.action
+//
+//            when (action) {
+//                DragEvent.ACTION_DRAG_STARTED -> {
+//                    // TODO: set scroll threshold
+//                    Log.d(DEBUG_TAG, "ACTION_DRAG_STARTED! == ON SPACER ${getSpacerPosition(spacer)}")
+//                }
+//                DragEvent.ACTION_DRAG_LOCATION -> {
+//                    // TODO: scroll if necessary
+//                    Log.d(DEBUG_TAG, "ACTION_DRAG_LOCATION! == ON SPACER ${getSpacerPosition(spacer)}")
+//                }
+//                DragEvent.ACTION_DROP -> {
+//                    // view was dropped in this spacer - add it here
+//                    val spacerPosition = getSpacerPosition(spacer)
+//                    Log.d(DEBUG_TAG, "ACTION_DROP! == ON SPACER $spacerPosition")
+//
+//                    // TODO handle trashmode?
+//                    if (spacerPosition != POSITION_INVALID) {
+//                        val draggedFromView = getDragFromBlockRow(draggedView)
+//                        callback.onDragBlockOut(draggedView, draggedFromView, spacerPosition)
+//                    }
+//
+//                    // remove self if not already removed
+//                    removeSpacers()
+//                }
+//                DragEvent.ACTION_DRAG_EXITED -> {
+//                    Log.d(DEBUG_TAG, "ACTION_DRAG_EXITED! == ON SPACER")
+//                }
+//                DragEvent.ACTION_DRAG_ENDED -> {
+//                    // TODO: this doesn't seem to be getting hit?
+//                    Log.d(DEBUG_TAG, "ACTION_DRAG_ENDED! == ON SPACER")
+//
+//                    removeSpacers()
+//                }
+//            }
+//
+//            return true
+//        }
+//    }
 
     private fun removeSpacers() {
         oldSpacer?.let {
