@@ -6,6 +6,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="@dimen/block_view_height"
 	android:gravity="center_vertical"
+	android:background="@color/colorPrimary"
 	>
 
 	<com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxOneBlockView

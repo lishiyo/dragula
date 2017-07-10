@@ -114,7 +114,6 @@ class BlockRow @JvmOverloads constructor(
         val dropZones = createDropZones()
         for ((zone, position) in dropZones) {
             if (zone.contains(event.x.toInt(), event.y.toInt())) {
-                Log.d(TAG, "found zone! " + zone.toShortString())
                 return position
             }
         }
@@ -124,7 +123,6 @@ class BlockRow @JvmOverloads constructor(
 
     private fun createDropZones(): MutableMap<Rect, Int> {
         val zones = mutableMapOf<Rect, Int>()
-        val blockRowWidth = width
         val blockRowHeight = height
 
         blockViews.map({ it -> it as View}).forEachIndexed { idx, blockView ->
