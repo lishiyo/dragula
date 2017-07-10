@@ -49,6 +49,14 @@ fun View.setDragStart(dragData: ClipData, shadowBuilder: View.DragShadowBuilder)
     return true
 }
 
+fun View.checkRemoveParent(view: View?) {
+    view?.let {
+        if (view.parent is ViewGroup) {
+            (view.parent as ViewGroup).removeView(view)
+        }
+    }
+}
+
 fun Context.getPixelSize(@DimenRes resId: Int): Int {
     return this.resources.getDimensionPixelSize(resId)
 }

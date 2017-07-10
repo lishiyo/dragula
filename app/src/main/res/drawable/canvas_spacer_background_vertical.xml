@@ -14,8 +14,8 @@
 
 	<item android:id="@+id/inner_line">
 		<inset
-			android:insetBottom="6dp"
-			android:insetTop="6dp">
+			android:insetLeft="6dp"
+			android:insetRight="6dp">
 			<shape android:shape="rectangle">
 				<corners android:radius="1.5dp" />
 				<solid android:color="#88529ECC" />

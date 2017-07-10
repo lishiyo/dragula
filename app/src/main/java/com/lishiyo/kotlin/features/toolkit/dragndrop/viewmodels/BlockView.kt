@@ -28,7 +28,7 @@ interface BlockView {
     // max num of this blockview type in a DroppableContainer
     fun limitPerContainer(): Int
 
-    // getWeight per container (1-3)
+    // getDefaultWeight per container (1-3)
     @IntRange(from = 1, to = 3)
-    fun getWeight(): Int
+    fun getDefaultWeight(): Int
 }

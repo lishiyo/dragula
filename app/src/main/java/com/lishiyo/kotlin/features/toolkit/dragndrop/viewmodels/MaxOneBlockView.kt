@@ -48,7 +48,7 @@ class MaxOneBlockView @JvmOverloads constructor(
         orientation = HORIZONTAL
 
         val params: LinearLayout.LayoutParams = if (layoutParams == null)
-            LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, getWeight().toFloat()) else layoutParams as LayoutParams
+            LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, getDefaultWeight().toFloat()) else layoutParams as LayoutParams
         params.marginStart = context.getPixelSize(R.dimen.block_view_margin)
         params.marginEnd = context.getPixelSize(R.dimen.block_view_margin)
         layoutParams = params
@@ -93,10 +93,13 @@ class MaxOneBlockView @JvmOverloads constructor(
     override fun onDrop(successful: Boolean) {
         // reset params to fill to weight
         val params: LinearLayout.LayoutParams = if (layoutParams == null)
-            LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, getWeight().toFloat()) else layoutParams as LayoutParams
+            LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, getDefaultWeight().toFloat()) else layoutParams as LayoutParams
         params.width = 0
-        params.weight = getWeight().toFloat()
+        params.weight = getDefaultWeight().toFloat()
         params.height = LayoutParams.MATCH_PARENT
+        params.marginStart = context.getPixelSize(R.dimen.block_view_margin)
+        params.marginEnd = context.getPixelSize(R.dimen.block_view_margin)
+
         layoutParams = params
     }
 
@@ -104,7 +107,7 @@ class MaxOneBlockView @JvmOverloads constructor(
         return 1
     }
 
-    override fun getWeight(): Int {
+    override fun getDefaultWeight(): Int {
         return 3
     }
 }

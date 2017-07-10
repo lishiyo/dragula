@@ -46,7 +46,7 @@ class MaxThreeBlockView @JvmOverloads constructor(
         ButterKnife.bind(this)
 
         val params: LinearLayout.LayoutParams = if (layoutParams == null)
-            LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, getWeight().toFloat()) else layoutParams as LayoutParams
+            LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, getDefaultWeight().toFloat()) else layoutParams as LayoutParams
         params.marginStart = context.getPixelSize(R.dimen.block_view_margin)
         params.marginEnd = context.getPixelSize(R.dimen.block_view_margin)
         layoutParams = params
@@ -83,10 +83,13 @@ class MaxThreeBlockView @JvmOverloads constructor(
     override fun onDrop(successful: Boolean) {
         // resize given max width
         val params: LinearLayout.LayoutParams = if (layoutParams == null)
-            LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, getWeight().toFloat()) else layoutParams as LayoutParams
+            LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, getDefaultWeight().toFloat()) else layoutParams as LayoutParams
         params.width = 0
         params.height = LayoutParams.MATCH_PARENT
-        params.weight = getWeight().toFloat()
+        params.weight = getDefaultWeight().toFloat()
+        params.marginStart = context.getPixelSize(R.dimen.block_view_margin)
+        params.marginEnd = context.getPixelSize(R.dimen.block_view_margin)
+
         layoutParams = params
     }
 
@@ -94,7 +97,7 @@ class MaxThreeBlockView @JvmOverloads constructor(
         return 3
     }
 
-    override fun getWeight(): Int {
+    override fun getDefaultWeight(): Int {
         return 1
     }
 }

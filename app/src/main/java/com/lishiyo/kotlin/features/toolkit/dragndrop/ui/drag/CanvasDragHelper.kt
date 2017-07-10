@@ -262,12 +262,12 @@ class CanvasDragHelper(context: Context,
 
         // add external spacer
         private fun addSpacer(position: Int, blockRow: BlockRow): View {
-//            callback.contentView.removeView(oldSpacer)
             removeSpacers() // remove either the external or internal one
 
             val spacer = callback.spacer
             callback.contentView.addView(spacer, position)
 
+            spacer.setBackgroundResource(R.drawable.canvas_spacer_background)
             val lp = spacer.layoutParams
             lp.height = spacerHeight
             lp.width = ViewGroup.LayoutParams.MATCH_PARENT

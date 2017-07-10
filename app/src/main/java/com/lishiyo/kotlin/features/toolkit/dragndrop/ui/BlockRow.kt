@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import com.lishiyo.kotlin.commons.extensions.checkRemoveParent
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 import com.lishiyo.kotlin.samples.retrofit.R
@@ -51,25 +52,19 @@ class BlockRow @JvmOverloads constructor(
         return limitAllowedInContainer > blockViews.size
     }
 
-//    private var innerSpacer: View? = null
-
-    // add the vertical spacer
+    // add the vertical inner spacer
     fun addInnerSpacer(spacer: View, position: Int): View {
         checkRemoveParent(spacer)
 
         rootView.addView(spacer, position)
-        // make it vertical
+
+        spacer.setBackgroundResource(R.drawable.canvas_spacer_background_vertical)
         val lp = spacer.layoutParams
         lp.width = context.getPixelSize(R.dimen.canvas_spacer_height)
         lp.height = ViewGroup.LayoutParams.MATCH_PARENT
         spacer.layoutParams = lp
 
         return spacer
-    }
-
-    fun removeInnerSpacer(spacer: View?) {
-        // if attached, remove the spacer
-        checkRemoveParent(spacer)
     }
 
     fun initDragAndDrop(dragListener: View.OnDragListener) {
@@ -107,14 +102,6 @@ class BlockRow @JvmOverloads constructor(
         val removed = blockViews.remove(blockView)
         Log.d(TAG, "removeBlockView! $blockViewIndex in current ${blockViews.size} ++ removed? $removed")
         rootView.removeView(blockView as View)
-    }
-
-    fun checkRemoveParent(view: View?) {
-        view?.let {
-            if (view.parent is ViewGroup) {
-                (view.parent as ViewGroup).removeView(view)
-            }
-        }
     }
 
     fun getDropPosition(event: DragEvent): Int {
