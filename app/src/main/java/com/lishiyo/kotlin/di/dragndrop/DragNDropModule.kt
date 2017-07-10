@@ -37,11 +37,6 @@ class DragNDropModule(val activity: DragNDropActivity) {
         return spacer
     }
 
-//    @Provides
-//    internal fun provideTrashHelper(@Named("CanvasLayoutHelper") callback: CanvasLayoutHelper): TrashHelper {
-//        return TrashHelper(callback)
-//    }
-
     @Provides
     internal fun provideActivity(): DragNDropActivity {
         return activity

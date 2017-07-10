@@ -6,19 +6,32 @@ import android.content.Context
 import android.graphics.Point
 import android.os.Build
 import android.support.annotation.DimenRes
+import android.support.v4.math.MathUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import java.io.IOException
 
 /**
- * UI related extensions.
+ * UI related extensions on View, Context etc.
  *
  * Created by connieli on 5/28/17.
  */
 
-public val POSITION_INVALID = -1
+val POSITION_INVALID = -1
 
+fun checkRemoveParent(view: View?) {
+    view?.let {
+        if (view.parent is ViewGroup) {
+            (view.parent as ViewGroup).removeView(view)
+        }
+    }
+}
+
+fun smootherStep(edge0: Float, edge1: Float, value: Float): Float {
+    val clippedVal = MathUtils.clamp((value - edge0) / (edge1 - edge0), 0f, 1f)
+    return clippedVal * clippedVal * clippedVal * (clippedVal * (clippedVal * 6 - 15) + 10)
+}
 
 // viewgroups' direct child views ( NOT recursive)
 val ViewGroup.childViews: List<View>
@@ -47,14 +60,6 @@ fun View.setDragStart(dragData: ClipData, shadowBuilder: View.DragShadowBuilder)
     }
 
     return true
-}
-
-fun checkRemoveParent(view: View?) {
-    view?.let {
-        if (view.parent is ViewGroup) {
-            (view.parent as ViewGroup).removeView(view)
-        }
-    }
 }
 
 fun Context.getPixelSize(@DimenRes resId: Int): Int {
