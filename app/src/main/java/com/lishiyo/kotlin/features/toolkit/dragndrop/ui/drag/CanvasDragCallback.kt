@@ -8,9 +8,6 @@ import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockRow
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
 
 /**
- * Created by connieli on 7/5/17.
- */
-/**
  * Interface for grabbing necessary views and notifying drag and drop events
  */
 interface CanvasDragCallback {

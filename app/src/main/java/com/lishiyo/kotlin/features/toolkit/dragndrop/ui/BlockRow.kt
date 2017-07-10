@@ -10,9 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
 import com.lishiyo.kotlin.commons.extensions.checkRemoveParent
+import com.lishiyo.kotlin.commons.extensions.findChildPosition
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.CanvasDragCallback
+import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.CanvasDragHelper.Companion.getDragFromBlockRow
+import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.DropOwner
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.SpacerDragListener
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 import com.lishiyo.kotlin.samples.retrofit.R
@@ -27,7 +31,8 @@ class BlockRow @JvmOverloads constructor(
         attrs: AttributeSet? = null,
         defStyle: Int = 0,
         defStyleRes: Int = 0
-) : LinearLayout(context, attrs, defStyle, defStyleRes) {
+) : LinearLayout(context, attrs, defStyle, defStyleRes), DropOwner {
+
     var rootView: ViewGroup = LayoutInflater.from(context).inflate(R.layout.droppable_container, this, true) as ViewGroup
     val blockViews = arrayListOf<BlockView>()
     var innerSpacerDragListener: SpacerDragListener? = null
@@ -47,6 +52,29 @@ class BlockRow @JvmOverloads constructor(
         params.bottomMargin = context.getPixelSize(R.dimen.block_row_margin)
         layoutParams = params
         setBackgroundColor(resources.getColor(R.color.material_grey_50))
+    }
+
+    override fun getSpacerPosition(spacer: View): Int {
+        return rootView.findChildPosition(spacer)
+    }
+
+    override fun handleDrop(spacer: View?, event: DragEvent, callback: CanvasDragCallback, draggedView: View, dropToPosition: Int):
+            Boolean {
+        val draggedFromView = getDragFromBlockRow(draggedView, callback)
+        val currentBlockRowIndex = callback.blockRows.indexOf(this)
+        Log.d(DEBUG_TAG, "INTERNAL ++ ACTION_DROP ! dragging to blockRowIndex $currentBlockRowIndex with dropToPosition $dropToPosition")
+        when (dropToPosition) {
+            BlockRow.DROP_POSITION_INVALID -> Log.d(DEBUG_TAG, "dropping in invalid position in blockRow!")
+            BlockRow.DROP_POSITION_TOP -> callback.onDragBlockOut(draggedView, draggedFromView, currentBlockRowIndex)
+            BlockRow.DROP_POSITION_BOTTOM -> callback.onDragBlockOut(draggedView, draggedFromView,
+                    currentBlockRowIndex + 1)
+            else -> {
+                // will go inside the block row
+                callback.onDragBlockIn(draggedView, draggedFromView, this, dropToPosition)
+            }
+        }
+
+        return true
     }
 
     // can this block view drop in here right now, given the current children?

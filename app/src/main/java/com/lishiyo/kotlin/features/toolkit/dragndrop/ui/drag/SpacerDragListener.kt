@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
 import com.lishiyo.kotlin.commons.extensions.POSITION_INVALID
-import com.lishiyo.kotlin.commons.extensions.findChildPosition
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 
@@ -15,10 +14,10 @@ import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
  */
 
 // Drag listener for the spacer so it can accept drops
-class SpacerDragListener(ownerView: ViewGroup,
+class SpacerDragListener(dropOwner: DropOwner,
                          callback: CanvasDragCallback,
                          @CanvasSpacer spacer: View) : View.OnDragListener {
-    val ownerView = ownerView
+    val dropOwner = dropOwner
     val callback = callback
     private var oldSpacer: View? = spacer
 
@@ -33,31 +32,26 @@ class SpacerDragListener(ownerView: ViewGroup,
         return handleDrag(draggedView, view, event)
     }
 
-    fun getSpacerPosition(spacer: View): Int {
-        return ownerView.findChildPosition(spacer)
-    }
-
     fun handleDrag(draggedView: View, spacer: View, event: DragEvent): Boolean {
         val action = event.action
 
         when (action) {
             DragEvent.ACTION_DRAG_STARTED -> {
                 // TODO: set scroll threshold
-                Log.d(DEBUG_TAG, "ACTION_DRAG_STARTED! == ON SPACER ${getSpacerPosition(spacer)}")
+                Log.d(DEBUG_TAG, "ACTION_DRAG_STARTED! == ON SPACER ${dropOwner.getSpacerPosition(spacer)}")
             }
             DragEvent.ACTION_DRAG_LOCATION -> {
                 // TODO: scroll if necessary
-                Log.d(DEBUG_TAG, "ACTION_DRAG_LOCATION! == ON SPACER ${getSpacerPosition(spacer)}")
+                Log.d(DEBUG_TAG, "ACTION_DRAG_LOCATION! == ON SPACER ${dropOwner.getSpacerPosition(spacer)}")
             }
             DragEvent.ACTION_DROP -> {
                 // view was dropped in this spacer - add it here
-                val spacerPosition = getSpacerPosition(spacer)
+                val spacerPosition = dropOwner.getSpacerPosition(spacer)
                 Log.d(DEBUG_TAG, "ACTION_DROP! == ON SPACER $spacerPosition")
 
                 // TODO handle trashmode?
                 if (spacerPosition != POSITION_INVALID) {
-                    val draggedFromView = getDragFromBlockRow(draggedView)
-                    callback.onDragBlockOut(draggedView, draggedFromView, spacerPosition)
+                    dropOwner.handleDrop(spacer, event, callback, draggedView, spacerPosition)
                 }
 
                 // remove self if not already removed

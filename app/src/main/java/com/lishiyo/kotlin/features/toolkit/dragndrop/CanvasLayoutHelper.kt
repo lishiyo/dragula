@@ -98,7 +98,12 @@ class CanvasLayoutHelper
     private fun addBlockRow(row: BlockRow, position: Int): BlockRow {
         // add row to layout, initialize drop and drop on the row (add drag long click listener)
         contentView.addView(row, position)
-        blockRows.add(position, row)
+        if (position < blockRows.size) {
+            blockRows.add(position, row)
+        } else {
+            // adding at very end
+            blockRows.add(row)
+        }
 
         row.initDragAndDrop(canvasDragHelper.blockRowDragListener)
 
