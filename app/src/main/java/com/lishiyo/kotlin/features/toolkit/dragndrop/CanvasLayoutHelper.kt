@@ -42,12 +42,12 @@ class CanvasLayoutHelper
     }
 
     // external drop - dropped outside a block row
-    override fun onDragBlockOut(draggedView: View, dragFromBlockRow: BlockRow?, dropToPosition: Int) {
-        Log.d(DEBUG_TAG, "onDragBlockOut ++ FROM blockRowIndex: $dragFromBlockRow TO: $dropToPosition")
+    override fun onDragBlockOut(draggedView: View, dragFromView: View, dropToPosition: Int) {
+        Log.d(DEBUG_TAG, "onDragBlockOut ++ TO: $dropToPosition")
 
         if (draggedView is BlockView) {
             // remove the draggedView from the dragFromBlockRow
-            removeDraggedView(dragFromBlockRow, draggedView)
+            removeDraggedView(dragFromView, draggedView)
 
             // create a new blockrow with this view
             val newBlockRow = BlockRow(activity)
@@ -59,13 +59,13 @@ class CanvasLayoutHelper
     }
 
     // internal drop - dropped inside a block row
-    override fun onDragBlockIn(draggedView: View, dragFromBlockRow: BlockRow?, dropToBlockRow: BlockRow, internalDropPosition: Int) {
-        val blockRowIndex = blockRows.indexOf(dropToBlockRow)
-        Log.d(DEBUG_TAG, "onDragBlockIn ++ FROM blockRowIndex: $dragFromBlockRow TO blockRowIndex: $blockRowIndex at internalPos: $internalDropPosition")
+    override fun onDragBlockIn(draggedView: View, dragFromView: View, dropToBlockRow: BlockRow, internalDropPosition: Int) {
+        Log.d(DEBUG_TAG, "onDragBlockIn ++ TO blockRowIndex: ${blockRows.indexOf(dropToBlockRow)} " +
+                "at internalPos: $internalDropPosition")
 
         if (draggedView is BlockView) {
             // remove the draggedView from the dragFromBlockRow
-            removeDraggedView(dragFromBlockRow, draggedView)
+            removeDraggedView(dragFromView, draggedView)
 
             // tell blockrow to insert draggedView at the internal position
             dropToBlockRow.addBlockViewAt(draggedView, internalDropPosition)
@@ -81,7 +81,7 @@ class CanvasLayoutHelper
     }
 
     fun setupDragAndDrop() {
-        // must be called AFTER activity's block rows have been set
+        // TODO: should be called AFTER activity's block rows have been set
         canvasDragHelper = CanvasDragHelper.init(activity, this, spacer)
     }
 
@@ -95,23 +95,23 @@ class CanvasLayoutHelper
                 })
     }
 
-    internal fun addBlockRow(row: BlockRow, position: Int): BlockRow {
+    private fun addBlockRow(row: BlockRow, position: Int): BlockRow {
         // add row to layout, initialize drop and drop on the row (add drag long click listener)
         contentView.addView(row, position)
         blockRows.add(position, row)
 
-        row.initDragAndDrop(canvasDragHelper.dragListener)
+        row.initDragAndDrop(canvasDragHelper.blockRowDragListener)
 
         return row
     }
 
-    private fun removeDraggedView(dragFromBlockRow: BlockRow?, draggedView: BlockView) {
+    private fun removeDraggedView(dragFromView: View, draggedView: BlockView) {
         // remove the draggedView from the dragFromBlockRow
-        dragFromBlockRow?.let {
-            it.removeBlockView(draggedView)
+        if (dragFromView is BlockRow) {
+            dragFromView.removeBlockView(draggedView)
             // delete the block row if it's now empty
-            if (it.blockViews.isEmpty()) {
-                deleteView(dragFromBlockRow)
+            if (dragFromView.blockViews.isEmpty()) {
+                deleteView(dragFromView)
             }
         }
     }

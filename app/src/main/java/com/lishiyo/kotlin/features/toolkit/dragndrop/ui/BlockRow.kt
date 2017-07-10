@@ -31,9 +31,9 @@ class BlockRow @JvmOverloads constructor(
 
     companion object {
         val TAG: String = BlockRow::class.java::getSimpleName.toString()
-        const val TOP_POSITION = -1000
-        const val BOTTOM_POSITION = 1000
-        const val INVALID_POSITION = -1
+        const val DROP_POSITION_TOP = -1000
+        const val DROP_POSITION_BOTTOM = 1000
+        const val DROP_POSITION_INVALID = -1
     }
 
     init {
@@ -67,8 +67,8 @@ class BlockRow @JvmOverloads constructor(
         return spacer
     }
 
+    // Set the drag listener on the blockrow and set the longclick listener on its blockviews
     fun initDragAndDrop(dragListener: View.OnDragListener) {
-        // set drag listener on the block row
         setOnDragListener(dragListener)
 
         blockViews.forEach { it.initDragAndDrop() }
@@ -119,7 +119,7 @@ class BlockRow @JvmOverloads constructor(
             }
         }
 
-        return INVALID_POSITION
+        return DROP_POSITION_INVALID
     }
 
     private fun createDropZones(): MutableMap<Rect, Int> {
@@ -145,8 +145,8 @@ class BlockRow @JvmOverloads constructor(
 
             zones.put(firstThirdZone, idx)
             zones.put(lastThirdZone, idx + 1)
-            zones.put(topHalfZone, TOP_POSITION)
-            zones.put(bottomHalfZone, BOTTOM_POSITION)
+            zones.put(topHalfZone, DROP_POSITION_TOP)
+            zones.put(bottomHalfZone, DROP_POSITION_BOTTOM)
         }
 
         return zones

@@ -36,7 +36,13 @@ class CanvasDragHelper(context: Context,
     // top 10% and bottom 10% of current scrollview height (scrollview wraps the blocks layout)
     private var scrollThreshold : Pair<Int, Int> = Pair(0, 0)
 
-    val dragListener = CanvasDragListener()
+    // Set on EACH blockrow
+    val blockRowDragListener = CanvasDragListener()
+    // Set on the spacer
+    val spacerDragListener = SpacerDragListener()
+
+    var isRemovingSpacer = false
+    var isSpacerHandlingDrop = false
 
     companion object {
         // factory constructor
@@ -45,16 +51,27 @@ class CanvasDragHelper(context: Context,
         }
     }
 
-    init {
-        // callback.scrollView.setOnDragListener(dragListener)
-    }
-
-    // this is the "drop zone" view, listening to the dragged view
-    // per block row listener - x and y are RELATIVE to the blockrow
+    // This is the "drop zone" view, listening to the dragged view - x and y are RELATIVE to the blockrow
     inner class CanvasDragListener : View.OnDragListener {
         // flag for when the view enters or exits trash area
         // true if this is being dragged on the trash atm
         private val trashMode: Boolean = false
+
+        override fun onDrag(view: View, event: DragEvent): Boolean {
+            if (event.localState !is BlockView) {
+                Log.d(DEBUG_TAG, "onDrag! A drag event using a " + event.localState.javaClass.canonicalName + " was detected")
+                return false
+            }
+
+            if (view !is BlockRow) {
+                Log.d(DEBUG_TAG, "trying to drop in non-BlockRow: " + view.javaClass.simpleName)
+                return false
+            }
+
+            val draggedView = event.localState as View
+
+            return handleDrag(draggedView, view, event)
+        }
 
         fun handleDrag(draggedView: View, blockRow: BlockRow, event: DragEvent): Boolean {
             val action = event.action
@@ -65,13 +82,13 @@ class CanvasDragHelper(context: Context,
                     // set up animations
                     // make trashcan visible
 
-                    // store the current threshold with spacer included adding spacer
+                    // store the current threshold with spacer included
                     val scrollViewVisibleRect = Rect()
                     callback.scrollView.getGlobalVisibleRect(scrollViewVisibleRect)
                     val height = scrollViewVisibleRect.bottom - scrollViewVisibleRect.top // total visible height of scrollview
                     val threshold = height * SCROLL_THRESHOLD // 10%
-                    val topCutoff = threshold.toInt() // normalized for top 10% (0-200)
-                    val bottomCutoff = (height - threshold).toInt() // 90% (2000-2200)
+                    val topCutoff = threshold.toInt() // 0-10% of visible (0-200)
+                    val bottomCutoff = (height - threshold).toInt() // 90-100% of visible (2000-2200)
                     scrollThreshold = Pair(topCutoff, bottomCutoff)
                     Log.d(DEBUG_TAG, "scrollView globalVisibleRect TOP: " + scrollViewVisibleRect.top + " BOTTOM: " +
                             scrollViewVisibleRect.bottom + " for threshold: <" + topCutoff + ", " + bottomCutoff + ">")
@@ -86,13 +103,11 @@ class CanvasDragHelper(context: Context,
 
                     // scale trash, remove spacer and select trash if on it
 
-                    // not scrolling the entire scrollview atm, toggle spacers
+                    // not scrolling the entire scrollview atm - toggle spacers
                     if (!handleScroll(callback.scrollView, blockRow, event, scrollThreshold)) {
 
                         if (!blockRow.canDropIn(draggedView as BlockView)) {
-                            // between block rows
-//                            val hoverPosition = getExternalDropPosition(blockRow, event) // drop at top or bottom
-                            // takes into account both spacers and blockrows
+                            // blockrow can't accept draggedView - add external spacer
                             val hoverPosition = getExternalDropPosition(blockRow, event) // drop at top or bottom
                             Log.i(DEBUG_TAG, "ACTION_DRAG_LOCATION ++ spacer hoverPosition: $hoverPosition")
                             if (oldSpacer != null) {
@@ -102,21 +117,21 @@ class CanvasDragHelper(context: Context,
                                 if (shouldMoveSpacer) {
 //                                hoverPosition = clamp(hoverPosition, currentSpacerPosition - 1, currentSpacerPosition + 1)
                                     // remove old spacer from layout and add spacer at new position
-                                    oldSpacer = addSpacer(hoverPosition, blockRow)
+                                    oldSpacer = addSpacer(hoverPosition)
                                 }
                             } else {
-                                oldSpacer = addSpacer(hoverPosition, blockRow)
+                                oldSpacer = addSpacer(hoverPosition)
                             }
                         } else {
-                            // maybe can drop spacer inside
+                            // blockrow can accept draggedView - spacer can go inside or out
                             val dropPosition = blockRow.getDropPosition(event)
                             val currentBlockRowIndex = callback.blockRows.indexOf(blockRow)
                             when (dropPosition) {
-                                BlockRow.INVALID_POSITION -> POSITION_INVALID
-                                BlockRow.TOP_POSITION -> oldSpacer = addSpacer(currentBlockRowIndex, blockRow)
-                                BlockRow.BOTTOM_POSITION -> oldSpacer = addSpacer(currentBlockRowIndex + 1, blockRow)
+                                BlockRow.DROP_POSITION_INVALID -> POSITION_INVALID
+                                BlockRow.DROP_POSITION_TOP -> oldSpacer = addSpacer(currentBlockRowIndex)
+                                BlockRow.DROP_POSITION_BOTTOM -> oldSpacer = addSpacer(currentBlockRowIndex + 1)
                                 else -> {
-                                    // add vertical spacer inside the block row
+                                    // drop position is internal - switch to vertical spacer inside the block row
                                     val spacer = oldSpacer ?: callback.spacer
                                     oldSpacer = blockRow.addInnerSpacer(spacer, dropPosition)
                                 }
@@ -127,8 +142,8 @@ class CanvasDragHelper(context: Context,
 
                 }
                 DragEvent.ACTION_DRAG_EXITED -> {
-                    // dragged view exited from our view area
-                    Log.d(DEBUG_TAG, "ACTION_DRAG_EXITED! trashMode? " + trashMode + " view: " + blockRow.id)
+                    // dragged view exited from our view area, didn't drop in here
+                    Log.d(DEBUG_TAG, "ACTION_DRAG_EXITED! trashMode? " + trashMode + " view: " + blockRow::class.java.simpleName)
 
                 }
                 DragEvent.ACTION_DROP -> {
@@ -155,9 +170,9 @@ class CanvasDragHelper(context: Context,
                             Log.d(DEBUG_TAG, "ACTION_DROP ! dragging from $draggedFromBlockRow to blockRowIndex " +
                                     "$currentBlockRowIndex with dropPosition $dropPosition")
                             when (dropPosition) {
-                                BlockRow.INVALID_POSITION -> Log.d(DEBUG_TAG, "dropping in invalid position in blockRow!")
-                                BlockRow.TOP_POSITION -> callback.onDragBlockOut(draggedView, draggedFromBlockRow, currentBlockRowIndex)
-                                BlockRow.BOTTOM_POSITION -> callback.onDragBlockOut(draggedView, draggedFromBlockRow,
+                                BlockRow.DROP_POSITION_INVALID -> Log.d(DEBUG_TAG, "dropping in invalid position in blockRow!")
+                                BlockRow.DROP_POSITION_TOP -> callback.onDragBlockOut(draggedView, draggedFromBlockRow, currentBlockRowIndex)
+                                BlockRow.DROP_POSITION_BOTTOM -> callback.onDragBlockOut(draggedView, draggedFromBlockRow,
                                         currentBlockRowIndex + 1)
                                 else -> {
                                     // will go inside the block row
@@ -170,8 +185,11 @@ class CanvasDragHelper(context: Context,
                     }
                 }
                 DragEvent.ACTION_DRAG_ENDED -> {
-                    // drag and drop flow finished, didn't drop in here
-                    Log.d(DEBUG_TAG, "ACTION_DRAG_ENDED! trashMode? " + trashMode + " view: " + blockRow.id)
+                    Log.d(DEBUG_TAG, "ACTION_DRAG_ENDED! isSpacerHandlingDrop? $isSpacerHandlingDrop ${event.result}")
+                    // pass to spacer instead
+                    if (isSpacerHandlingDrop) {
+                        return true
+                    }
 
                     removeSpacers()
 
@@ -182,45 +200,13 @@ class CanvasDragHelper(context: Context,
                         // drop didn't succeed
                         draggedView.animate().alpha(1f).start()
                     }
+
                     // clearAnimations();
                     // animate out the trash
-                }
-                else -> {
-                    Log.d(DEBUG_TAG, "fell to default: " + trashMode + " view: " + blockRow.id)
                 }
             }
 
             return true
-        }
-
-        // index of block row we are dragging a view from
-        // does NOT include spacer
-        fun getDragFromBlockRow(draggedView: View): BlockRow? {
-            // find which block row this drag is coming from
-            // TODO: get it from the clip data
-            val draggedFromBlockRow = callback.blockRows.findLast {
-                blockRow -> blockRow.indexOfChild(draggedView) != POSITION_INVALID
-            }
-            return draggedFromBlockRow
-        }
-
-        fun getExternalDropPositionWithSpacer(blockRow: BlockRow, event: DragEvent): Int {
-            var dropPosition = POSITION_INVALID
-            // takes into account the blockrow index
-            val blockRowIndex = callback.contentView.findChildPosition(blockRow)
-            if (blockRowIndex == POSITION_INVALID) {
-                Log.d(DEBUG_TAG, "getExternalDropPosition ++ blockRow not in layout!")
-                return dropPosition
-            }
-
-            val cutoff = (blockRow.y + blockRow.height / 2.0).toInt()
-            if (event.y < cutoff) {
-                dropPosition = blockRowIndex // on top of block row
-            } else {
-                dropPosition = blockRowIndex + 1 // on bottom of block row
-            }
-
-            return dropPosition
         }
 
         // get the drop position taking into account block rows only
@@ -244,45 +230,43 @@ class CanvasDragHelper(context: Context,
             return dropPosition
         }
 
-        override fun onDrag(view: View, event: DragEvent): Boolean {
-            if (event.localState !is BlockView) {
-                Log.d(DEBUG_TAG, "onDrag! A drag event using a " + event.localState.javaClass.canonicalName + " was detected")
-                return false
+        fun getExternalDropPositionWithSpacer(blockRow: BlockRow, event: DragEvent): Int {
+            var dropPosition = POSITION_INVALID
+            // takes into account the blockrow index
+            val blockRowIndex = callback.contentView.findChildPosition(blockRow)
+            if (blockRowIndex == POSITION_INVALID) {
+                Log.d(DEBUG_TAG, "getExternalDropPosition ++ blockRow not in layout!")
+                return dropPosition
             }
 
-            if (view !is BlockRow) {
-                Log.d(DEBUG_TAG, "trying to drop in non-BlockRow: " + view.javaClass.simpleName)
-                return false
+            val cutoff = (blockRow.y + blockRow.height / 2.0).toInt()
+            if (event.y < cutoff) {
+                dropPosition = blockRowIndex // on top of block row
+            } else {
+                dropPosition = blockRowIndex + 1 // on bottom of block row
             }
 
-            val draggedView = event.localState as View
-
-            return handleDrag(draggedView, view, event)
+            return dropPosition
         }
 
-        // add external spacer
-        private fun addSpacer(position: Int, blockRow: BlockRow): View {
-            removeSpacers() // remove either the external or internal one
+        // add external spacer (the horizontal one b/t blockrows)
+        private fun addSpacer(position: Int): View {
+            removeSpacers() // removes either the external or internal one
 
             val spacer = callback.spacer
             callback.contentView.addView(spacer, position)
 
+            // make it horzontal
             spacer.setBackgroundResource(R.drawable.canvas_spacer_background)
             val lp = spacer.layoutParams
             lp.height = spacerHeight
             lp.width = ViewGroup.LayoutParams.MATCH_PARENT
             spacer.layoutParams = lp
 
-            return spacer
-        }
+            // add the drag listener
+            spacer.setOnDragListener(spacerDragListener)
 
-        private fun removeSpacers() {
-            oldSpacer?.let {
-                if (it.parent is ViewGroup) {
-                    (it.parent as ViewGroup).removeView(oldSpacer)
-                    oldSpacer = null
-                }
-            }
+            return spacer
         }
 
         // Scroll the full content layout
@@ -310,10 +294,10 @@ class CanvasDragHelper(context: Context,
             needToScroll = delta < 0 && scrollView.scrollY > 0 // at top, and we've scroll down => scroll back up
                     || delta > 0 && (scrollView.height + scrollView.scrollY <= scrollView.getChildAt(0).height) // at bottom
 
-            Log.d(DEBUG_TAG, "handleScroll! eventY $eventY ++ blockRowLocationInWindow: $blockRowY for total eventYOnScreen $eventYOnScreen")
-            Log.d(DEBUG_TAG, "handleScroll! BLOCKROW globalRect: <" + blockRowVisibleRect.top + ", " + blockRowVisibleRect.bottom + ">" +
-                    " vs top: " + blockRow.top + " scrollY: " + blockRow.scrollY)
-            Log.d(DEBUG_TAG, "handleScroll finish ===== delta: $delta ==== needToScroll? $needToScroll")
+//            Log.d(DEBUG_TAG, "handleScroll! eventY $eventY ++ blockRowLocationInWindow: $blockRowY for total eventYOnScreen $eventYOnScreen")
+//            Log.d(DEBUG_TAG, "handleScroll! BLOCKROW globalRect: <" + blockRowVisibleRect.top + ", " + blockRowVisibleRect.bottom + ">" +
+//                    " vs top: " + blockRow.top + " scrollY: " + blockRow.scrollY)
+//            Log.d(DEBUG_TAG, "handleScroll finish ===== delta: $delta ==== needToScroll? $needToScroll")
 
             scrollView.smoothScrollBy(0, delta)
 
@@ -321,9 +305,97 @@ class CanvasDragHelper(context: Context,
         }
     }
 
-    /**
-     * By Ken Perlin. See [Smoothstep - Wikipedia](http://en.wikipedia.org/wiki/Smoothstep).
-     */
+    // Drag listener for the spacer so it can accept drops
+    inner class SpacerDragListener : View.OnDragListener {
+        override fun onDrag(view: View, event: DragEvent): Boolean {
+            if (event.localState !is BlockView) {
+                Log.d(DEBUG_TAG, "onDrag! A drag event using a " + event.localState.javaClass.canonicalName + " was detected")
+                return false
+            }
+
+            val draggedView = event.localState as View
+
+            return handleDrag(draggedView, view, event)
+        }
+
+        fun handleDrag(draggedView: View, spacer: View, event: DragEvent): Boolean {
+            val action = event.action
+
+            when (action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    // TODO: set scroll threshold
+                    Log.d(DEBUG_TAG, "ACTION_DRAG_STARTED! == ON SPACER == ")
+                }
+                DragEvent.ACTION_DRAG_LOCATION -> {
+                    // TODO: scroll if necessary
+                    Log.d(DEBUG_TAG, "ACTION_DRAG_LOCATION! == ON SPACER == ")
+                }
+                DragEvent.ACTION_DROP -> {
+                    // view was dropped in this spacer - add it here
+                    Log.d(DEBUG_TAG, "ACTION_DROP! == ON SPACER == ")
+
+                    // flag for dropped on spacer
+                    isSpacerHandlingDrop = true
+
+                    // TODO handle trashmode?
+
+                    val draggedFromView = getDragFromBlockRow(draggedView)
+                    val currentSpacerPosition = callback.contentView.findChildPosition(spacer)
+                    callback.onDragBlockOut(draggedView, draggedFromView, currentSpacerPosition)
+
+                    // remove self if not already removed
+                    removeSpacers()
+
+                    isSpacerHandlingDrop = false
+                }
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    Log.d(DEBUG_TAG, "ACTION_DRAG_EXITED! == ON SPACER == ")
+
+                    isSpacerHandlingDrop = false
+                }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    // TODO: this doesn't seem to be getting hit?
+                    Log.d(DEBUG_TAG, "ACTION_DRAG_ENDED! == ON SPACER == ${event.result}")
+
+                    removeSpacers()
+                    if (event.result) {
+                        // drop was successful
+                        draggedView.alpha = 1f
+                    } else {
+                        // drop didn't succeed
+                        draggedView.animate().alpha(1f).start()
+                    }
+
+                    isSpacerHandlingDrop = false
+                }
+            }
+
+            return true
+        }
+    }
+
+    private fun removeSpacers() {
+        oldSpacer?.let {
+            if (it.parent is ViewGroup) {
+                it.setOnDragListener(null)
+                (it.parent as ViewGroup).removeView(oldSpacer)
+                oldSpacer = null
+            }
+        }
+    }
+
+    // index of block row we are dragging a view from
+    // does NOT include spacer
+    fun getDragFromBlockRow(draggedView: View): View {
+        // find which block row this drag is coming from
+        // TODO: get it from the clip data
+        val draggedFromBlockRow = callback.blockRows.findLast {
+            blockRow -> blockRow.indexOfChild(draggedView) != POSITION_INVALID
+        }
+
+        return draggedFromBlockRow ?: (draggedView.parent as View)
+    }
+
     private fun smootherStep(edge0: Float, edge1: Float, value: Float): Float {
         val clippedVal = clamp((value - edge0) / (edge1 - edge0), 0f, 1f)
         return clippedVal * clippedVal * clippedVal * (clippedVal * (clippedVal * 6 - 15) + 10)

@@ -15,19 +15,28 @@ import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
  */
 interface CanvasDragCallback {
     /**
-     * Drop a block view *out* of a block row (need to add new block row).
+     * External drop - drop a block view *out* of a block row.
      *
      * @param draggedView
      *      the block view being dragged out
-     * @param dragFromBlockRow
-     *      the index of the block row we are dragging view from, or {@link POSITION_INVALID} if not dragging from a block row
+     * @param dragFromView
+     *      the view we are dragging the blockview from, usually a BlockRow
      * @param dropToPosition
      *      the index of where to drop in entire layout
      */
-    fun onDragBlockOut(draggedView: View, dragFromBlockRow: BlockRow?, dropToPosition: Int)
+    fun onDragBlockOut(draggedView: View, dragFromView: View, dropToPosition: Int)
 
-    // can drop inside the block, or maybe out
-    fun onDragBlockIn(draggedView: View, dragFromBlockRow: BlockRow?, dropToBlockRow: BlockRow, internalDropPosition: Int)
+    /**
+     * Internal drop - drop a block view *inside* a block row.
+     *
+     * @param draggedView
+     *      the block view dragged
+     * @param dragFromView
+     *      the view we are dragging blockview from, usually a BlockRow
+     * @param dropToBlockRow
+     *
+     */
+    fun onDragBlockIn(draggedView: View, dragFromView: View, dropToBlockRow: BlockRow, internalDropPosition: Int)
 
     /**
      * @return the [ScrollView] used for setting up the Drag and Drop operation, and scrolling when necessary
@@ -44,12 +53,6 @@ interface CanvasDragCallback {
      */
     @CanvasSpacer
     val spacer: View
-
-//    /**
-//     * @return The inner spacer inside block rows
-//     */
-//    @InnerSpacer
-//    val innerSpacer: View
 
     /**
      * @return The [View] to use as the drop target
