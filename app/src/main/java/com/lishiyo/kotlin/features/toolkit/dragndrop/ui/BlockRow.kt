@@ -14,10 +14,10 @@ import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
 import com.lishiyo.kotlin.commons.extensions.checkRemoveParent
 import com.lishiyo.kotlin.commons.extensions.findChildPosition
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
-import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.CanvasDragCallback
-import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.CanvasDragHelper.Companion.getDragFromBlockRow
-import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.DropOwner
-import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.SpacerDragListener
+import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.CanvasDragCallback
+import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.CanvasDragHelper.Companion.getDragFromBlockRow
+import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.DropOwner
+import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.SpacerDragListener
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 import com.lishiyo.kotlin.samples.retrofit.R
 
@@ -58,7 +58,7 @@ class BlockRow @JvmOverloads constructor(
         return rootView.findChildPosition(spacer)
     }
 
-    override fun handleDrop(spacer: View?, event: DragEvent, callback: CanvasDragCallback, draggedView: View, dropToPosition: Int):
+    override fun handleDrop(callback: CanvasDragCallback, event: DragEvent, draggedView: View, dropToPosition: Int, spacer: View?):
             Boolean {
         val draggedFromView = getDragFromBlockRow(draggedView, callback)
         val currentBlockRowIndex = callback.blockRows.indexOf(this)

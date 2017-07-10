@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag
+package com.lishiyo.kotlin.features.toolkit.dragndrop.drag
 
 import android.graphics.Bitmap
 import android.graphics.Canvas

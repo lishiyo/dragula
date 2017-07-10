@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag
+package com.lishiyo.kotlin.features.toolkit.dragndrop.drag
 
 import android.content.Context
 import android.graphics.Rect
@@ -24,7 +24,7 @@ import com.lishiyo.kotlin.samples.retrofit.R
  */
 class CanvasDragHelper(context: Context,
                        dragCallback: CanvasDragCallback,
-                       @CanvasSpacer spacer: View) : DropOwner {
+                       @CanvasSpacer spacer: View) {
 
     private val SCROLL_THRESHOLD = 0.15f
     private val MAX_DRAG_SCROLL_SPEED = 20
@@ -37,10 +37,10 @@ class CanvasDragHelper(context: Context,
     // top 10% and bottom 10% of current scrollview height (scrollview wraps the blocks layout)
     private var scrollThreshold : Pair<Int, Int> = Pair(0, 0)
 
-    // Set on EACH blockrow
+    // Drag listener set on each blockrow
     val blockRowDragListener = CanvasDragListener()
-    // Set on the spacer
-    val spacerDragListener = SpacerDragListener(this, callback, spacer)
+    // Drag listener set on the spacer
+    val spacerDragListener = SpacerDragListener(callback, callback, spacer)
 
     companion object {
         // factory constructor
@@ -59,20 +59,6 @@ class CanvasDragHelper(context: Context,
 
             return draggedFromBlockRow ?: (draggedView.parent as View)
         }
-    }
-
-    override fun getSpacerPosition(spacer: View): Int {
-        return callback.contentView.findChildPosition(spacer)
-    }
-
-    override fun handleDrop(spacer: View?, event: DragEvent, callback: CanvasDragCallback, draggedView: View, dropToPosition: Int): Boolean {
-        val draggedFromView = getDragFromBlockRow(draggedView, callback)
-        Log.d(DEBUG_TAG, "EXTERNAL ++ ACTION_DROP dropToPosition $dropToPosition")
-        if (dropToPosition != POSITION_INVALID) {
-           callback.onDragBlockOut(draggedView, draggedFromView, dropToPosition)
-        }
-
-        return true
     }
 
     // This is the "drop zone" view, listening to the dragged view - x and y are RELATIVE to the blockrow
@@ -184,10 +170,10 @@ class CanvasDragHelper(context: Context,
                             Log.d(DEBUG_TAG, "ACTION_DROP! drop index: $dropIndex")
 
                             // remove the block view from the block row, add a new blockrow at the dropIndex
-                            handleDrop(oldSpacer, event, callback, draggedView, dropIndex)
+                            callback.handleDrop(callback, event, draggedView, dropIndex, oldSpacer)
                         } else {
                             // drag block INTO this BlockRow
-                            blockRow.handleDrop(oldSpacer, event, callback, draggedView, blockRow.getDropPosition(event))
+                            blockRow.handleDrop(callback, event, draggedView, blockRow.getDropPosition(event), oldSpacer)
                         }
                     }
                 }

@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag
+package com.lishiyo.kotlin.features.toolkit.dragndrop.drag
 
 import android.util.Log
 import android.view.DragEvent
@@ -46,12 +46,12 @@ class SpacerDragListener(dropOwner: DropOwner,
             }
             DragEvent.ACTION_DROP -> {
                 // view was dropped in this spacer - add it here
-                val spacerPosition = dropOwner.getSpacerPosition(spacer)
-                Log.d(DEBUG_TAG, "ACTION_DROP! == ON SPACER $spacerPosition")
+                val dropToPosition = dropOwner.getSpacerPosition(spacer)
+                Log.d(DEBUG_TAG, "ACTION_DROP! == ON SPACER $dropToPosition")
 
                 // TODO handle trashmode?
-                if (spacerPosition != POSITION_INVALID) {
-                    dropOwner.handleDrop(spacer, event, callback, draggedView, spacerPosition)
+                if (dropToPosition != POSITION_INVALID) {
+                    dropOwner.handleDrop(callback, event, draggedView, dropToPosition, spacer)
                 }
 
                 // remove self if not already removed

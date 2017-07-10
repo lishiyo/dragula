@@ -1,16 +1,20 @@
 package com.lishiyo.kotlin.features.toolkit.dragndrop
 
 import android.util.Log
+import android.view.DragEvent
 import android.view.View
 import android.view.ViewGroup
 import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
+import com.lishiyo.kotlin.commons.extensions.POSITION_INVALID
+import com.lishiyo.kotlin.commons.extensions.findChildPosition
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.PerActivity
+import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.CanvasDragCallback
+import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.CanvasDragHelper
+import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.DropOwner
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockRow
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
-import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.CanvasDragCallback
-import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag.CanvasDragHelper
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -26,7 +30,7 @@ class CanvasLayoutHelper
     @Inject constructor(val activity: DragNDropActivity,
                         val blockViewProviderMap: Map<Class<out Block>, @JvmSuppressWildcards Provider<BlockView>>,
                         @CanvasSpacer val spacerProvider: Provider<View>)
-    : CanvasDragCallback {
+    : CanvasDragCallback, DropOwner {
 
     private lateinit var canvasDragHelper: CanvasDragHelper
 
@@ -39,6 +43,20 @@ class CanvasLayoutHelper
 
     init {
         setupDragAndDrop()
+    }
+
+    override fun getSpacerPosition(spacer: View): Int {
+        return contentView.findChildPosition(spacer)
+    }
+
+    override fun handleDrop(callback: CanvasDragCallback, event: DragEvent, draggedView: View, dropToPosition: Int, spacer: View?): Boolean {
+        Log.d(DEBUG_TAG, "EXTERNAL ++ ACTION_DROP dropToPosition $dropToPosition")
+        val draggedFromView = CanvasDragHelper.getDragFromBlockRow(draggedView, this)
+        if (dropToPosition != POSITION_INVALID) {
+            onDragBlockOut(draggedView, draggedFromView, dropToPosition)
+        }
+
+        return true
     }
 
     // external drop - dropped outside a block row

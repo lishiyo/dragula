@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.toolkit.dragndrop.ui.drag
+package com.lishiyo.kotlin.features.toolkit.dragndrop.drag
 
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
 /**
  * Interface for grabbing necessary views and notifying drag and drop events
  */
-interface CanvasDragCallback {
+interface CanvasDragCallback : DropOwner {
     /**
      * External drop - drop a block view *out* of a block row.
      *
