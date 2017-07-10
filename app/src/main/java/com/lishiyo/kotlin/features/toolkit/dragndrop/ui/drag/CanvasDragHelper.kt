@@ -129,7 +129,6 @@ class CanvasDragHelper(context: Context,
 
                     // not scrolling the entire scrollview atm - toggle spacers
                     if (!handleScroll(callback.scrollView, blockRow, event, scrollThreshold)) {
-
                         if (!blockRow.canDropIn(draggedView as BlockView)) {
                             // blockrow can't accept draggedView - add external spacer either above or below
                             var hoverPosition = getExternalDropPositionWithSpacer(blockRow, event, oldSpacer) // drop at top or bottom
@@ -188,8 +187,7 @@ class CanvasDragHelper(context: Context,
                             handleDrop(oldSpacer, event, callback, draggedView, dropIndex)
                         } else {
                             // drag block INTO this BlockRow
-                            val dropPosition = blockRow.getDropPosition(event)
-                            blockRow.handleDrop(oldSpacer, event, callback, draggedView, dropPosition)
+                            blockRow.handleDrop(oldSpacer, event, callback, draggedView, blockRow.getDropPosition(event))
                         }
                     }
                 }

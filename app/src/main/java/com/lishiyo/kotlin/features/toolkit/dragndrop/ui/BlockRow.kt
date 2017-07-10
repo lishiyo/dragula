@@ -80,7 +80,7 @@ class BlockRow @JvmOverloads constructor(
     // can this block view drop in here right now, given the current children?
     fun canDropIn(newBlockView: BlockView): Boolean {
         val limitAllowedInContainer = (blockViews.plus(newBlockView)).minBy { it.limitPerContainer() }?.limitPerContainer() ?: 0
-        return limitAllowedInContainer > blockViews.size
+        return blockViews.contains(newBlockView) || limitAllowedInContainer > blockViews.size
     }
 
     // add the vertical inner spacer
