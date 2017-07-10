@@ -30,6 +30,7 @@ class CanvasDragHelper(context: Context,
     private val MAX_DRAG_SCROLL_SPEED = 20
 
     private val callback: CanvasDragCallback = dragCallback
+    private val trashHelper: TrashHelper = TrashHelper(callback)
 
     // spacer logic
     private val spacerHeight: Int = context.getPixelSize(R.dimen.canvas_spacer_height)
@@ -65,7 +66,7 @@ class CanvasDragHelper(context: Context,
     inner class CanvasDragListener : View.OnDragListener {
         // flag for when the view enters or exits trash area
         // true if this is being dragged on the trash atm
-        private val trashMode: Boolean = false
+        private var trashMode: Boolean = false
 
         override fun onDrag(view: View, event: DragEvent): Boolean {
             if (event.localState !is BlockView) {
@@ -90,7 +91,8 @@ class CanvasDragHelper(context: Context,
                 DragEvent.ACTION_DRAG_STARTED -> {
                     // unsubscribe from animation, close keyboard
                     // set up animations
-                    // make trashcan visible
+
+                    trashHelper.showTrash()
 
                     // store the current threshold with spacer included
                     val scrollViewVisibleRect = Rect()
@@ -112,6 +114,21 @@ class CanvasDragHelper(context: Context,
                     // dragged view is moving around in our view area
 
                     // scale trash, remove spacer and select trash if on it
+                    trashHelper.scaleTrash(event, blockRow)
+                    // wasn't on trash before but now on trash - remove spacer
+                    if (trashHelper.isOnTrash(event, blockRow) && !trashMode) {
+                        trashMode = true
+                        removeSpacers()
+                        trashHelper.selectTrash(true)
+                        return true
+                    } else if (trashHelper.isOnTrash(event, blockRow)) {
+                        // on trash and was on trash before
+                        return true
+                    } else if (!trashHelper.isOnTrash(event, blockRow) && trashMode) {
+                        // not on trash
+                        trashMode = false
+                        trashHelper.selectTrash(false)
+                    }
 
                     // not scrolling the entire scrollview atm - toggle spacers
                     if (!handleScroll(callback.scrollView, blockRow, event, scrollThreshold)) {
@@ -153,15 +170,16 @@ class CanvasDragHelper(context: Context,
 
                 }
                 DragEvent.ACTION_DRAG_EXITED -> {
-                    // dragged view exited from our view area, didn't drop in here
+                    // view exited from this block row without dropping in here
                     Log.d(DEBUG_TAG, "ACTION_DRAG_EXITED! trashMode? " + trashMode + " view: " + blockRow::class.java.simpleName)
                 }
                 DragEvent.ACTION_DROP -> {
                     // view was dropped in this block row!
+                    Log.d(DEBUG_TAG, "ACTION_DROP! trashMode? $trashMode")
 
                     if (trashMode) {
-                        // TODO: delete the dragged view
-
+                        val draggedFromView = getDragFromBlockRow(draggedView, callback)
+                        callback.removeDraggedView(draggedFromView, draggedView as BlockView)
                     } else {
                         if (!blockRow.canDropIn(draggedView as BlockView)) {
                             // drag block to above or below this BlockRow
@@ -191,7 +209,9 @@ class CanvasDragHelper(context: Context,
                     }
 
                     // clearAnimations();
-                    // animate out the trash
+
+                    trashHelper.selectTrash(false)
+                    trashHelper.animateOutTrash()
                 }
             }
 

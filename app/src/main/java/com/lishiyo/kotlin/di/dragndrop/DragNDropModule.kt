@@ -38,11 +38,8 @@ class DragNDropModule(val activity: DragNDropActivity) {
     }
 
 //    @Provides
-//    @InnerSpacer
-//    internal fun provideInnerSpacer(context: Context): View {
-//        val spacer = View(context)
-//        spacer.setBackgroundResource(R.drawable.inner_spacer_background)
-//        return spacer
+//    internal fun provideTrashHelper(@Named("CanvasLayoutHelper") callback: CanvasLayoutHelper): TrashHelper {
+//        return TrashHelper(callback)
 //    }
 
     @Provides

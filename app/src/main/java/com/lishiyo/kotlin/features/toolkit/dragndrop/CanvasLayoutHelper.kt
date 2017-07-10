@@ -91,7 +91,18 @@ class CanvasLayoutHelper
         }
     }
 
-    override fun deleteView(view: View) {
+    override fun removeDraggedView(dragFromView: View, draggedView: BlockView) {
+        // remove the draggedView from the dragFromBlockRow
+        if (dragFromView is BlockRow) {
+            dragFromView.removeBlockView(draggedView)
+            // delete the block row if it's now empty
+            if (dragFromView.blockViews.isEmpty()) {
+                deleteBlockRow(dragFromView)
+            }
+        }
+    }
+
+    private fun deleteBlockRow(view: View) {
         contentView.removeView(view)
         if (view is BlockRow) {
             blockRows.remove(view)
@@ -126,16 +137,5 @@ class CanvasLayoutHelper
         row.initDragAndDrop(canvasDragHelper.blockRowDragListener)
 
         return row
-    }
-
-    private fun removeDraggedView(dragFromView: View, draggedView: BlockView) {
-        // remove the draggedView from the dragFromBlockRow
-        if (dragFromView is BlockRow) {
-            dragFromView.removeBlockView(draggedView)
-            // delete the block row if it's now empty
-            if (dragFromView.blockViews.isEmpty()) {
-                deleteView(dragFromView)
-            }
-        }
     }
 }

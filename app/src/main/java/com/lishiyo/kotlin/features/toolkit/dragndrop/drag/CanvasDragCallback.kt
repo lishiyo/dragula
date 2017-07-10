@@ -6,6 +6,7 @@ import android.widget.ScrollView
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockRow
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
+import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 
 /**
  * Interface for grabbing necessary views and notifying drag and drop events
@@ -62,9 +63,12 @@ interface CanvasDragCallback : DropOwner {
     val blockRows: MutableList<BlockRow>
 
     /**
-     * Remove a view
-     * @param view
-     * * 		The [View] to delete
+     * Remove a blockview
+     *
+     * @param dragFromView
+     * 	    the block row this view was dragged from
+     * @param draggedView
+     *      the block view to delete
      */
-    fun deleteView(view: View)
+    fun removeDraggedView(dragFromView: View, draggedView: BlockView)
 }
