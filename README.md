@@ -12,6 +12,9 @@ A miniature drag n' drop demo in Kotlin. :sparkles:
 - You can trash any Block. :x:
 - If you need new ones, just drag from the bottom bar to get some fresh new blocks :bread: :yum:
 
+*Setup*:
+I'm on Android Studio 3.0 (Canary 4) which has Kotlin built-in, not sure if this will run on a stable build :sweat_smile:
+
 #### TODOs
 
 - Add your own text and photos :tada:
