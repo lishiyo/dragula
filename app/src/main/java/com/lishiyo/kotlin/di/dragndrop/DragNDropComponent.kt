@@ -1,7 +1,7 @@
 package com.lishiyo.kotlin.di.dragndrop
 
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.PerActivity
-import com.lishiyo.kotlin.features.toolkit.dragndrop.DragNDropActivity
+import com.lishiyo.kotlin.features.dragndrop.DragNDropActivity
 import dagger.Component
 
 /**

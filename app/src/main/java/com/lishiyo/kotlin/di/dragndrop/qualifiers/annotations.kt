@@ -1,6 +1,6 @@
 package com.lishiyo.kotlin.di.dragndrop.qualifiers
 
-import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
+import com.lishiyo.kotlin.features.dragndrop.models.Block
 import dagger.MapKey
 import javax.inject.Qualifier
 import javax.inject.Scope

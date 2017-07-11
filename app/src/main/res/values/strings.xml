@@ -1,13 +1,5 @@
 <resources>
-    <string name="app_name">kotlin-sandbox</string>
-
-    <string name="tab_toolkit_label">toolkit</string>
-    <string name="tab_casual_q_label">casual q</string>
-    <string name="tab_scribbles_label">scribbles</string>
-
-    <string name="label_wifi_fencer">Wifi fencer</string>
-    <string name="label_github">GitHub demo</string>
-
+    <string name="app_name">@string/tab_dragndropper_title</string>
     <string name="label_textblock">TEXT BLOCK</string>
     <string name="tab_dragndropper_title">Dragula!</string>
 </resources>

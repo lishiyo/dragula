@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.lishiyo.kotlin.RootActivity">
+        <activity
+            android:name="com.lishiyo.kotlin.features.dragndrop.DragNDropActivity"
+            android:theme="@style/NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,14 +25,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.lishiyo.kotlin.features.toolkit.dragndrop.DragNDropActivity"
-            android:theme="@style/NoActionBar" >
-        </activity>
-        <activity android:name="com.lishiyo.kotlin.features.toolkit.wifi_fencer.WifiFencerActivity">
-        </activity>
-        <activity android:name="com.lishiyo.kotlin.features.scribbles.github.ui.GithubActivity">
-        </activity>
     </application>
 
 </manifest>
