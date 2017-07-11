@@ -7,7 +7,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
-        applicationId "com.lishiyo.kotlin.sandbox"
+        applicationId "com.lishiyo.kotlin.dragula"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
