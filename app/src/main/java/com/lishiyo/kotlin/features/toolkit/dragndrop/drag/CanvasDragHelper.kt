@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.dragndrop.drag
+package com.lishiyo.kotlin.features.toolkit.dragndrop.drag
 
 import android.content.Context
 import android.graphics.Rect
@@ -14,8 +14,8 @@ import com.lishiyo.kotlin.commons.extensions.findChildPosition
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
 import com.lishiyo.kotlin.commons.extensions.smootherStep
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
-import com.lishiyo.kotlin.features.dragndrop.ui.BlockRow
-import com.lishiyo.kotlin.features.dragndrop.viewmodels.BlockView
+import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockRow
+import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 import com.lishiyo.kotlin.samples.retrofit.R
 
 /**

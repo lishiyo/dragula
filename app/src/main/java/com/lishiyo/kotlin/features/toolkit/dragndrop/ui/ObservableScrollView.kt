@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.dragndrop.ui
+package com.lishiyo.kotlin.features.toolkit.dragndrop.ui
 
 import android.content.Context
 import android.util.AttributeSet

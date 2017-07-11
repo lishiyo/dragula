@@ -8,7 +8,7 @@
 	android:background="@android:color/holo_blue_bright"
 	android:focusable="false"
 	xmlns:tools="http://schemas.android.com/tools"
-	tools:context="com.lishiyo.kotlin.features.dragndrop.DragNDropActivity"
+	tools:context="com.lishiyo.kotlin.features.toolkit.dragndrop.DragNDropActivity"
 	tools:targetApi="26"
 	>
 

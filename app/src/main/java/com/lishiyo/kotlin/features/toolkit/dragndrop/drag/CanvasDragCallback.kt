@@ -1,12 +1,12 @@
-package com.lishiyo.kotlin.features.dragndrop.drag
+package com.lishiyo.kotlin.features.toolkit.dragndrop.drag
 
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
-import com.lishiyo.kotlin.features.dragndrop.ui.BlockRow
-import com.lishiyo.kotlin.features.dragndrop.ui.ObservableScrollView
-import com.lishiyo.kotlin.features.dragndrop.viewmodels.BlockView
+import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockRow
+import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
+import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 
 /**
  * Interface for grabbing necessary views and notifying drag and drop events

@@ -1,8 +1,8 @@
-package com.lishiyo.kotlin.features.dragndrop.viewmodels
+package com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels
 
 import android.content.Context
 import android.support.annotation.IntRange
-import com.lishiyo.kotlin.features.dragndrop.models.Block
+import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
 import io.reactivex.Observable
 
 /**

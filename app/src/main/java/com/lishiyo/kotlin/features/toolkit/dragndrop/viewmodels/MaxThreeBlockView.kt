@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.dragndrop.viewmodels
+package com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels
 
 import android.content.ClipData
 import android.content.Context
@@ -14,7 +14,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.jakewharton.rxbinding2.view.RxView
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
 import com.lishiyo.kotlin.commons.extensions.setDragStart
-import com.lishiyo.kotlin.features.dragndrop.models.Block
+import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
 import com.lishiyo.kotlin.samples.retrofit.R
 import io.reactivex.Observable
 

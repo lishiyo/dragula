@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.dragndrop.models
+package com.lishiyo.kotlin.features.toolkit.dragndrop.models
 
 /**
  * Marker interface for data model of the outgoing block.

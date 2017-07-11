@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.dragndrop.drag
+package com.lishiyo.kotlin.features.toolkit.dragndrop.drag
 
 import android.util.Log
 import android.view.DragEvent
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
 import com.lishiyo.kotlin.commons.extensions.POSITION_INVALID
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
-import com.lishiyo.kotlin.features.dragndrop.viewmodels.BlockView
+import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 
 /**
  * Created by connieli on 7/10/17.

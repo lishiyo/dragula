@@ -1,7 +1,12 @@
 # Dragula!
 
 A miniature drag n' drop demo in Kotlin.
-There are only two rules:
-- Text blocks always take up a whole row.
-- Image blocks can
-You can put up to three image blocks in a row, but text blocks always take up a whole row.
+
+Some things you can do:
+- You can drag around any of the blocks on the canvas.
+- You can put up to three image blocks in a single row.
+- You can re-order those blocks, or drag them out to their own row.
+- But text blocks will always take up an entire row.
+- You can trash any block.
+- If you need new ones, just drag from the bottom bar to get some fresh new blocks.
+

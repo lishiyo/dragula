@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.dragndrop
+package com.lishiyo.kotlin.features.toolkit.dragndrop
 
 import android.util.Log
 import android.view.DragEvent
@@ -9,13 +9,13 @@ import com.lishiyo.kotlin.commons.extensions.POSITION_INVALID
 import com.lishiyo.kotlin.commons.extensions.findChildPosition
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.PerActivity
-import com.lishiyo.kotlin.features.dragndrop.drag.CanvasDragCallback
-import com.lishiyo.kotlin.features.dragndrop.drag.CanvasDragHelper
-import com.lishiyo.kotlin.features.dragndrop.drag.DropOwner
-import com.lishiyo.kotlin.features.dragndrop.models.Block
-import com.lishiyo.kotlin.features.dragndrop.ui.BlockRow
-import com.lishiyo.kotlin.features.dragndrop.ui.ObservableScrollView
-import com.lishiyo.kotlin.features.dragndrop.viewmodels.BlockView
+import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.CanvasDragCallback
+import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.CanvasDragHelper
+import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.DropOwner
+import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
+import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockRow
+import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
+import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Named

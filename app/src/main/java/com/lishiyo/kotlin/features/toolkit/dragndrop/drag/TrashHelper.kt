@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.features.dragndrop.drag
+package com.lishiyo.kotlin.features.toolkit.dragndrop.drag
 
 import android.graphics.Rect
 import android.support.v4.math.MathUtils.clamp

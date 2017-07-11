@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.lishiyo.kotlin.features.dragndrop.DragNDropActivity"
+            android:name="com.lishiyo.kotlin.features.toolkit.dragndrop.DragNDropActivity"
             android:theme="@style/NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
