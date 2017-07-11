@@ -12,7 +12,7 @@ import android.view.View
  *
  * Created by connieli on 7/2/17.
  */
-private class DragShadowBuilder(v: View) : View.DragShadowBuilder(v) {
+class CustomDragShadowBuilder(v: View) : View.DragShadowBuilder(v) {
 
     companion object {
         // The drag shadow image, to be filled in as ColorDrawable

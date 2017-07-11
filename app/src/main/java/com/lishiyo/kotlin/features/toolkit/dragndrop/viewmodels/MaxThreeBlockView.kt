@@ -92,6 +92,7 @@ class MaxThreeBlockView @JvmOverloads constructor(
                     "max three" // text in the clip
             )
             val shadowBuilder = View.DragShadowBuilder(this)
+
             it.setDragStart(dragData, shadowBuilder)
         }
     }

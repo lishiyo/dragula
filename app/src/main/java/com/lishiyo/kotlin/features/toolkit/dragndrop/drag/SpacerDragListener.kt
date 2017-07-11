@@ -14,11 +14,9 @@ import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
  */
 
 // Drag listener for the spacer so it can accept drops
-class SpacerDragListener(dropOwner: DropOwner,
-                         callback: CanvasDragCallback,
+class SpacerDragListener(val dropOwner: DropOwner,
+                         val callback: CanvasDragCallback,
                          @CanvasSpacer spacer: View) : View.OnDragListener {
-    val dropOwner = dropOwner
-    val callback = callback
     private var oldSpacer: View? = spacer
 
     override fun onDrag(view: View, event: DragEvent): Boolean {

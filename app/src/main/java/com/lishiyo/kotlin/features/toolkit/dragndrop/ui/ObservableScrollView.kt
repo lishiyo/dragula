@@ -4,11 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.ScrollView
 
-
-
-/**
- * Created by connieli on 7/1/17.
- */
 /**
  * @author Cyril Mottier with modifications from Manuel Peinado
  */
