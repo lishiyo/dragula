@@ -1,5 +1,6 @@
 package com.lishiyo.kotlin.features.toolkit.dragndrop
 
+import android.support.v4.math.MathUtils.clamp
 import android.util.Log
 import android.view.DragEvent
 import android.view.View
@@ -88,8 +89,6 @@ class CanvasLayoutHelper
 
     // internal drop - dropped inside a block row
     override fun onDragBlockIn(draggedView: View, dragFromView: View, dropToBlockRow: BlockRow, internalDropPosition: Int) {
-        Log.d(DEBUG_TAG, "onDragBlockIn ++ TO blockRowIndex: ${blockRows.indexOf(dropToBlockRow)} " +
-                "at internalPos: $internalDropPosition")
 
         if (draggedView is BlockView) {
             // remove the draggedView from the dragFromBlockRow
@@ -102,8 +101,15 @@ class CanvasLayoutHelper
                 newBlockView = draggedView.clone(draggedView.context)
             }
 
+            Log.d(DEBUG_TAG, "onDragBlockIn ++ TO blockRowIndex: ${blockRows.indexOf(dropToBlockRow)} " +
+                    "at internalPos: $internalDropPosition given current size ${dropToBlockRow.blockViews.size}")
+
+            // if re-ordering inside this block view, need to clamp in case we decreased in size
+            val realDropPosition = clamp(internalDropPosition, 0, dropToBlockRow.blockViews.size)
+
             // tell blockrow to insert draggedView at the internal position
-            dropToBlockRow.addBlockViewAt(newBlockView, internalDropPosition)
+            dropToBlockRow.addBlockViewAt(newBlockView, realDropPosition)
+
             if (dragFromView is BlockRow) {
                 // notify the just-added view of successful drop
                 newBlockView.onDrop(true)

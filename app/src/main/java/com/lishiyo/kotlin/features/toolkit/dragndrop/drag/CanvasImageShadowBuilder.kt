@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.view.View
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
-import com.lishiyo.kotlin.samples.retrofit.R
+import com.lishiyo.kotlin.dragula.R
 
 /**
  * Tumblr real canvas shadow.

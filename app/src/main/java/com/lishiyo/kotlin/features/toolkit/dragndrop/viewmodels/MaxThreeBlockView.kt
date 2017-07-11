@@ -14,8 +14,8 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.jakewharton.rxbinding2.view.RxView
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
 import com.lishiyo.kotlin.commons.extensions.setDragStart
+import com.lishiyo.kotlin.dragula.R
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
-import com.lishiyo.kotlin.samples.retrofit.R
 import io.reactivex.Observable
 
 

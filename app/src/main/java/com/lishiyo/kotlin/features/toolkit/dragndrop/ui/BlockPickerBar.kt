@@ -8,9 +8,9 @@ import android.widget.LinearLayout
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.lishiyo.kotlin.commons.extensions.childViews
+import com.lishiyo.kotlin.dragula.R
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.MaxThreeBlockView
-import com.lishiyo.kotlin.samples.retrofit.R
 
 
 /**

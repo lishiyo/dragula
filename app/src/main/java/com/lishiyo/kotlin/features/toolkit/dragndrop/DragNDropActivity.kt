@@ -11,13 +11,13 @@ import butterknife.ButterKnife
 import com.lishiyo.kotlin.commons.ui.RxBaseActivity
 import com.lishiyo.kotlin.di.dragndrop.DaggerDragNDropComponent
 import com.lishiyo.kotlin.di.dragndrop.DragNDropModule
+import com.lishiyo.kotlin.dragula.R
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.MaxOneBlock
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.MaxThreeBlock
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.BlockRow
 import com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
-import com.lishiyo.kotlin.samples.retrofit.R
 import javax.inject.Inject
 import javax.inject.Provider
 
