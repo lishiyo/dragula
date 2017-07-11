@@ -10,10 +10,10 @@ import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 
 /**
+ * Drag listener for the spacer so we can still detect drops when hovering right on the spacer instead of a blockrow.
+ *
  * Created by connieli on 7/10/17.
  */
-
-// Drag listener for the spacer so it can accept drops
 class SpacerDragListener(val dropOwner: DropOwner,
                          val callback: CanvasDragCallback,
                          @CanvasSpacer spacer: View) : View.OnDragListener {
@@ -35,11 +35,9 @@ class SpacerDragListener(val dropOwner: DropOwner,
 
         when (action) {
             DragEvent.ACTION_DRAG_STARTED -> {
-                // TODO: set scroll threshold
                 Log.d(DEBUG_TAG, "ACTION_DRAG_STARTED! == ON SPACER ${dropOwner.getSpacerPosition(spacer)}")
             }
             DragEvent.ACTION_DRAG_LOCATION -> {
-                // TODO: scroll if necessary
                 Log.d(DEBUG_TAG, "ACTION_DRAG_LOCATION! == ON SPACER ${dropOwner.getSpacerPosition(spacer)}")
             }
             DragEvent.ACTION_DROP -> {
@@ -77,17 +75,5 @@ class SpacerDragListener(val dropOwner: DropOwner,
                 oldSpacer = null
             }
         }
-    }
-
-    // index of block row we are dragging a view from
-    // does NOT include spacer
-    fun getDragFromBlockRow(draggedView: View): View {
-        // find which block row this drag is coming from
-        // TODO: get it from the clip data
-        val draggedFromBlockRow = callback.blockRows.findLast {
-            blockRow -> blockRow.indexOfChild(draggedView) != POSITION_INVALID
-        }
-
-        return draggedFromBlockRow ?: (draggedView.parent as View)
     }
 }
