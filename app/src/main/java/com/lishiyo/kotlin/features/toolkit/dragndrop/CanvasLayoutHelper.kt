@@ -4,7 +4,7 @@ import android.util.Log
 import android.view.DragEvent
 import android.view.View
 import android.view.ViewGroup
-import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
+import com.lishiyo.kotlin.commons.DEBUG_TAG
 import com.lishiyo.kotlin.commons.extensions.POSITION_INVALID
 import com.lishiyo.kotlin.commons.extensions.findChildPosition
 import com.lishiyo.kotlin.di.dragndrop.qualifiers.CanvasSpacer

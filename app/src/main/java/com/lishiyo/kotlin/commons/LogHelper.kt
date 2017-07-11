@@ -1,4 +1,4 @@
-package com.lishiyo.kotlin.commons.adapter
+package com.lishiyo.kotlin.commons
 
 /**
  * Created by connieli on 7/5/17.

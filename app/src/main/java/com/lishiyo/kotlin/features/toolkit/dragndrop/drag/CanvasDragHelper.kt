@@ -8,7 +8,7 @@ import android.view.DragEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
-import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
+import com.lishiyo.kotlin.commons.DEBUG_TAG
 import com.lishiyo.kotlin.commons.extensions.POSITION_INVALID
 import com.lishiyo.kotlin.commons.extensions.findChildPosition
 import com.lishiyo.kotlin.commons.extensions.getPixelSize

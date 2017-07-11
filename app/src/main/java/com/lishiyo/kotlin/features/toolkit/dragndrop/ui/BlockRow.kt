@@ -10,7 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import com.lishiyo.kotlin.commons.adapter.DEBUG_TAG
+import com.lishiyo.kotlin.commons.DEBUG_TAG
 import com.lishiyo.kotlin.commons.extensions.checkRemoveParent
 import com.lishiyo.kotlin.commons.extensions.findChildPosition
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
