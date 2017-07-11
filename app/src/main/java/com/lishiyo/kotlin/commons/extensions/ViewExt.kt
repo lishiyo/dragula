@@ -4,12 +4,14 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.Context
 import android.graphics.Point
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.DimenRes
 import android.support.v4.math.MathUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import java.io.IOException
 
 /**
@@ -45,6 +47,16 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
 // given a child view, find it in this viewgroup
 fun ViewGroup.findChildPosition(viewToFind: View): Int {
     return childViews.indexOf(viewToFind)
+}
+
+// make Fresco image full-width, keeping aspect ratio
+fun Drawable.matchScreenWidth(activity: Activity, layoutParams: LinearLayout.LayoutParams): LinearLayout.LayoutParams {
+    val imageViewParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+    imageViewParams.width = activity.getScreenWidth()
+    val imageRatio = intrinsicWidth.toFloat() / intrinsicHeight.toFloat()
+
+    layoutParams.height = (layoutParams.width / imageRatio).toInt()
+    return layoutParams
 }
 
 fun View.setDragStart(dragData: ClipData, shadowBuilder: View.DragShadowBuilder): Boolean {

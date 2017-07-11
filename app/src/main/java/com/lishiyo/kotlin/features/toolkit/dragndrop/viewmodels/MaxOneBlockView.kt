@@ -6,19 +6,16 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.facebook.drawee.view.SimpleDraweeView
-import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.jakewharton.rxbinding2.view.RxView
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
 import com.lishiyo.kotlin.commons.extensions.setDragStart
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
 import com.lishiyo.kotlin.samples.retrofit.R
 import io.reactivex.Observable
-
-
-
 
 
 /**
@@ -28,11 +25,12 @@ import io.reactivex.Observable
  */
 class MaxOneBlockView @JvmOverloads constructor(
         context: Context,
-        attrs: AttributeSet? = null,
-        defStyle: Int = 0,
-        defStyleRes: Int = 0
+        val attrs: AttributeSet? = null,
+        val defStyle: Int = 0,
+        val defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyle, defStyleRes), BlockView {
     @BindView(R.id.image) lateinit var image: SimpleDraweeView
+    @BindView(R.id.text_block_text) lateinit var textView: TextView
 
     private var block: Block? = null
 
@@ -53,16 +51,16 @@ class MaxOneBlockView @JvmOverloads constructor(
         params.marginEnd = context.getPixelSize(R.dimen.block_view_margin)
         layoutParams = params
 
-        // set aspect ratio
-//        val imageViewParams = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-//        imageViewParams.width = getScreenWidth()
-//        val imageRatio = blockDrawable.intrinsicWidth / blockDrawable.intrinsicHeight as Float
-//        layoutParams.height = (layoutParams.width / imageRatio).toInt()
-//        image.setLayoutParams(layoutParams)
-
         setBackgroundColor(resources.getColor(R.color.material_red_A100))
-        val imageRequest = ImageRequestBuilder.newBuilderWithResourceId(R.drawable.block_1).build()
-        image.setImageURI(imageRequest.sourceUri)
+
+        // switch to text-only
+        image.visibility = GONE
+        textView.visibility = View.VISIBLE
+        textView.setText(R.string.label_textblock)
+    }
+
+    override fun clone(context: Context): BlockView {
+        return MaxOneBlockView(context, attrs, defStyle, defStyleRes)
     }
 
     override fun initDragAndDrop() {
@@ -97,8 +95,6 @@ class MaxOneBlockView @JvmOverloads constructor(
         params.width = 0
         params.weight = getDefaultWeight().toFloat()
         params.height = LayoutParams.MATCH_PARENT
-        params.marginStart = context.getPixelSize(R.dimen.block_view_margin)
-        params.marginEnd = context.getPixelSize(R.dimen.block_view_margin)
 
         layoutParams = params
     }

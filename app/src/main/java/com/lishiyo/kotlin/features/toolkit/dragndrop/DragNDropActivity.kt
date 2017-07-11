@@ -64,14 +64,16 @@ class DragNDropActivity : RxBaseActivity() {
         layoutHelper.clearAndSetBlockRows(createInitialBlockRows())
     }
 
+    // seed with some block rows
     private fun createInitialBlockRows(): List<BlockRow> {
         val initialRows = mutableListOf<BlockRow>()
         initialRows.add(createMaxOneBlockRow())
-        initialRows.add(createMaxOneBlockRow())
         initialRows.add(createMaxThreeBlockRow())
         initialRows.add(createMaxOneBlockRow())
         initialRows.add(createMaxThreeBlockRow())
         initialRows.add(createMaxThreeBlockRow())
+        initialRows.add(createMaxOneBlockRow())
+        initialRows.add(createMaxOneBlockRow())
         return initialRows
     }
 
@@ -81,11 +83,11 @@ class DragNDropActivity : RxBaseActivity() {
         val blockView = blockViewProviderMap[MaxOneBlock::class.java]?.get()!!
         blockView.setBlock(textBlock)
 
-        // create the first block row with MaxOne
-        val firstBlockRow = BlockRow(this)
-        firstBlockRow.setBlockViews(blockView)
+        // create the block row with MaxOne
+        val blockRow = BlockRow(this)
+        blockRow.setBlockViews(blockView)
 
-        return firstBlockRow
+        return blockRow
     }
 
     private fun createMaxThreeBlockRow(): BlockRow {
@@ -94,11 +96,11 @@ class DragNDropActivity : RxBaseActivity() {
         val blockView = blockViewProviderMap[MaxThreeBlock::class.java]?.get()!!
         blockView.setBlock(imageBlock)
 
-        // create the second block row with MaxThree
-        val firstBlockRow = BlockRow(this)
-        firstBlockRow.setBlockViews(blockView)
+        // create the block row with MaxThree
+        val blockRow = BlockRow(this)
+        blockRow.setBlockViews(blockView)
 
-        return firstBlockRow
+        return blockRow
     }
 
     private fun injectDependencies() {

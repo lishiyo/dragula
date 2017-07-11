@@ -49,7 +49,6 @@ class BlockRow @JvmOverloads constructor(
         gravity = CENTER_VERTICAL
         val params = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, context.getPixelSize(R.dimen.block_view_height_large))
         params.topMargin = context.getPixelSize(R.dimen.block_row_margin)
-        params.bottomMargin = context.getPixelSize(R.dimen.block_row_margin)
         layoutParams = params
         setBackgroundColor(resources.getColor(R.color.material_grey_50))
     }
@@ -122,7 +121,7 @@ class BlockRow @JvmOverloads constructor(
         checkRemoveParent(newBlockView as View)
 
         blockViews.add(newBlockView)
-        rootView.addView(newBlockView)
+        rootView.addView(newBlockView as View)
         newBlockView.initDragAndDrop()
     }
 
@@ -130,7 +129,7 @@ class BlockRow @JvmOverloads constructor(
         checkRemoveParent(newBlockView as View)
 
         blockViews.add(position, newBlockView)
-        rootView.addView(newBlockView, position)
+        rootView.addView(newBlockView as View, position)
         newBlockView.initDragAndDrop()
     }
 

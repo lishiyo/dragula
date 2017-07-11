@@ -1,5 +1,6 @@
 package com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels
 
+import android.content.Context
 import android.support.annotation.IntRange
 import com.lishiyo.kotlin.features.toolkit.dragndrop.models.Block
 import io.reactivex.Observable
@@ -21,6 +22,9 @@ interface BlockView {
     fun getBlock(): Block?
 
     fun getFocusObservable(): Observable<out BlockView>
+
+    // make a clone of this view
+    fun clone(context: Context): BlockView
 
     // successful drop - resize the view to max width (1/2 or 1/3)
     fun onDrop(successful: Boolean)

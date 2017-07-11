@@ -167,11 +167,11 @@ class CanvasDragHelper(context: Context,
                 }
                 DragEvent.ACTION_DRAG_EXITED -> {
                     // view exited from this block row without dropping in here
-                    Log.d(DEBUG_TAG, "ACTION_DRAG_EXITED! trashMode? " + trashMode + " view: " + blockRow::class.java.simpleName)
+//                    Log.d(DEBUG_TAG, "ACTION_DRAG_EXITED! trashMode? " + trashMode + " view: " + blockRow::class.java.simpleName)
                 }
                 DragEvent.ACTION_DROP -> {
                     // view was dropped in this block row!
-                    Log.d(DEBUG_TAG, "ACTION_DROP! trashMode? $trashMode")
+//                    Log.d(DEBUG_TAG, "ACTION_DROP! trashMode? $trashMode")
 
                     if (trashMode) {
                         val draggedFromView = getDragFromBlockRow(draggedView, callback)
@@ -192,7 +192,7 @@ class CanvasDragHelper(context: Context,
                     }
                 }
                 DragEvent.ACTION_DRAG_ENDED -> {
-                    Log.d(DEBUG_TAG, "ACTION_DRAG_ENDED! event result? ${event.result}")
+//                    Log.d(DEBUG_TAG, "ACTION_DRAG_ENDED! event result? ${event.result}")
 
                     removeSpacers()
 

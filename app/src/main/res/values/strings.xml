@@ -7,4 +7,7 @@
 
     <string name="label_wifi_fencer">Wifi fencer</string>
     <string name="label_github">GitHub demo</string>
+
+    <string name="label_textblock">TEXT BLOCK</string>
+    <string name="tab_dragndropper_title">Dragula!</string>
 </resources>

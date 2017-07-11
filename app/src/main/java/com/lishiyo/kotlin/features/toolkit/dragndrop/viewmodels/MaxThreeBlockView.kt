@@ -2,6 +2,7 @@ package com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels
 
 import android.content.ClipData
 import android.content.Context
+import android.support.annotation.DrawableRes
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -26,18 +27,25 @@ import io.reactivex.Observable
  */
 class MaxThreeBlockView @JvmOverloads constructor(
         context: Context,
-        attrs: AttributeSet? = null,
-        defStyle: Int = 0,
-        defStyleRes: Int = 0
+        val attrs: AttributeSet? = null,
+        val defStyle: Int = 0,
+        val defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyle, defStyleRes), BlockView {
     @BindView(R.id.image) lateinit var image: SimpleDraweeView
 
     private var block: Block? = null
+    private var currentDrawableId: Int = R.drawable.block_3
 
     val bodyFocusObservable: Observable<out BlockView> by lazy {
         RxView.focusChanges(image)
                 .filter({ isFocused -> isFocused })
                 .map({ _ -> this })
+    }
+
+    companion object {
+        val DRAWABLE_SET = setOf(R.drawable.pizza_queen, R.drawable.poop,
+                R.drawable.gudetama, R.drawable.gudetama2, R.drawable.datboi, R.drawable.shibi,
+                R.drawable.drag_ghost, R.drawable.narwhall)
     }
 
     init {
@@ -51,9 +59,29 @@ class MaxThreeBlockView @JvmOverloads constructor(
         params.marginEnd = context.getPixelSize(R.dimen.block_view_margin)
         layoutParams = params
 
+        // resize to image intrinsics
+//        layoutParams = image.drawable.matchScreenWidth(context as Activity, params)
+//        image.setLayoutParams(layoutParams)
+
         setBackgroundColor(resources.getColor(R.color.material_deep_teal_500))
 
-        val imageRequest = ImageRequestBuilder.newBuilderWithResourceId(R.drawable.block_3).build()
+        setRandomImage()
+    }
+
+    override fun clone(context: Context): BlockView {
+        val blockView = MaxThreeBlockView(context, attrs, defStyle, defStyleRes)
+        blockView.setImage(currentDrawableId)
+        return blockView
+    }
+
+    fun setRandomImage() {
+        val randomDrawable = DRAWABLE_SET.elementAt((Math.random() * DRAWABLE_SET.size).toInt())
+        setImage(randomDrawable)
+    }
+
+    fun setImage(@DrawableRes drawableId: Int) {
+        currentDrawableId = drawableId
+        val imageRequest = ImageRequestBuilder.newBuilderWithResourceId(currentDrawableId).build()
         image.setImageURI(imageRequest.sourceUri)
     }
 
@@ -61,7 +89,7 @@ class MaxThreeBlockView @JvmOverloads constructor(
         setOnLongClickListener {
             val dragData = ClipData.newPlainText(
                     MaxOneBlockView::class.java.simpleName, // label
-                    "max one" // text in the clip
+                    "max three" // text in the clip
             )
             val shadowBuilder = View.DragShadowBuilder(this)
             it.setDragStart(dragData, shadowBuilder)
@@ -81,14 +109,13 @@ class MaxThreeBlockView @JvmOverloads constructor(
     }
 
     override fun onDrop(successful: Boolean) {
-        // resize given max width
+        // reset params to fill to weight
         val params: LinearLayout.LayoutParams = if (layoutParams == null)
             LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, getDefaultWeight().toFloat()) else layoutParams as LayoutParams
         params.width = 0
         params.height = LayoutParams.MATCH_PARENT
         params.weight = getDefaultWeight().toFloat()
         params.marginStart = context.getPixelSize(R.dimen.block_view_margin)
-        params.marginEnd = context.getPixelSize(R.dimen.block_view_margin)
 
         layoutParams = params
     }

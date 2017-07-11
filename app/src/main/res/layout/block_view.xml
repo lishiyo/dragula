@@ -7,7 +7,28 @@
 	android:layout_height="wrap_content"
 	android:background="@android:color/holo_blue_bright"
 	android:focusable="false"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:context="com.lishiyo.kotlin.features.toolkit.dragndrop.DragNDropActivity"
+	tools:targetApi="26"
 	>
+
+	<TextView
+		android:id="@+id/text_block_text"
+		android:visibility="gone"
+		tools:visibility="visible"
+		tools:text="TEXT BLOCK"
+		android:textAlignment="center"
+		android:textAllCaps="true"
+		android:layout_centerInParent="true"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_gravity="center"
+		android:gravity="center"
+		android:autoSizeTextType="uniform"
+		android:autoSizeMinTextSize="12sp"
+		android:autoSizeMaxTextSize="60sp"
+		android:autoSizeStepGranularity="2sp"
+		/>
 
 	<com.facebook.drawee.view.SimpleDraweeView
 		android:id="@+id/image"

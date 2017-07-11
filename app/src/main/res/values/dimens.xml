@@ -1,6 +1,6 @@
 <resources>
 	<!-- in block picker bar -->
-	<dimen name="block_view_height">66dp</dimen>
+	<dimen name="block_view_height">62dp</dimen>
 	<!-- in canvas -->
 	<dimen name="block_view_height_large">200dp</dimen>
 	<dimen name="canvas_image_shadow_margin_medium">3.75dp</dimen>

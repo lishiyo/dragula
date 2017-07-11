@@ -64,15 +64,25 @@ class CanvasLayoutHelper
         Log.d(DEBUG_TAG, "onDragBlockOut ++ TO: $dropToPosition")
 
         if (draggedView is BlockView) {
-            // remove the draggedView from the dragFromBlockRow
-            removeDraggedView(dragFromView, draggedView)
+            var newBlockView: BlockView = draggedView
+            if (dragFromView is BlockRow) {
+                // dragged from another block row - remove it
+                removeDraggedView(dragFromView, newBlockView)
+            } else {
+                // dragged from blockpickerbar - make a copy
+                newBlockView = draggedView.clone(draggedView.context)
+            }
 
-            // create a new blockrow with this view
+            // create a new blockrow with the draggedView
             val newBlockRow = BlockRow(activity)
-            newBlockRow.addBlockView(draggedView)
-            // add to the layout
+            newBlockRow.addBlockView(newBlockView)
+
+            // add to the canvas layout
             addBlockRow(newBlockRow, dropToPosition)
-            draggedView.onDrop(true)
+            if (dragFromView is BlockRow) {
+                // notify the just-added view of successful drop
+                newBlockView.onDrop(true)
+            }
         }
     }
 
@@ -83,11 +93,21 @@ class CanvasLayoutHelper
 
         if (draggedView is BlockView) {
             // remove the draggedView from the dragFromBlockRow
-            removeDraggedView(dragFromView, draggedView)
+            var newBlockView: BlockView = draggedView
+            if (dragFromView is BlockRow) {
+                // dragged from another block row - remove it
+                removeDraggedView(dragFromView, newBlockView)
+            } else {
+                // dragged from blockpickerbar - make a copy
+                newBlockView = draggedView.clone(draggedView.context)
+            }
 
             // tell blockrow to insert draggedView at the internal position
-            dropToBlockRow.addBlockViewAt(draggedView, internalDropPosition)
-            draggedView.onDrop(true)
+            dropToBlockRow.addBlockViewAt(newBlockView, internalDropPosition)
+            if (dragFromView is BlockRow) {
+                // notify the just-added view of successful drop
+                newBlockView.onDrop(true)
+            }
         }
     }
 

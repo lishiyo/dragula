@@ -6,17 +6,31 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical"
 	tools:context="com.lishiyo.kotlin.features.toolkit.dragndrop.DragNDropActivity"
-	tools:targetApi="O"
+	tools:targetApi="26"
 	>
+
+	<TextView
+		android:id="@+id/title"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/block_view_height"
+		android:layout_alignParentTop="true"
+		android:gravity="center"
+		android:text="@string/tab_dragndropper_title"
+		android:textAllCaps="true"
+		android:textAlignment="center"
+		android:textSize="26sp"
+		android:fontFamily="@font/asimovation"
+		android:background="@android:color/holo_orange_light"
+		/>
 
 	<!-- canvas zone -->
 	<com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView
 		android:id="@+id/canvas_scrollview"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:layout_height="wrap_content"
 		android:layout_alignParentEnd="true"
 		android:layout_above="@+id/block_picker_bar"
-		android:background="@android:color/white"
+		android:layout_below="@id/title"
 		>
 
 		<!-- actual layout for the blocks -->
@@ -25,7 +39,6 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			android:paddingTop="16dp"
 			android:paddingBottom="16dp" />
 	</com.lishiyo.kotlin.features.toolkit.dragndrop.ui.ObservableScrollView>
 
