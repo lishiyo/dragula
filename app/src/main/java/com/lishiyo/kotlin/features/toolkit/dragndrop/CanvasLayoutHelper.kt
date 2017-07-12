@@ -160,8 +160,6 @@ class CanvasLayoutHelper
             blockRows.add(row)
         }
 
-//        row.initDragAndDrop(canvasDragHelper.blockRowDragListener)
-
         return row
     }
 }

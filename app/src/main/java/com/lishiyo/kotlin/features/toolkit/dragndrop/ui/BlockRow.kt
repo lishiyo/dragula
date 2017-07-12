@@ -18,7 +18,6 @@ import com.lishiyo.kotlin.dragula.R
 import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.CanvasDragCallback
 import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.CanvasDragHelper.Companion.getDragFromBlockRow
 import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.DropOwner
-import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.SpacerDragListener
 import com.lishiyo.kotlin.features.toolkit.dragndrop.viewmodels.BlockView
 
 /**
@@ -35,7 +34,6 @@ class BlockRow @JvmOverloads constructor(
 
     var rootView: ViewGroup = LayoutInflater.from(context).inflate(R.layout.droppable_container, this, true) as ViewGroup
     val blockViews = arrayListOf<BlockView>()
-    var innerSpacerDragListener: SpacerDragListener? = null
 
     companion object {
         val TAG: String = BlockRow::class.java::getSimpleName.toString()
