@@ -38,11 +38,7 @@ class CanvasDragHelper(context: Context,
     // global visible rect of the scroll view
     private var scrollViewVisibleRect = Rect()
 
-    // Drag listener set on each blockrow
-//    val blockRowDragListener = CanvasDragListener()
-    // Drag listener set on the spacer
-//    val spacerDragListener = SpacerDragListener(callback, callback, spacer)
-
+    // set on the full scroll view (reblog tree + blockrows)
     val scrollViewDragListener = ScrollViewDragListener()
 
     companion object {
@@ -59,7 +55,6 @@ class CanvasDragHelper(context: Context,
          * @return which block row this dragged view is coming from, if not block row then the parent view
          */
         fun getDragFromBlockRow(draggedView: View, callback: CanvasDragCallback): View {
-            // TODO: get it from the clip data
             val draggedFromBlockRow = callback.blockRows.findLast {
                 blockRow -> blockRow.indexOfChild(draggedView) != POSITION_INVALID
             }
@@ -117,16 +112,10 @@ class CanvasDragHelper(context: Context,
 
             val rawEventY = dragEvent.y.toInt() + scrollOffset
 
-            for (i in boundaryList.indices) {
-                if (rawEventY < boundaryList[i]) {
-                    if (i == 0) { // above the first item
-                        neighborViews = INVALID_NEIGHBOR_VIEWS
-                        break
-                    } else {
-                        neighborViews = Pair(i - 1, i) // view we are inside is i-1
-                        break
-                    }
-                }
+            val hoverOnViewIdx = boundaryList.indexOfFirst({ rawEventY < it})
+            neighborViews = when (hoverOnViewIdx) {
+                0, -1 -> INVALID_NEIGHBOR_VIEWS
+                else -> Pair(hoverOnViewIdx - 1, hoverOnViewIdx)
             }
 
             return neighborViews
@@ -161,22 +150,21 @@ class CanvasDragHelper(context: Context,
         }
 
         // Add or move the current spacer to the drop position
-        fun handleExternalSpacer(dropPosition: Int, neighborViews: Pair<Int, Int>) {
+        fun handleExternalSpacer(dropPosition: Int) {
             if (oldSpacer != null) {
                 val currentSpacerPosition = callback.contentView.findChildPosition(oldSpacer!!)
                 val shouldMoveSpacer = (dropPosition != POSITION_INVALID
                         && dropPosition != currentSpacerPosition // already at spacer
                         && dropPosition - 1 != currentSpacerPosition)  // spacer already included above me
                 Log.i(DEBUG_TAG, "ACTION_DRAG_LOCATION ++ old spacer position: $currentSpacerPosition vs dropPosition: $dropPosition ++ " +
-                        "shouldMove? $shouldMoveSpacer ")
+                        "shouldMove? $shouldMoveSpacer")
                 if (shouldMoveSpacer) {
-//                   dropPosition = clamp(hoverPosition, currentSpacerPosition - 1, currentSpacerPosition + 1)
                     // remove old spacer from layout and add spacer at new position
-                    oldSpacer = addSpacer(dropPosition)
+                    oldSpacer = addExternalSpacer(clamp(dropPosition, currentSpacerPosition - 1, currentSpacerPosition + 1))
                 }
             } else {
                 Log.i(DEBUG_TAG, "ACTION_DRAG_LOCATION ++ no spacer yet! add spacer at $dropPosition")
-                oldSpacer = addSpacer(dropPosition)
+                oldSpacer = addExternalSpacer(dropPosition)
             }
         }
 
@@ -215,19 +203,19 @@ class CanvasDragHelper(context: Context,
                             val dropPosition = getDropPosition(neighborViews, boundaryListWithSpacer, event, callback.scrollView.scrollY)
                             if (!blockRow.canDropIn(draggedView as BlockView)) {
                                 // blockrow can't accept draggedView - add external spacer either above or below
-//                                Log.i(DEBUG_TAG, "ACTION_DRAG_LOCATION ++ dropPosition given spacer: $dropPosition")
 
-                                handleExternalSpacer(dropPosition, neighborViews)
+//                                Log.i(DEBUG_TAG, "ACTION_DRAG_LOCATION ++ dropPosition given spacer: $dropPosition")
+                                handleExternalSpacer(dropPosition)
                             } else {
                                 // blockrow can accept draggedView - spacer might go inside OR out
-                                val blockRowDropPosition = blockRow.getDropPosition(event, callback.scrollView)
 
 //                                Log.i(DEBUG_TAG, "ACTION_DRAG_LOCATION ++ internal blockRow's dropPosition: $blockRowDropPosition " +
 //                                        "dropPosition: $dropPosition")
+                                val blockRowDropPosition = blockRow.getDropPosition(event, callback.scrollView)
                                 when (blockRowDropPosition) {
                                     BlockRow.DROP_POSITION_INVALID -> POSITION_INVALID
-                                    BlockRow.DROP_POSITION_TOP -> handleExternalSpacer(neighborViews.first, neighborViews)
-                                    BlockRow.DROP_POSITION_BOTTOM -> handleExternalSpacer(neighborViews.second, neighborViews)
+                                    BlockRow.DROP_POSITION_TOP -> handleExternalSpacer(neighborViews.first)
+                                    BlockRow.DROP_POSITION_BOTTOM -> handleExternalSpacer(neighborViews.second)
                                     else -> {
                                         // drop position is internal - switch to vertical spacer inside the block row
                                         val spacer = oldSpacer ?: callback.spacer
@@ -386,10 +374,10 @@ class CanvasDragHelper(context: Context,
                                 if (shouldMoveSpacer) {
                                     hoverPosition = clamp(hoverPosition, currentSpacerPosition - 1, currentSpacerPosition + 1)
                                     // remove old spacer from layout and add spacer at new position
-                                    oldSpacer = addSpacer(hoverPosition)
+                                    oldSpacer = addExternalSpacer(hoverPosition)
                                 }
                             } else {
-                                oldSpacer = addSpacer(hoverPosition)
+                                oldSpacer = addExternalSpacer(hoverPosition)
                             }
                         } else {
                             // blockrow can accept draggedView - spacer can go inside or out
@@ -397,8 +385,8 @@ class CanvasDragHelper(context: Context,
                             val currentBlockRowIndex = callback.blockRows.indexOf(blockRow)
                             when (dropPosition) {
                                 BlockRow.DROP_POSITION_INVALID -> POSITION_INVALID
-                                BlockRow.DROP_POSITION_TOP -> oldSpacer = addSpacer(currentBlockRowIndex)
-                                BlockRow.DROP_POSITION_BOTTOM -> oldSpacer = addSpacer(currentBlockRowIndex + 1)
+                                BlockRow.DROP_POSITION_TOP -> oldSpacer = addExternalSpacer(currentBlockRowIndex)
+                                BlockRow.DROP_POSITION_BOTTOM -> oldSpacer = addExternalSpacer(currentBlockRowIndex + 1)
                                 else -> {
                                     // drop position is internal - switch to vertical spacer inside the block row
                                     val spacer = oldSpacer ?: callback.spacer
@@ -477,60 +465,23 @@ class CanvasDragHelper(context: Context,
 
             return dropPosition
         }
-
-        // get the drop position taking into account block rows only
-        // only for external drops (above or below this block row)
-//        fun getExternalDropPosition(blockRow: BlockRow, event: DragEvent): Int {
-//            var dropPosition = POSITION_INVALID
-//            // takes into account the blockrow index
-//            val blockRowIndex = callback.blockRows.indexOf(blockRow)
-//            if (blockRowIndex == POSITION_INVALID) {
-//                Log.d(DEBUG_TAG, "getExternalDropPosition ++ blockRow not in layout!")
-//                return dropPosition
-//            }
-//
-//            val cutoff = (blockRow.y + blockRow.height / 2.0).toInt()
-//            if (event.y < cutoff) {
-//                dropPosition = blockRowIndex // on top of block row
-//            } else {
-//                dropPosition = blockRowIndex + 1 // on bottom of block row
-//            }
-//
-//            return dropPosition
-//        }
-
     }
 
     private fun handleScroll(scrollView: ScrollView, event: DragEvent, scrollThreshold: Pair<Int, Int>): Boolean {
         val needToScroll: Boolean
-//        val eventYOnScreen = event.y - scrollView.scrollY
         val eventYOnScreen = event.y
-        val delta: Int
-
-//        delta = when {
-//            (eventYOnScreen < scrollThreshold.first) -> (-MAX_DRAG_SCROLL_SPEED * smootherStep(
-//                    scrollThreshold.first.toFloat(), // bottom edge
-//                    scrollViewVisibleRect.top.toFloat(), // top edge (where we are moving towards)
-//                    eventYOnScreen)).toInt() // current hover position on screen
-//            (eventYOnScreen > scrollThreshold.second) -> (MAX_DRAG_SCROLL_SPEED * smootherStep(
-//                    scrollThreshold.second.toFloat(), // top edge
-//                    scrollViewVisibleRect.bottom.toFloat(), // bottom edge (where we are moving towards)
-//                    eventYOnScreen)).toInt() // current hover position on screen
-//            else -> 0
-//        }
-
-        if (eventYOnScreen < scrollThreshold.first) { // in top threshold
-            delta = (-MAX_DRAG_SCROLL_SPEED * smootherStep(scrollThreshold.first.toFloat(), 0f, event.y)).toInt()
-        } else if (eventYOnScreen > scrollThreshold.second) {
-            delta = (MAX_DRAG_SCROLL_SPEED * smootherStep(scrollThreshold.second.toFloat(), scrollView.height.toFloat(), event.y)).toInt()
-        } else {
-            delta = 0
+        val delta = when {
+            (eventYOnScreen < scrollThreshold.first) -> (-MAX_DRAG_SCROLL_SPEED * smootherStep(scrollThreshold.first.toFloat(), 0f, event.y)).toInt()
+            (eventYOnScreen > scrollThreshold.second) -> (MAX_DRAG_SCROLL_SPEED * smootherStep(scrollThreshold.second.toFloat(), scrollView.height.toFloat(), event.y)).toInt()
+            else -> {
+                0
+            }
         }
 
         needToScroll = delta < 0 && scrollView.scrollY > 0
                 || delta > 0 && (scrollView.height + scrollView.scrollY <= scrollView.getChildAt(0).height)
-        Log.d(DEBUG_TAG, "handleScroll! eventY: ${event.y} scrollY: ${scrollView.scrollY} ==> eventYOnScreen: ${eventYOnScreen} " +
-                "++ delta: $delta " + "needToScroll?" + " $needToScroll")
+//        Log.d(DEBUG_TAG, "handleScroll! eventY: ${event.y} scrollY: ${scrollView.scrollY} ==> eventYOnScreen: $eventYOnScreen " +
+//                "++ delta: $delta " + "needToScroll?" + " $needToScroll")
 
         scrollView.smoothScrollBy(0, delta)
 
@@ -538,11 +489,12 @@ class CanvasDragHelper(context: Context,
     }
 
     // add external spacer (the horizontal one b/t blockrows)
-    private fun addSpacer(position: Int): View {
+    private fun addExternalSpacer(position: Int): View {
         removeSpacers() // removes either the external or internal one
 
         val spacer = callback.spacer
-        callback.contentView.addView(spacer, position)
+        val finalPosition = clamp(position, 0, callback.blockRows.size)
+        callback.contentView.addView(spacer, finalPosition)
 
         // make it horizontal
         spacer.setBackgroundResource(R.drawable.canvas_spacer_background)
@@ -551,16 +503,12 @@ class CanvasDragHelper(context: Context,
         lp.width = ViewGroup.LayoutParams.MATCH_PARENT
         spacer.layoutParams = lp
 
-        // add the drag listener
-//        spacer.setOnDragListener(spacerDragListener)
-
         return spacer
     }
 
     private fun removeSpacers() {
         oldSpacer?.let {
             if (it.parent is ViewGroup) {
-//                it.setOnDragListener(null)
                 (it.parent as ViewGroup).removeView(oldSpacer)
                 oldSpacer = null
             }
