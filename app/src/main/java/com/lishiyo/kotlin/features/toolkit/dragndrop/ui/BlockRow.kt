@@ -133,7 +133,7 @@ class BlockRow @JvmOverloads constructor(
         }
 
         // iterate over and find first that matches
-        val dropZones = createDropZones()
+        val dropZones = createLocalDropZones()
         val rawEventY = event.y + owner.scrollY
         val rawEventX = event.x + owner.scrollX
         val localX = (rawEventX - x).toInt()
@@ -145,10 +145,6 @@ class BlockRow @JvmOverloads constructor(
         }
 
         return DROP_POSITION_INVALID
-    }
-
-    private fun createDropZones(): MutableMap<Rect, Int> {
-        return createLocalDropZones()
     }
 
     private fun createLocalDropZones(): MutableMap<Rect, Int> {
