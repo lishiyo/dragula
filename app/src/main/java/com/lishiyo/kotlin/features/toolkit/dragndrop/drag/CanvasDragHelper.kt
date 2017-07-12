@@ -74,15 +74,19 @@ class CanvasDragHelper(context: Context,
         private var trashMode: Boolean = false
         private val boundaryList: MutableList<Int> = mutableListOf()
 
-        override fun onDrag(view: View, event: DragEvent): Boolean {
+        override fun onDrag(ownerView: View, event: DragEvent): Boolean {
             if (event.localState !is BlockView) {
                 Log.d(DEBUG_TAG, "onDrag! A drag event using a " + event.localState.javaClass.canonicalName + " was detected")
+                return false
+            }
+            if (ownerView !is ScrollView) {
+                Log.d(DEBUG_TAG, "onDrag! Not dragging on a ScrollView, this should be set on callback.scrollView")
                 return false
             }
 
             val draggedView = event.localState as View
 
-            return handleDrag(draggedView, view, event)
+            return handleDrag(draggedView, ownerView, event)
         }
 
         // list of top edges of each view
@@ -108,12 +112,10 @@ class CanvasDragHelper(context: Context,
         private fun getNeighborViews(boundaryList: List<Int>,
                                      dragEvent: DragEvent,
                                      scrollOffset: Int): Pair<Int, Int> {
-            var neighborViews: Pair<Int, Int> = INVALID_NEIGHBOR_VIEWS
-
             val rawEventY = dragEvent.y.toInt() + scrollOffset
 
             val hoverOnViewIdx = boundaryList.indexOfFirst({ rawEventY < it})
-            neighborViews = when (hoverOnViewIdx) {
+            val neighborViews = when (hoverOnViewIdx) {
                 0, -1 -> INVALID_NEIGHBOR_VIEWS
                 else -> Pair(hoverOnViewIdx - 1, hoverOnViewIdx)
             }
@@ -156,8 +158,8 @@ class CanvasDragHelper(context: Context,
                 val shouldMoveSpacer = (dropPosition != POSITION_INVALID
                         && dropPosition != currentSpacerPosition // already at spacer
                         && dropPosition - 1 != currentSpacerPosition)  // spacer already included above me
-                Log.i(DEBUG_TAG, "ACTION_DRAG_LOCATION ++ old spacer position: $currentSpacerPosition vs dropPosition: $dropPosition ++ " +
-                        "shouldMove? $shouldMoveSpacer")
+//                Log.i(DEBUG_TAG, "ACTION_DRAG_LOCATION ++ old spacer position: $currentSpacerPosition vs dropPosition: $dropPosition ++ " +
+//                        "shouldMove? $shouldMoveSpacer")
                 if (shouldMoveSpacer) {
                     // remove old spacer from layout and add spacer at new position
                     oldSpacer = addExternalSpacer(clamp(dropPosition, currentSpacerPosition - 1, currentSpacerPosition + 1))
@@ -168,7 +170,7 @@ class CanvasDragHelper(context: Context,
             }
         }
 
-        fun handleDrag(draggedView: View, scrollLayout: View, event: DragEvent): Boolean {
+        fun handleDrag(draggedView: View, ownerView: ScrollView, event: DragEvent): Boolean {
             val action = event.action
 
             when (action) {
@@ -177,30 +179,45 @@ class CanvasDragHelper(context: Context,
                     trashHelper.showTrash()
 
                     // store the current threshold with spacer included
-                    val height = scrollLayout.height
+                    val height = ownerView.height
                     val topTen = (height * SCROLL_THRESHOLD).toInt()
                     val bottomTen = (height - height * SCROLL_THRESHOLD).toInt()
                     scrollThreshold = Pair(topTen, bottomTen)
 
                     // reset blockrow thresholds list
                     boundaryList.clear()
-                    boundaryList.addAll(getBoundaryList(scrollLayout)) // doesn't include spacer yet
+                    boundaryList.addAll(getBoundaryList(ownerView)) // doesn't include spacer yet
                 }
                 DragEvent.ACTION_DRAG_LOCATION -> {
                     // TODO trash stuff
+                    trashHelper.scaleTrash(event, ownerView)
+                    if (trashHelper.isOnTrash(event, ownerView) && !trashMode) {
+                        // wasn't on trash before but now on trash - remove spacer
+                        trashMode = true
+                        removeSpacers()
+                        trashHelper.selectTrash(true)
+                        return true
+                    } else if (trashHelper.isOnTrash(event, ownerView)) {
+                        // on trash and was on trash before
+                        return true
+                    } else if (!trashHelper.isOnTrash(event, ownerView) && trashMode) {
+                        // not on trash
+                        trashMode = false
+                        trashHelper.selectTrash(false)
+                    }
 
                     // not scrolling the entire scrollview atm - toggle spacers
-                    if (!handleScroll(callback.scrollView, event, scrollThreshold)) {
-                        val boundaryListWithSpacer = getBoundaryList(scrollLayout) // top edges of all views including spacer
+                    if (!handleScroll(ownerView, event, scrollThreshold)) {
+                        val boundaryListWithSpacer = getBoundaryList(ownerView) // top edges of all views including spacer
                         // <idx of view I am hovering on, idx of view below>
-                        val neighborViews = getNeighborViews(boundaryListWithSpacer, event, scrollLayout.scrollY)
+                        val neighborViews = getNeighborViews(boundaryListWithSpacer, event, ownerView.scrollY)
                         // view I am hovering on - could be either spacer or block row (only handle block rows)
                         val hoverOnView = getHoverOnView(callback.contentView, neighborViews)
                         if (hoverOnView is BlockRow) {
                             val blockRow = hoverOnView
 
                             // drop at either this block row's top or bottom
-                            val dropPosition = getDropPosition(neighborViews, boundaryListWithSpacer, event, callback.scrollView.scrollY)
+                            val dropPosition = getDropPosition(neighborViews, boundaryListWithSpacer, event, ownerView.scrollY)
                             if (!blockRow.canDropIn(draggedView as BlockView)) {
                                 // blockrow can't accept draggedView - add external spacer either above or below
 
@@ -239,8 +256,8 @@ class CanvasDragHelper(context: Context,
                         val draggedFromBlockRow = getDragFromBlockRow(draggedView, callback)
                         callback.removeDraggedView(draggedFromBlockRow, draggedView as BlockView)
                     } else {
-                        val boundaryListWithSpacer = getBoundaryList(scrollLayout) // top edges of all views including spacer
-                        val neighborViews = getNeighborViews(boundaryListWithSpacer, event, scrollLayout.scrollY)
+                        val boundaryListWithSpacer = getBoundaryList(ownerView) // top edges of all views including spacer
+                        val neighborViews = getNeighborViews(boundaryListWithSpacer, event, ownerView.scrollY)
                         val hoverOnView = getHoverOnView(callback.contentView, neighborViews)
                         when (hoverOnView) {
                             is BlockRow -> {
@@ -248,7 +265,7 @@ class CanvasDragHelper(context: Context,
                                 if (!blockRow.canDropIn(draggedView as BlockView)) {
                                     // drag block to above or below this BlockRow
                                     // need to take into account current spacer position if it's in there
-                                    val boundaryListWithSpacer = getBoundaryList(scrollLayout) // top edges of all views including spacer
+                                    val boundaryListWithSpacer = getBoundaryList(ownerView) // top edges of all views including spacer
                                     // figure out what block row we are hovering on, then whether to drop at top or bottom
                                     // <idx of view I am hovering on, idx of view below>
                                     val dropIndex = getDropPosition(neighborViews, boundaryListWithSpacer, event, callback.scrollView.scrollY)
