@@ -70,7 +70,7 @@ class SpacerDragListener(val dropOwner: DropOwner,
     private fun removeSpacers() {
         oldSpacer?.let {
             if (it.parent is ViewGroup) {
-                it.setOnDragListener(null)
+//                it.setOnDragListener(null)
                 (it.parent as ViewGroup).removeView(oldSpacer)
                 oldSpacer = null
             }

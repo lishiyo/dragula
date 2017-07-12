@@ -104,7 +104,7 @@ class CanvasLayoutHelper
             Log.d(DEBUG_TAG, "onDragBlockIn ++ TO blockRowIndex: ${blockRows.indexOf(dropToBlockRow)} " +
                     "at internalPos: $internalDropPosition given current size ${dropToBlockRow.blockViews.size}")
 
-            // if re-ordering inside this block view, need to clamp in case we decreased in size
+            // if re-ordering inside the same block row, we just decreased in size so need to clamp
             val realDropPosition = clamp(internalDropPosition, 0, dropToBlockRow.blockViews.size)
 
             // tell blockrow to insert draggedView at the internal position
@@ -160,7 +160,7 @@ class CanvasLayoutHelper
             blockRows.add(row)
         }
 
-        row.initDragAndDrop(canvasDragHelper.blockRowDragListener)
+//        row.initDragAndDrop(canvasDragHelper.blockRowDragListener)
 
         return row
     }

@@ -10,12 +10,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import com.lishiyo.kotlin.commons.DEBUG_TAG
 import com.lishiyo.kotlin.commons.extensions.checkRemoveParent
 import com.lishiyo.kotlin.commons.extensions.findChildPosition
 import com.lishiyo.kotlin.commons.extensions.getPixelSize
+import com.lishiyo.kotlin.commons.extensions.smootherStep
 import com.lishiyo.kotlin.dragula.R
 import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.CanvasDragCallback
+import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.CanvasDragHelper.Companion.MAX_DRAG_SCROLL_SPEED
 import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.CanvasDragHelper.Companion.getDragFromBlockRow
 import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.DropOwner
 import com.lishiyo.kotlin.features.toolkit.dragndrop.drag.SpacerDragListener
@@ -95,17 +98,17 @@ class BlockRow @JvmOverloads constructor(
         spacer.layoutParams = lp
 
         // add the drag listener
-        if (innerSpacerDragListener == null) {
-            innerSpacerDragListener = SpacerDragListener(this, callback, spacer)
-        }
-        spacer.setOnDragListener(innerSpacerDragListener)
+//        if (innerSpacerDragListener == null) {
+//            innerSpacerDragListener = SpacerDragListener(this, callback, spacer)
+//        }
+//        spacer.setOnDragListener(innerSpacerDragListener)
 
         return spacer
     }
 
     // Set the drag listener on the blockrow and set the longclick listener on its blockviews
     fun initDragAndDrop(dragListener: View.OnDragListener) {
-        setOnDragListener(dragListener)
+//        setOnDragListener(dragListener)
 
         blockViews.forEach { it.initDragAndDrop() }
     }
@@ -140,7 +143,51 @@ class BlockRow @JvmOverloads constructor(
         rootView.removeView(blockView as View)
     }
 
-    fun getDropPosition(event: DragEvent): Int {
+    // Scroll the full content layout if necessary
+    // return if we need to scroll
+    fun handleScroll(scrollView: ScrollView,
+                     scrollViewVisibleRect: Rect,
+                     blockRow: BlockRow,
+                     event: DragEvent,
+                     threshold: Pair<Int, Int>): Boolean {
+        val blockRowVisibleRect = Rect()
+        blockRow.getGlobalVisibleRect(blockRowVisibleRect)
+
+        val needToScroll: Boolean // whether we need to scroll this scrollview
+        val delta: Int
+
+        val locationInWindow = IntArray(2)
+        blockRow.getLocationInWindow(locationInWindow)
+        val eventY = event.y // relative y within blockRow
+        val blockRowY = locationInWindow[1] // y of blockrow's top edge, negative if above the top line
+        val eventYOnScreen: Float = event.y + blockRowY // actual y of event from top line
+
+        delta = when {
+            (eventYOnScreen < threshold.first) -> (-MAX_DRAG_SCROLL_SPEED * smootherStep(
+                    threshold.first.toFloat(), // bottom edge
+                    scrollViewVisibleRect.top.toFloat(), // top edge (where we are moving towards)
+                    eventYOnScreen)).toInt() // current hover position on screen
+            (eventYOnScreen > threshold.second) -> (MAX_DRAG_SCROLL_SPEED * smootherStep(
+                    threshold.second.toFloat(), // top edge
+                    scrollViewVisibleRect.bottom.toFloat(), // bottom edge (where we are moving towards)
+                    eventYOnScreen)).toInt() // current hover position on screen
+            else -> 0
+        }
+
+        needToScroll = delta < 0 && scrollView.scrollY > 0 // at top, and we've scroll down => scroll back up
+                || delta > 0 && (scrollView.height + scrollView.scrollY <= scrollView.getChildAt(0).height) // at bottom
+
+//            Log.d(DEBUG_TAG, "blockRowHandleScroll! eventY $eventY ++ blockRowLocationInWindow: $blockRowY for total eventYOnScreen $eventYOnScreen")
+//            Log.d(DEBUG_TAG, "blockRowHandleScroll! BLOCKROW globalRect: <" + blockRowVisibleRect.top + ", " + blockRowVisibleRect.bottom + ">" +
+//                    " vs top: " + blockRow.top + " scrollY: " + blockRow.scrollY)
+//            Log.d(DEBUG_TAG, "blockRowHandleScroll finish ===== delta: $delta ==== needToScroll? $needToScroll")
+
+        scrollView.smoothScrollBy(0, delta)
+
+        return needToScroll
+    }
+
+    fun getDropPosition(event: DragEvent, owner: View): Int {
         // shortcircuit the empty case
         if (blockViews.isEmpty()) {
             return 0
@@ -148,8 +195,32 @@ class BlockRow @JvmOverloads constructor(
 
         // iterate over and find first that matches
         val dropZones = createDropZones()
+        val rawEventY = event.y + owner.scrollY
+        val rawEventX = event.x + owner.scrollX
+        val localX = (rawEventX - x).toInt()
+        val localY = (rawEventY - y).toInt()
         for ((zone, position) in dropZones) {
-            if (zone.contains(event.x.toInt(), event.y.toInt())) {
+            if (zone.contains(localX, localY)) {
+                return position
+            }
+        }
+
+        return DROP_POSITION_INVALID
+    }
+
+    // return TOP, BOTTOM, or index to drop in
+    fun getLocalDropPosition(event: DragEvent): Int {
+        // shortcircuit the empty case
+        if (blockViews.isEmpty()) {
+            return 0
+        }
+
+        // iterate over and find first that matches
+        val dropZones = createDropZones()
+        val localX = event.x.toInt()
+        val localY = event.y.toInt()
+        for ((zone, position) in dropZones) {
+            if (zone.contains(localX, localY)) {
                 return position
             }
         }
@@ -158,6 +229,10 @@ class BlockRow @JvmOverloads constructor(
     }
 
     private fun createDropZones(): MutableMap<Rect, Int> {
+        return createLocalDropZones()
+    }
+
+    private fun createLocalDropZones(): MutableMap<Rect, Int> {
         val zones = mutableMapOf<Rect, Int>()
         val blockRowHeight = height
 
